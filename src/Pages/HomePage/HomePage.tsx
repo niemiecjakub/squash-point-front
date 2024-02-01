@@ -1,10 +1,11 @@
 import React from 'react'
+import LeagueList from '../../Components/LeagueList/LeagueList'
 
-type Props = {}
+interface Props  {}
 
 const HomePage = (props: Props) => {
   return (
-    <div>HomePage</div>
+      <LeagueList />
   )
 }
 
