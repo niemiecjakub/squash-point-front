@@ -1,31 +1,39 @@
 import React, {useEffect, useState} from 'react'
-import { PlayerProfile, PlayerProfileInfo } from '../../squashpoint';
+import { PlayerProfileInfo } from '../../squashpoint';
 import { useParams } from 'react-router-dom';
-import { getPlayerDashboard } from '../../api';
 import Player from '../Player/Player';
 import League from '../League/League';
 import Game from '../Game/Game';
+import { useAxiosFetch } from '../../Hooks/useAxiosFetch';
 
 type Props = {}
 
 const PlayerDashboard = (props: Props) => {
   const { id } = useParams();
   const [playerInfo, setPlayerInfo] = useState<PlayerProfileInfo>();
+  const [ data, error, loading ] = useAxiosFetch({
+    method: "GET",
+    url: "/Player/" + id,
+  });
 
   useEffect(() => {
-    const getPlayerInfo = async () => {
-      try {
-        const data = await getPlayerDashboard(id!);
-        console.log(data)
-        setPlayerInfo(data);
-      } catch (error) {
-        console.error("Error fetching leagues:", error);
-      }
-    };
+    if (data) {
+      setPlayerInfo(data);
+      console.log(data);
+    }
+  }, [data]);
 
-    getPlayerInfo();
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+    }
+  }, [error]);
 
-  }, []);
+  useEffect(() => {
+    if (loading) {
+      console.log("getting player info...");
+    }
+  }, [loading]);
 
   return (
     <div>

@@ -1,31 +1,39 @@
 import React, { useEffect, useState } from "react";
 import { LeagueProfileInfo } from "../../squashpoint";
-import { getLeagueDashboard } from "../../api";
 import { useNavigate, useParams } from "react-router-dom";
 import Player from "../Player/Player";
 import { Link } from "react-router-dom";
 import Game from "../Game/Game";
+import { useAxiosFetch } from "../../Hooks/useAxiosFetch";
 
-interface Props {}
 
-const LeagueDashboard = (props: Props) => {
+const LeagueDashboard : React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [info, setInfo] = useState<LeagueProfileInfo>();
+  const [leagueInfo, setLeagueInfo] = useState<LeagueProfileInfo>();
+  const [ data, error, loading ] = useAxiosFetch({
+    method: "GET",
+    url: "/League/" + id,
+  });
 
   useEffect(() => {
-    const getLeagueInfo = async () => {
-      try {
-        const data = await getLeagueDashboard(id!);
-        console.log(data)
-        setInfo(data);
-      } catch (error) {
-        console.error("Error fetching leagues:", error);
-      }
-    };
+    if (data) {
+      setLeagueInfo(data);
+      console.log(data);
+    }
+  }, [data]);
 
-    getLeagueInfo();
-  }, []);
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (loading) {
+      console.log("getting league info...");
+    }
+  }, [loading]);
 
 
   const handlePlayerClick = (id : number) => {
@@ -34,15 +42,15 @@ const LeagueDashboard = (props: Props) => {
 
   return (
     <div>
-      {info ? (
+      {leagueInfo ? (
         <>
-          <h1>{info.name}</h1>
+          <h1>{leagueInfo.name}</h1>
           <div className="bg-red-200">
             <h1>Players</h1>
             <ul>
 
-              {info.players.length > 0 ? (
-                info.players.map((player) => {
+              {leagueInfo.players.length > 0 ? (
+                leagueInfo.players.map((player) => {
                   return (
                       <li onClick={() => handlePlayerClick(player.id)}>
                         <Player PlayerProfile={player}/>
@@ -57,8 +65,8 @@ const LeagueDashboard = (props: Props) => {
           <div className="bg-blue-200">
             <h1>Games</h1>
             <ul>
-              {info.games.length > 0 ? (
-                info.games.map((game) => {
+              {leagueInfo.games.length > 0 ? (
+                leagueInfo.games.map((game) => {
                   return (
                     <li>
                       <Game GameProfile={game}/>

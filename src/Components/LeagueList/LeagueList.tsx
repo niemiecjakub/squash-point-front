@@ -1,42 +1,51 @@
 import React, { useEffect, useState } from "react";
-import { getLeagues } from "../../api";
 import { LeagueProfile } from "../../squashpoint";
 import League from "../League/League";
+import { useAxiosFetch } from "../../Hooks/useAxiosFetch";
 
-interface Props {}
-
-const LeagueList: React.FC<Props> = (props: Props): JSX.Element => {
+const LeagueList: React.FC = () => {
   const [leagues, setLeagues] = useState<LeagueProfile[]>([]);
+  const [ data, error, loading, fetchData ] = useAxiosFetch({
+    method: "GET",
+    url: "/League/league-list",
+  });
+  
+  useEffect(() => {
+    if (data) {
+      setLeagues(data);
+      console.log(data);
+    } else {
+      setLeagues([]);
+    }
+  }, [data]);
 
   useEffect(() => {
-    const getLeagueList = async () => {
-      try {
-        const data = await getLeagues();
-        if (data && Array.isArray(data)) {
-          setLeagues(data);
-        } else {
-          console.error("Invalid data received:", data);
-        }
-      } catch (error) {
-        console.error("Error fetching leagues:", error);
-      }
-    };
+    if (error) {
+      console.log(error);
+    }
+  }, [error]);
 
-    getLeagueList();
-  }, []);
+  useEffect(() => {
+    if (loading) {
+      console.log("retrieving leagues...");
+    }
+  }, [loading]);
 
 
   return (
     <div>
-      {leagues.length > 0 ? (
-        leagues.map((result) => {
-          return <League LeagueProfile={result} key={result.id}/>;
-        })
-      ) : (
-        <p className="mb-3 mt-3 text-xl font-semibold text-center md:text-xl">
-          No results!
-        </p>
-      )}
+      <div>
+        <h4>Leagues List</h4>
+        {loading && <p>loading...</p>}
+        <ul>
+          {leagues &&
+            leagues.map((league, index) => (
+              <li key={index} >
+                <League LeagueProfile={league} />
+              </li>
+            ))}
+        </ul>
+      </div>
     </div>
   );
 };
