@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { LeagueProfileInfo } from "../../squashpoint";
 import { getLeagueDashboard } from "../../api";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import Player from "../Player/Player";
+import { Link } from "react-router-dom";
+import Game from "../Game/Game";
 
 interface Props {}
 
 const LeagueDashboard = (props: Props) => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [info, setInfo] = useState<LeagueProfileInfo>();
 
   useEffect(() => {
     const getLeagueInfo = async () => {
       try {
         const data = await getLeagueDashboard(id!);
-        console.log(data);
+        console.log(data)
         setInfo(data);
       } catch (error) {
         console.error("Error fetching leagues:", error);
@@ -22,6 +26,11 @@ const LeagueDashboard = (props: Props) => {
 
     getLeagueInfo();
   }, []);
+
+
+  const handlePlayerClick = (id : number) => {
+    navigate(`/player/${id}`);
+  };
 
   return (
     <div>
@@ -35,9 +44,9 @@ const LeagueDashboard = (props: Props) => {
               {info.players.length > 0 ? (
                 info.players.map((player) => {
                   return (
-                    <li>
-                      {player.firstName} {player.lastName}
-                    </li>
+                      <li onClick={() => handlePlayerClick(player.id)}>
+                        <Player PlayerProfile={player}/>
+                      </li>
                   );
                 })
               ) : (
@@ -52,8 +61,7 @@ const LeagueDashboard = (props: Props) => {
                 info.games.map((game) => {
                   return (
                     <li>
-                      {game.players[0].firstName} {game.players[0].lastName} vs{" "}
-                      {game.players[1].firstName} {game.players[1].lastName}
+                      <Game GameProfile={game}/>
                     </li>
                   );
                 })

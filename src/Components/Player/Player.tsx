@@ -1,11 +1,18 @@
-import React from 'react'
+import React from "react";
+import { PlayerProfile } from "../../squashpoint";
 
-interface Props {}
-
-function Player({}: Props) {
-  return (
-    <div>Player</div>
-  )
+interface Props {
+  PlayerProfile: PlayerProfile;
 }
 
-export default Player
+const Player: React.FC<Props> = ({
+  PlayerProfile: { firstName, lastName},
+}: Props): JSX.Element => {
+  return (
+    <p>
+      {firstName} {lastName}
+    </p>
+  );
+};
+
+export default Player;
