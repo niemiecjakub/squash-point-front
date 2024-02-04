@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { PlayerProfileInfo } from '../../squashpoint';
+import { PlayerProfileDetails } from '../../squashpoint';
 import { useParams } from 'react-router-dom';
 import Player from '../Player/Player';
 import League from '../League/League';
@@ -10,7 +10,7 @@ type Props = {}
 
 const PlayerDashboard = (props: Props) => {
   const { id } = useParams();
-  const [playerInfo, setPlayerInfo] = useState<PlayerProfileInfo>();
+  const [playerInfo, setPlayerInfo] = useState<PlayerProfileDetails>();
   const [ data, error, loading ] = useAxiosFetch({
     method: "GET",
     url: "/Player/" + id,

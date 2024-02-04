@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { LeagueProfileInfo } from "../../squashpoint";
+import { LeagueProfileDetails } from "../../squashpoint";
 import { useNavigate, useParams } from "react-router-dom";
 import Player from "../Player/Player";
 import { Link } from "react-router-dom";
@@ -10,7 +10,7 @@ import { useAxiosFetch } from "../../Hooks/useAxiosFetch";
 const LeagueDashboard : React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [leagueInfo, setLeagueInfo] = useState<LeagueProfileInfo>();
+  const [leagueInfo, setLeagueInfo] = useState<LeagueProfileDetails>();
   const [ data, error, loading ] = useAxiosFetch({
     method: "GET",
     url: "/League/" + id,

@@ -33,9 +33,9 @@ const LeagueList: React.FC = () => {
 
 
   return (
-    <div>
+    <div className='bg-green-300'>
       <div>
-        <h4>Leagues List</h4>
+        <h1>Leagues List</h1>
         {loading && <p>loading...</p>}
         <ul>
           {leagues &&

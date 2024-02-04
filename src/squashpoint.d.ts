@@ -1,6 +1,6 @@
 export interface LeagueProfile {
   id : number,
-  name: string
+  name: string,
 }
 
 export interface GameProfile {
@@ -13,15 +13,16 @@ export interface PlayerProfile {
   id : number,
   firstName: string,
   lastName: string,
+  email: string,
   sex: string
 }
 
-export interface LeagueProfileInfo extends LeagueProfile {
+export interface LeagueProfileDetails extends LeagueProfile {
   players: PlayerProfile[],
   games: GameProfile[]
 }
 
-export interface PlayerProfileInfo extends PlayerProfile {
+export interface PlayerProfileDetails extends PlayerProfile {
   leagues: LeagueProfile[]
   games: GameProfile[],
 }
