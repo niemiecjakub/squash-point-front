@@ -26,3 +26,10 @@ export interface PlayerProfileDetails extends PlayerProfile {
   leagues: LeagueProfile[]
   games: GameProfile[],
 }
+
+export interface SignUpFormState {
+  firstname: string;
+  lastname: string;
+  email: string;
+  sex: string;
+}

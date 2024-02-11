@@ -23,18 +23,6 @@ const PlayerDashboard = (props: Props) => {
     }
   }, [data]);
 
-  useEffect(() => {
-    if (error) {
-      console.log(error);
-    }
-  }, [error]);
-
-  useEffect(() => {
-    if (loading) {
-      console.log("getting player info...");
-    }
-  }, [loading]);
-
   return (
     <div>
       {playerInfo? (
