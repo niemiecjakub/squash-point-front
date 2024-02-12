@@ -7,11 +7,11 @@ import NewPlayerForm from "../../Components/NewPlayerForm/NewPlayerForm";
 const HomePage: React.FC = () => {
 
   return (
-    <>
+    <div className="flex flex-col">
       <LeagueList />
       <PlayerList />
       <NewPlayerForm />
-    </>
+    </div>
   );
 };
 

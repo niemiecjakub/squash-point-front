@@ -4,15 +4,28 @@ type Props = {};
 
 const Navbar = (props: Props) => {
   return (
-    <Link to="/">
-      <div className="bg-red-400 py-5 flex justify-between items-center px-56">
+    <div className="py-5 flex justify-between items-center">
+      <Link to="/">
         <h1 className="text-lg font-bold">SQUASH POINT</h1>
-        <div className="flex justify-end items-center w-1/5">
-          <button className="font-bold bg-slate-50 mx-2 px-4 py-2 rounded-xl">LEAGUES</button>
-          <button className="font-bold bg-slate-50 mx-2 px-4 py-2 rounded-xl">ACCOUNT</button>
-        </div>
+      </Link>
+      <div className="flex justify-end items-center w-1/5">
+        <button className="font-bold bg-slate-50 mx-2 px-4 py-2 rounded-xl">
+          PLAYERS
+        </button>
+        <button className="font-bold bg-slate-50 mx-2 px-4 py-2 rounded-xl">
+          LEAGUES
+        </button>
+        <button className="font-bold bg-slate-50 mx-2 px-4 py-2 rounded-xl">
+          REGISTER
+        </button>
+        <button className="font-bold bg-slate-50 mx-2 px-4 py-2 rounded-xl">
+          LOGIN
+        </button>
+        <button className="font-bold bg-slate-50 mx-2 px-4 py-2 rounded-xl">
+          ACCOUNT
+        </button>
       </div>
-    </Link>
+    </div>
   );
 };
 

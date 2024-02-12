@@ -10,7 +10,7 @@ const League: React.FC<Props> = ({
   LeagueProfile: { name, id },
 }: Props): JSX.Element => {
   return (
-    <div>
+    <div className="bg-red-300 p-2 my-2">
       <Link to={`/league/${id}`}>{name}</Link>
     </div>
   );
