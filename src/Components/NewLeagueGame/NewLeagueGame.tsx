@@ -3,13 +3,15 @@ import React, { useState } from "react";
 import { NewGameFormState, PlayerProfile } from "../../squashpoint";
 
 interface Props {
-  players: PlayerProfile[];
+  players: PlayerProfile[] | undefined;
   leagueId: number;
+  className?: string;
 }
 
 const NewLeagueGame: React.FC<Props> = ({
   leagueId,
   players,
+  className,
 }: Props): JSX.Element => {
   const [formData, setFormData] = useState<NewGameFormState>({
     leagueId: leagueId,
@@ -52,7 +54,7 @@ const NewLeagueGame: React.FC<Props> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-red-400 w-1/2">
+    <form onSubmit={handleSubmit} className={`${className}`}>
       <div>
         <label htmlFor="player1">Player1</label>
         <br />

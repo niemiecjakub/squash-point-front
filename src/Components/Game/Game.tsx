@@ -1,6 +1,5 @@
 import React from "react";
 import { GameProfile } from "../../squashpoint";
-import Player from "../Player/Player";
 
 interface Props {
   GameProfile: GameProfile;
@@ -11,11 +10,11 @@ const Game: React.FC<Props> = ({
 }: Props): JSX.Element => {
   return (
     <>
-      <Player PlayerProfile={players[0]} />
-      <span> vs </span> 
-      <Player PlayerProfile={players[1]} />
-      <span> {status} </span>
-      <span> schedule date: {date} </span>
+      <span>
+        {" "}
+        {players[0].fullName} vs {players[1].fullName} {status} schedule date:{" "}
+        {date}
+      </span>
     </>
   );
 };

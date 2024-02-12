@@ -1,32 +1,32 @@
 export interface LeagueProfile {
-  id : number,
-  name: string,
+  id: number;
+  name: string;
 }
 
 export interface GameProfile {
-  id : number,
-  status: string,
-  date: string,
-  players: PlayerProfile[]
+  id: number;
+  status: string;
+  date: string;
+  players: PlayerProfile[];
 }
 
 export interface PlayerProfile {
-  id : number,
-  firstName: string,
-  lastName: string,
-  fullName: string,
-  email: string,
-  sex: string
+  id: number;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  email: string;
+  sex: string;
 }
 
 export interface LeagueProfileDetails extends LeagueProfile {
-  players: PlayerProfile[],
-  games: GameProfile[]
+  players: PlayerProfile[];
+  games: GameProfile[];
 }
 
 export interface PlayerProfileDetails extends PlayerProfile {
-  leagues: LeagueProfile[]
-  games: GameProfile[],
+  leagues: LeagueProfile[];
+  games: GameProfile[];
 }
 
 export interface SignUpFormState {
@@ -37,7 +37,7 @@ export interface SignUpFormState {
 }
 
 export interface NewGameFormState {
-  leagueId: number,
+  leagueId: number;
   player1Id: number | null;
   player2Id: number | null;
   year: number;
