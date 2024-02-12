@@ -7,14 +7,15 @@ interface Props {
 }
 
 const Game: React.FC<Props> = ({
-  GameProfile: { players, status },
+  GameProfile: { players, status, date },
 }: Props): JSX.Element => {
   return (
     <>
       <Player PlayerProfile={players[0]} />
-      vs
+      <span> vs </span> 
       <Player PlayerProfile={players[1]} />
-      <p>{status}</p>
+      <span> {status} </span>
+      <span> schedule date: {date} </span>
     </>
   );
 };

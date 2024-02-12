@@ -9,9 +9,9 @@ const Player: React.FC<Props> = ({
   PlayerProfile: { firstName, lastName},
 }: Props): JSX.Element => {
   return (
-    <p>
+    <span>
       {firstName} {lastName}
-    </p>
+    </span>
   );
 };
 

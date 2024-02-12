@@ -6,6 +6,7 @@ export interface LeagueProfile {
 export interface GameProfile {
   id : number,
   status: string,
+  date: string,
   players: PlayerProfile[]
 }
 
@@ -32,4 +33,15 @@ export interface SignUpFormState {
   lastname: string;
   email: string;
   sex: string;
+}
+
+export interface NewGameFormState {
+  leagueId: number,
+  player1Id: number | null;
+  player2Id: number | null;
+  year: number;
+  month: number;
+  day: number;
+  hour: number;
+  minute: number;
 }

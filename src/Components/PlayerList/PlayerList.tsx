@@ -3,8 +3,6 @@ import { PlayerProfile } from '../../squashpoint';
 import { useAxiosFetch } from '../../Hooks/useAxiosFetch';
 import Player from '../Player/Player';
 
-type Props = {}
-
 const PlayerList: React.FC = () => {
   const [players, setPlayers] = useState<PlayerProfile[]>([]);
   const [ data, error, loading, fetchData ] = useAxiosFetch({
