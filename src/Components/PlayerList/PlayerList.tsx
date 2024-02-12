@@ -1,11 +1,30 @@
-import React, { useEffect, useState } from 'react'
-import { PlayerProfile } from '../../squashpoint';
-import { useAxiosFetch } from '../../Hooks/useAxiosFetch';
-import Player from '../Player/Player';
+import React, { useEffect, useState } from "react";
+import { PlayerProfile } from "../../squashpoint";
+import { useAxiosFetch } from "../../Hooks/useAxiosFetch";
+import DataTable, { TableColumn } from "react-data-table-component";
+import { useNavigate } from "react-router";
 
-const PlayerList: React.FC = () => {
+interface PlayerListProps {
+  className?: string;
+  title?: string;
+}
+
+interface DataRow {
+  fullName: string;
+}
+
+const columns: TableColumn<DataRow>[] = [
+  {
+    name: "Name",
+    selector: (row) => row.fullName,
+    sortable: true,
+  },
+];
+
+const PlayerList: React.FC<PlayerListProps> = ({ className, title }) => {
+  const navigate = useNavigate();
   const [players, setPlayers] = useState<PlayerProfile[]>([]);
-  const [ data, error, loading, fetchData ] = useAxiosFetch({
+  const [data, error, loading, fetchData] = useAxiosFetch({
     method: "GET",
     url: "/Player/player-list",
   });
@@ -19,32 +38,25 @@ const PlayerList: React.FC = () => {
     }
   }, [data]);
 
-  useEffect(() => {
-    if (error) {
-      console.log(error);
-    }
-  }, [error]);
+  const handleRowClick = (row: any) => {
+    console.log("Clicked row:", row);
+    navigate(`/player/${row.id}`);
+  };
 
-  useEffect(() => {
-    if (loading) {
-      console.log("retrieving players...");
-    }
-  }, [loading]);
-  
   return (
-    <div className='bg-red-300'>
-      <h1 >Player List</h1>
-      {loading && <p>loading...</p>}
-        <ul>
-          {players &&
-            players.map((player, index) => (
-              <li key={index} >
-                <Player PlayerProfile={player} />
-              </li>
-            ))}
-        </ul>
+    <div className={`${className}`}>
+      {players && (
+        <DataTable
+          title={title}
+          columns={columns}
+          data={players}
+          progressPending={loading}
+          progressComponent={<p>loading:P</p>}
+          onRowClicked={handleRowClick}
+        />
+      )}
     </div>
-  )
-}
+  );
+};
 
 export default PlayerList;

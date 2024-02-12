@@ -1,40 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { LeagueProfile } from "../../squashpoint";
-import League from "../League/League";
 import { useAxiosFetch } from "../../Hooks/useAxiosFetch";
-import DataTable from "react-data-table-component";
+import DataTable, { TableColumn } from "react-data-table-component";
+import { useNavigate } from "react-router";
 
-const LeagueList: React.FC = () => {
+interface LeagueListProps {
+  className?: string;
+  title?: string;
+}
+
+interface DataRow {
+  name: string;
+  id: number;
+}
+
+const columns: TableColumn<DataRow>[] = [
+  {
+    name: "Name",
+    selector: (row) => row.name,
+    sortable: true,
+  },
+];
+
+const LeagueList: React.FC<LeagueListProps> = ({ className, title }) => {
+  const navigate = useNavigate();
   const [leagues, setLeagues] = useState<LeagueProfile[]>([]);
   const [data, error, loading, fetchData] = useAxiosFetch({
     method: "GET",
     url: "/League/league-list",
   });
-
-  const columns = [
-    {
-      name: "Name",
-      selector: (row: { name: string }) => row.name,
-    },
-    {
-      name: "Year",
-      selector: (row: { year: number }) => row.year,
-    },
-  ];
-
-
-  const dataTEST = [
-    {
-      id: 1,
-      name: "Beetlejuice",
-      year: 1988,
-    },
-    {
-      id: 2,
-      name: "Ghostbusters",
-      year: 1984,
-    },
-  ];
 
   useEffect(() => {
     if (data) {
@@ -45,47 +39,23 @@ const LeagueList: React.FC = () => {
     }
   }, [data]);
 
-  useEffect(() => {
-    if (error) {
-      console.log(error);
-    }
-  }, [error]);
-
-  useEffect(() => {
-    if (loading) {
-      console.log("retrieving leagues...");
-    }
-  }, [loading]);
+  const handleRowClick = (row: LeagueProfile) => {
+    console.log("Clicked row:", row);
+    navigate(`/league/${row.id}`);
+  };
 
   return (
-    <div className="bg-green-300 rounded-xl px-5">
-      <h1 className="font-semibold">Leagues</h1>
-      {loading && <p>loading...</p>}
-      <ul>
-        {leagues &&
-          leagues.map((league, index) => (
-            <li key={index}>
-              <League LeagueProfile={league} />
-            </li>
-          ))}
-        <li>
-          <League LeagueProfile={{ id: 1, name: "aaaa" }} />
-        </li>
-        <li>
-          <League LeagueProfile={{ id: 1, name: "aaaa" }} />
-        </li>
-        <li>
-          <League LeagueProfile={{ id: 1, name: "aaaa" }} />
-        </li>
-        <li>
-          <League LeagueProfile={{ id: 1, name: "aaaa" }} />
-        </li>
-        <li>
-          <League LeagueProfile={{ id: 1, name: "aaaa" }} />
-        </li>
-      </ul>
-
-      <DataTable columns={columns} data={dataTEST}/>
+    <div className={`${className}`}>
+      {leagues && (
+        <DataTable
+          title={title}
+          columns={columns}
+          data={leagues}
+          progressPending={loading}
+          progressComponent={<p>loading:P</p>}
+          onRowClicked={handleRowClick}
+        />
+      )}
     </div>
   );
 };
