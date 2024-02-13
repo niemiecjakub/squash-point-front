@@ -28,6 +28,7 @@ const NewLeaguePlayer: React.FC<Props> = ({ leagueId, className, players }) => {
   }, [playerData]);
 
   const handleAddPlayer = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
     console.log(`Adding player: ${selectedPlayerId}`);
     try {
       const response = await axios.post("/League/addPlayer", null, {

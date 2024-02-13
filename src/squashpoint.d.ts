@@ -7,6 +7,7 @@ export interface GameProfile {
   id: number;
   status: string;
   date: string;
+  winner: string | null;
   players: PlayerProfile[];
 }
 
@@ -19,15 +20,22 @@ export interface PlayerProfile {
   sex: string;
 }
 
-export interface LeagueProfileDetails extends LeagueProfile {
-  players: PlayerProfile[];
-  games: GameProfile[];
-}
-
 export interface PlayerProfileDetails extends PlayerProfile {
   leagues: LeagueProfile[];
   games: GameProfile[];
 }
+
+export interface LeaguePlayerScoreboard extends PlayerProfile {
+  score: number;
+  gamesPlayed: number;
+}
+
+export interface LeagueProfileDetails extends LeagueProfile {
+  players: LeaguePlayerScoreboard[];
+  games: GameProfile[];
+}
+
+export interface GameProfileDetails extends GameProfile {}
 
 export interface SignUpFormState {
   firstname: string;

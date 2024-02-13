@@ -5,16 +5,27 @@ import {
   GameProfile,
   LeagueProfileDetails,
   PlayerProfile,
+  LeaguePlayerScoreboard
 } from "../../squashpoint";
 import { useAxiosFetch } from "../../Hooks/useAxiosFetch";
 import { TableColumn } from "react-data-table-component";
 import NewLeagueGame from "../../Components/NewLeagueGame/NewLeagueGame";
 import NewLeaguePlayer from "../../Components/NewLeaguePlayer/NewLeaguePlayer";
 
-const scoreboardColumns: TableColumn<PlayerProfile>[] = [
+const scoreboardColumns: TableColumn<LeaguePlayerScoreboard>[] = [
+  {
+    name: "Score",
+    selector: (row) => row.score,
+    sortable: true,
+  },
   {
     name: "Name",
     selector: (row) => row.fullName,
+    sortable: true,
+  },
+  {
+    name: "Games played",
+    selector: (row) => row.gamesPlayed,
     sortable: true,
   },
 ];
@@ -54,6 +65,7 @@ const LeaguePage = () => {
   useEffect(() => {
     if (data) {
       setLeagueData(data);
+      console.log(data)
     }
   }, [data]);
 
@@ -72,7 +84,7 @@ const LeaguePage = () => {
           className="w-1/2 mx-2"
           title="Scoreboard"
           loading={loading}
-          data={leagueData?.players}
+          data={leagueData?.players.sort((a, b) => b.score - a.score)}
           columns={scoreboardColumns}
           onRowClicked={handlePlayerClick}
         />
