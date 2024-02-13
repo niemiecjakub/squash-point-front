@@ -5,8 +5,8 @@ import { SignUpFormState } from '../../squashpoint';
 const NewPlayerForm: React.FC = () => {
 
   const [formData, setFormData] = useState<SignUpFormState>({
-    firstname: "",
-    lastname: "",
+    firstName: "",
+    lastName: "",
     email: "",
     sex: "",
   });
@@ -37,7 +37,7 @@ const NewPlayerForm: React.FC = () => {
           <input
             name="firstname"
             onChange={handleChange}
-            value={formData.firstname}
+            value={formData.firstName}
           />
           <br />
         </div>
@@ -48,7 +48,7 @@ const NewPlayerForm: React.FC = () => {
           <input
             name="lastname"
             onChange={handleChange}
-            value={formData.lastname}
+            value={formData.lastName}
           />
           <br />
         </div>

@@ -15,6 +15,7 @@ const GamePage = () => {
   useEffect(() => {
     if (data) {
       setGameData(data);
+      console.log(data);
     }
   }, [data]);
 
@@ -22,10 +23,24 @@ const GamePage = () => {
     navigate(`/player/${row.id}`);
   };
 
+  const handleStartGame =() => {
+    
+  }
+
   return (
-    <div className="flex">
-      <h1>fsdf</h1>
-      <h1>fsdf</h1>
+    <div className="">
+      {gameData && (
+        <>
+          <h1>{gameData.status}</h1>
+          <h1>
+            {gameData.players[0].fullName} vs.{gameData.players[1].fullName}
+          </h1>
+          <h1>{gameData.date}</h1>
+        </>
+      )}
+      <div>
+        <button className="bg-green-200 p-4">Start game</button>
+      </div>
     </div>
   );
 };

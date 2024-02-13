@@ -74,7 +74,7 @@ const LeaguePage = () => {
   };
 
   const handleGameClick = (row: GameProfile) => {
-    navigate(`/player/${row.id}`);
+    navigate(`/game/${row.id}`);
   };
 
   return (

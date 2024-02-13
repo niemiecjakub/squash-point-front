@@ -35,11 +35,23 @@ export interface LeagueProfileDetails extends LeagueProfile {
   games: GameProfile[];
 }
 
-export interface GameProfileDetails extends GameProfile {}
+export interface GameProfileDetails extends GameProfile {
+  sets: SetDetails[];
+}
+
+export interface SetDetails{
+  winner: PlayerProfile| null;
+  points: PointDetails[];
+}
+
+export interface PointDetails{
+  winner: PlayerProfile | null;
+  pointType: string;
+}
 
 export interface SignUpFormState {
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   email: string;
   sex: string;
 }
