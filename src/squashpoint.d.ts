@@ -40,6 +40,7 @@ export interface GameProfileDetails extends GameProfile {
 }
 
 export interface SetDetails{
+  setId: number;
   winner: PlayerProfile| null;
   points: PointDetails[];
 }
