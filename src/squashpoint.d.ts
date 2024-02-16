@@ -37,16 +37,26 @@ export interface LeagueProfileDetails extends LeagueProfile {
 
 export interface GameProfileDetails extends GameProfile {
   sets: SetDetails[];
+  player1Sets: number;
+  player2Sets: number;
+  player1Points: number;
+  player2Points: number;
+}
+
+export interface GameState {
+  setId : number,
+  player1Points: number,
+  player2Points: number
 }
 
 export interface SetDetails{
-  setId: number;
+  id: number;
   winner: PlayerProfile| null;
   points: PointDetails[];
 }
 
 export interface PointDetails{
-  winner: PlayerProfile | null;
+  winner: PlayerProfile;
   pointType: string;
 }
 

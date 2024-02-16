@@ -1,23 +1,34 @@
 import { useEffect, useState } from "react";
-import { GameProfileDetails, PlayerProfile } from "../../squashpoint";
+import {
+  GameProfileDetails,
+  GameState,
+  PlayerProfile,
+  SetDetails,
+} from "../../squashpoint";
 import { useNavigate, useParams } from "react-router";
 import { useAxiosFetch } from "../../Hooks/useAxiosFetch";
 import axios from "axios";
 
+const startNewGame = async (gameId: number) => {
+  const { data: id } = await axios.put(`/Game/${gameId}`, {
+    status: "Started",
+    winnerId: null,
+  });
+  await axios.post(`/Set`, null, {
+    params: {
+      GameId: id,
+    },
+  });
+};
+
+const countPoints = (set: SetDetails, playerId: number) => {
+  return set.points.filter((e) => e.winner.id === playerId).length;
+};
+
 const GamePage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [gameScore, setGameScore] = useState({
-    player1: {
-      sets: 0,
-      points: 0,
-    },
-    player2: {
-      sets: 0,
-      points: 0,
-    },
-    currentSetId: 0,
-  });
+  const [currentSetData, setCurrentSetData] = useState<GameState>();
   const [gameData, setGameData] = useState<GameProfileDetails>();
   const [data, error, loading, fetchData] = useAxiosFetch({
     method: "GET",
@@ -27,7 +38,15 @@ const GamePage = () => {
   useEffect(() => {
     if (data) {
       setGameData(data);
-      console.log(data);
+      if (data.sets.length > 0) {
+        const { players, sets } = data;
+        const currentSet = sets[0];
+        setCurrentSetData({
+          setId: currentSet.id,
+          player1Points: countPoints(currentSet, players[0].id),
+          player2Points: countPoints(currentSet, players[1].id),
+        });
+      }
     }
   }, [data]);
 
@@ -35,13 +54,17 @@ const GamePage = () => {
     navigate(`/player/${row.id}`);
   };
 
-  const handleGameStart = (e: any) => {
-    axios
-      .put(`/Game/${id}`, {
-        status: "Started",
-        winnerId: null,
-      })
-      .then((e) => setGameData(e.data));
+  const handleGameStart = async (e: any): Promise<void> => {
+    const { data } = await axios.put(`/Game/${id}`, {
+      status: "Started",
+      winnerId: null,
+    });
+    await axios.post(`/Set`, null, {
+      params: {
+        GameId: data.id,
+      },
+    });
+    fetchData();
   };
 
   const handleNewSet = (e: any) => {
@@ -53,18 +76,31 @@ const GamePage = () => {
     });
   };
 
-  const handlePointScored = (
+  const handleGameWinner = async (playerId: number) => {
+    const { data } = await axios.put(`/Game/${id}`, {
+      status: "Finished",
+      winnerId: playerId,
+    });
+  };
+
+  const handleSetWinner = async (setId: number, playerId: number) => {
+    const { data } = await axios.put(`/Set/${setId}`, {
+      winnerId: playerId,
+    });
+  };
+
+  const handlePointScored = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     winnerId: number
-  ) => {
-    console.log(winnerId);
-    // axios.post(`/api/Point`, null, {
-    //   params: {
-    //     WinnerId : winnerId,
-    //     PointType: "N",
-    //     SetId: setId
-    //   }
-    // })
+  ): Promise<void> => {
+    await axios.post(`/Point`, null, {
+      params: {
+        SetId: currentSetData?.setId,
+        WinnerId: winnerId,
+        PointType: "N",
+      },
+    });
+    await fetchData();
   };
 
   return (
@@ -80,33 +116,35 @@ const GamePage = () => {
             <>
               <div className="flex flex-col items-center">
                 <div className="text-3xl font-bold">
-                  {gameScore.player1.points} : {gameScore.player2.points}
+                  {currentSetData?.player1Points} :{" "}
+                  {currentSetData?.player2Points}
                 </div>
                 <div className="text-2xl">
-                  {gameScore.player1.sets} : {gameScore.player2.sets}
+                  {gameData.player1Sets} : {gameData.player2Sets}
                 </div>
               </div>
-              <div className="flex flex-col w-full">
-                <div className="bg-blue-400 p-4">
-                  <button className="w-full">Sart new set</button>
-                </div>
-                <div className="flex w-full justify-center">
-                  {gameData?.players.map(({ fullName, id }) => (
-                    <div className="w-1/2 bg-green-300 p-3 mx-1">G
-                      <button onClick={(e) => handlePointScored(e, id)}>
-                        {fullName} +1
-                      </button>
-                    </div>
+              <div className="flex w-full justify-center">
+                {gameData?.players.map(({ fullName, id }) => (
+                  <div className="w-1/2 bg-green-300 p-3 mx-1">
+                    <button onClick={(e) => handlePointScored(e, id)}>
+                      {fullName} +1
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              {gameData.sets.map(({ id, winner, points }) => (
+                <div key={id}>
+                  <div>
+                    set id: {id} __ points: {points.length}
+                  </div>
+                  {points.map(({ pointType, winner }, index) => (
+                    <p key={index}>
+                      {pointType} - {winner?.fullName}
+                    </p>
                   ))}
                 </div>
-              </div>
-              {gameData.sets.map(({ points, setId, winner }) => {
-                <>
-                  <div>{points.map(({winner, pointType}) => <p>{winner?.fullName} - {pointType}</p>)}</div>
-                  <div>{setId}</div>
-                  <div>{winner?.fullName}</div>
-                </>;
-              })}
+              ))}
             </>
           ) : (
             <div className="bg-green-200 p-4 w-full">
