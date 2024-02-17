@@ -9,7 +9,7 @@ function App() {
           <Navbar />
         </div>
       </div>
-      <div className="w-5/6 mx-auto mt-5">
+      <div className="w-5/6 mx-auto mt-5 h-full">
         <Outlet />
       </div>
     </div>

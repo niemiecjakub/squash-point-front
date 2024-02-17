@@ -8,6 +8,7 @@ import {
 import { useNavigate, useParams } from "react-router";
 import { useAxiosFetch } from "../../Hooks/useAxiosFetch";
 import axios from "axios";
+import GameDashboard from "../../Components/GameDashboard/GameDashboard";
 
 const startNewGame = async (gameId: number) => {
   const { data: id } = await axios.put(`/Game/${gameId}`, {
@@ -41,14 +42,34 @@ const GamePage = () => {
       if (data.sets.length > 0) {
         const { players, sets } = data;
         const currentSet = sets[0];
+        const player1Points = countPoints(currentSet, players[0].id);
+        const player2Points = countPoints(currentSet, players[1].id);
+        if (player2Points == 11 || player1Points == 11) {
+          const winnerId = player1Points == 11 ? players[0].id : players[1].id;
+          newSet(winnerId, currentSet.id);
+        }
         setCurrentSetData({
           setId: currentSet.id,
-          player1Points: countPoints(currentSet, players[0].id),
-          player2Points: countPoints(currentSet, players[1].id),
+          player1Points,
+          player2Points,
         });
       }
     }
   }, [data]);
+
+  const newSet = async (winnerId: number, setId: number) => {
+    await axios.put(`/Set/${setId}`, {
+      winnerId,
+    });
+
+    await axios.post(`/Set`, null, {
+      params: {
+        GameId: id,
+        WinnerId: null,
+      },
+    });
+    fetchData();
+  };
 
   const handlePlayerClick = (row: PlayerProfile) => {
     navigate(`/player/${row.id}`);
@@ -67,24 +88,9 @@ const GamePage = () => {
     fetchData();
   };
 
-  const handleNewSet = (e: any) => {
-    axios.post(`api/Set`, null, {
-      params: {
-        GameId: id,
-        WinnerId: null,
-      },
-    });
-  };
-
   const handleGameWinner = async (playerId: number) => {
     const { data } = await axios.put(`/Game/${id}`, {
       status: "Finished",
-      winnerId: playerId,
-    });
-  };
-
-  const handleSetWinner = async (setId: number, playerId: number) => {
-    const { data } = await axios.put(`/Set/${setId}`, {
       winnerId: playerId,
     });
   };
@@ -125,26 +131,30 @@ const GamePage = () => {
               </div>
               <div className="flex w-full justify-center">
                 {gameData?.players.map(({ fullName, id }) => (
-                  <div className="w-1/2 bg-green-300 p-3 mx-1">
-                    <button onClick={(e) => handlePointScored(e, id)}>
-                      {fullName} +1
-                    </button>
-                  </div>
+                  <button
+                    onClick={(e) => handlePointScored(e, id)}
+                    className="bg-green-300 p-3 w-1/2 mx-1"
+                  >
+                    {fullName} +1
+                  </button>
                 ))}
               </div>
 
-              {gameData.sets.map(({ id, winner, points }) => (
-                <div key={id}>
-                  <div>
-                    set id: {id} __ points: {points.length}
+              <div className="flex w-full justify-center">
+                {gameData.sets.map(({ id, winner, points }) => (
+                  <div key={id} className="w-1/2">
+                    <div>
+                      set id: {id} __ points: {points.length}
+                    </div>
+                    {points.map(({ pointType, winner }, index) => (
+                      <p key={index}>
+                        {pointType} - {winner?.fullName}
+                      </p>
+                    ))}
                   </div>
-                  {points.map(({ pointType, winner }, index) => (
-                    <p key={index}>
-                      {pointType} - {winner?.fullName}
-                    </p>
-                  ))}
-                </div>
-              ))}
+                ))}
+                <GameDashboard className="w-1/2"/>
+              </div>
             </>
           ) : (
             <div className="bg-green-200 p-4 w-full">
