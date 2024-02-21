@@ -10,21 +10,11 @@ import { useAxiosFetch } from "../../Hooks/useAxiosFetch";
 import axios from "axios";
 import GameDashboard from "../../Components/GameDashboard/GameDashboard";
 
-const startNewGame = async (gameId: number) => {
-  const { data: id } = await axios.put(`/Game/${gameId}`, {
-    status: "Started",
-    winnerId: null,
-  });
-  await axios.post(`/Set`, null, {
-    params: {
-      GameId: id,
-    },
-  });
-};
-
 const countPoints = (set: SetDetails, playerId: number) => {
   return set.points.filter((e) => e.winner.id === playerId).length;
 };
+
+const checkGameWin = () => {};
 
 const GamePage = () => {
   const navigate = useNavigate();
@@ -40,13 +30,17 @@ const GamePage = () => {
     if (data) {
       setGameData(data);
       if (data.sets.length > 0) {
-        const { players, sets } = data;
+        const { players, sets, player1Sets, player2Sets } = data;
         const currentSet = sets[0];
         const player1Points = countPoints(currentSet, players[0].id);
         const player2Points = countPoints(currentSet, players[1].id);
         if (player2Points == 11 || player1Points == 11) {
           const winnerId = player1Points == 11 ? players[0].id : players[1].id;
           newSet(winnerId, currentSet.id);
+        }
+        if (player1Sets == 3 || player2Sets == 3) {
+          const winnerId = player1Sets == 3 ? players[0].id : players[1].id;
+          handleGameWinner(winnerId);
         }
         setCurrentSetData({
           setId: currentSet.id,
@@ -89,10 +83,11 @@ const GamePage = () => {
   };
 
   const handleGameWinner = async (playerId: number) => {
-    const { data } = await axios.put(`/Game/${id}`, {
+    await axios.put(`/Game/${id}`, {
       status: "Finished",
       winnerId: playerId,
     });
+    fetchData();
   };
 
   const handlePointScored = async (
@@ -132,6 +127,7 @@ const GamePage = () => {
               <div className="flex w-full justify-center">
                 {gameData?.players.map(({ fullName, id }) => (
                   <button
+                    key={id}
                     onClick={(e) => handlePointScored(e, id)}
                     className="bg-green-300 p-3 w-1/2 mx-1"
                   >
@@ -153,7 +149,7 @@ const GamePage = () => {
                     ))}
                   </div>
                 ))}
-                <GameDashboard className="w-1/2"/>
+                <GameDashboard className="w-1/2" />
               </div>
             </>
           ) : (

@@ -11,10 +11,12 @@ export interface GameProfile {
   players: PlayerProfile[];
 }
 
+export interface LeagueGameProfile extends GameProfile{
+  league: LeagueProfile
+}
+
 export interface PlayerProfile {
   id: number;
-  firstName: string;
-  lastName: string;
   fullName: string;
   email: string;
   sex: string;
@@ -27,6 +29,8 @@ export interface PlayerProfileDetails extends PlayerProfile {
 
 export interface LeaguePlayerScoreboard extends PlayerProfile {
   score: number;
+  gamesWon: number;
+  gamesLost: number;
   gamesPlayed: number;
 }
 

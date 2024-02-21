@@ -28,7 +28,6 @@ const NewLeaguePlayer: React.FC<Props> = ({ leagueId, className, players }) => {
   }, [playerData]);
 
   const handleAddPlayer = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
     console.log(`Adding player: ${selectedPlayerId}`);
     try {
       const response = await axios.post("/League/addPlayer", null, {
@@ -57,7 +56,7 @@ const NewLeaguePlayer: React.FC<Props> = ({ leagueId, className, players }) => {
           {playerInfo &&
             playerInfo.map(({ fullName, email, id }) => (
               <option key={id} value={id}>
-                {fullName} ({email})
+                {fullName}
               </option>
             ))}
         </select>

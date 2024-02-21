@@ -3,7 +3,6 @@ import { useParams, useNavigate } from "react-router";
 import LeagueScoreboard from "../../Components/LeagueScoreboard/LeagueScoreboard";
 import {
   GameProfile,
-  LeagueProfileDetails,
   PlayerProfile,
   LeaguePlayerScoreboard
 } from "../../squashpoint";
@@ -21,6 +20,16 @@ const scoreboardColumns: TableColumn<LeaguePlayerScoreboard>[] = [
   {
     name: "Name",
     selector: (row) => row.fullName,
+    sortable: true,
+  },
+  {
+    name: "Games won",
+    selector: (row) => row.gamesWon,
+    sortable: true,
+  },
+  {
+    name: "Games Lost",
+    selector: (row) => row.gamesLost,
     sortable: true,
   },
   {
@@ -56,18 +65,35 @@ const gamesColumns: TableColumn<GameProfile>[] = [
 const LeaguePage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [leagueData, setLeagueData] = useState<LeagueProfileDetails>();
+
   const [data, error, loading, fetchData] = useAxiosFetch({
     method: "GET",
     url: `/League/${id}`,
   });
 
+  const [playerData, setPlayerData] = useState<LeaguePlayerScoreboard[]>();
+  const [playerResponse, playerError, playerLoading, playerFetchData] = useAxiosFetch({
+    method: "GET",
+    url: `/League/${id}/player-list`,
+  });
+
+  const [gameData, setGameData] = useState<GameProfile[]>();
+  const [gameResponse, gameError, gameLoading, gameFetchData] = useAxiosFetch({
+    method: "GET",
+    url: `/League/${id}/league-games`,
+  });
+
   useEffect(() => {
-    if (data) {
-      setLeagueData(data);
+    if (data){
       console.log(data)
     }
-  }, [data]);
+    if (playerResponse) {
+      setPlayerData(playerResponse);
+    }
+    if (gameResponse) {
+      setGameData(gameResponse);
+    }
+  }, [playerResponse, gameResponse, data]);
 
   const handlePlayerClick = (row: PlayerProfile) => {
     navigate(`/player/${row.id}`);
@@ -83,8 +109,8 @@ const LeaguePage = () => {
         <LeagueScoreboard
           className="w-1/2 mx-2"
           title="Scoreboard"
-          loading={loading}
-          data={leagueData?.players.sort((a, b) => b.score - a.score)}
+          loading={playerLoading}
+          data={playerData?.sort((a, b) => b.score - a.score)}
           columns={scoreboardColumns}
           onRowClicked={handlePlayerClick}
         />
@@ -92,8 +118,8 @@ const LeaguePage = () => {
         <LeagueScoreboard
           className="w-1/2 mx-2"
           title="Games"
-          loading={loading}
-          data={leagueData?.games}
+          loading={gameLoading}
+          data={gameData}
           columns={gamesColumns}
           onRowClicked={handleGameClick}
         />
@@ -101,11 +127,11 @@ const LeaguePage = () => {
       <div className="flex">
         <NewLeagueGame
           className="mx-2 bg-blue-200 w-1/2"
-          players={leagueData?.players}
+          players={playerData}
           leagueId={parseInt(id || "0", 10)}
         />
         <NewLeaguePlayer
-          players={leagueData?.players}
+          players={playerData}
           className="mx-2 bg-red-200 w-1/2"
           leagueId={parseInt(id || "0", 10)}
         />

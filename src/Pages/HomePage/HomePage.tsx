@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { TableColumn } from "react-data-table-component";
 import NewPlayerForm from "../../Components/NewPlayerForm/NewPlayerForm";
 import { useAxiosFetch } from "../../Hooks/useAxiosFetch";
-import { LeagueProfile, PlayerProfile } from "../../squashpoint";
+import { GameProfile, LeagueGameProfile, LeagueProfile, PlayerProfile } from "../../squashpoint";
 import { useNavigate } from "react-router";
 import LeagueScoreboard from "../../Components/LeagueScoreboard/LeagueScoreboard";
+import UpcommingGames from "../../Components/UpcommingGames/UpcommingGames";
 
 const leaguesColumns: TableColumn<LeagueProfile>[] = [
   {
@@ -18,6 +19,34 @@ const playersColumns: TableColumn<PlayerProfile>[] = [
   {
     name: "Name",
     selector: (row) => row.fullName,
+    sortable: true,
+  },
+];
+
+const gamesColumns: TableColumn<LeagueGameProfile>[] = [
+  {
+    name: "League",
+    selector: (row) => row.league.name,
+    sortable: true,
+  },
+  {
+    name: "Player1",
+    selector: (row) => row.players[0].fullName,
+    sortable: true,
+  },
+  {
+    name: "Player2",
+    selector: (row) => row.players[1].fullName,
+    sortable: true,
+  },
+  {
+    name: "Date",
+    selector: (row) => row.date,
+    sortable: true,
+  },
+  {
+    name: "Status",
+    selector: (row) => row.status,
     sortable: true,
   },
 ];
@@ -38,6 +67,15 @@ const HomePage: React.FC = () => {
       url: "/Player/player-list",
     });
 
+    const [games, setGames] = useState<GameProfile[]>();
+    const [gamesData, gamesError, gamesLoading, gameFetchData] = useAxiosFetch({
+      method: "GET",
+      url: `/Game/game-list`, 
+      params : {
+        GameStatus: "Unfinished"
+      }
+    });
+
   useEffect(() => {
     if (leaguesData) {
       setLeagues(leaguesData);
@@ -45,7 +83,11 @@ const HomePage: React.FC = () => {
     if (playersData) {
       setPlayers(playersData);
     }
-  }, [leaguesData, playersData]);
+    if (gamesData) {
+      console.log(gamesData)
+      setGames(gamesData);
+    }
+  }, [leaguesData, playersData, gamesData]);
 
   const handleLeagueClick = (row: LeagueProfile) => {
     navigate(`/league/${row.id}`);
@@ -53,6 +95,9 @@ const HomePage: React.FC = () => {
 
   const handlePlayerClick = (row: PlayerProfile) => {
     navigate(`/player/${row.id}`);
+  };
+  const handleGameClick = (row: PlayerProfile) => {
+    navigate(`/game/${row.id}`);
   };
 
   return (
@@ -75,7 +120,17 @@ const HomePage: React.FC = () => {
           onRowClicked={handlePlayerClick}
         />
       </div>
-      <NewPlayerForm />
+      <div className="flex ">
+      <LeagueScoreboard
+          className="w-1/2 mx-2"
+          title="Upcomming league games"
+          columns={gamesColumns}
+          loading={gamesLoading}
+          data={games}
+          onRowClicked={handleGameClick}
+        />
+        <NewPlayerForm className="w-1/2 mx-2"/>
+      </div>
     </>
   );
 };

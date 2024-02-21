@@ -13,6 +13,7 @@ const NewLeagueGame: React.FC<Props> = ({
   players,
   className,
 }: Props): JSX.Element => {
+
   const [formData, setFormData] = useState<NewGameFormState>({
     leagueId: leagueId,
     player1Id: null,
@@ -43,7 +44,7 @@ const NewLeagueGame: React.FC<Props> = ({
     try {
       console.log(formData);
       const response = await axios.post(
-        "http://localhost:5110/api/Game",
+        "/Game",
         null,
         { params: formData }
       );
@@ -65,9 +66,9 @@ const NewLeagueGame: React.FC<Props> = ({
           value={formData.player1Id || ""}
         >
           {players &&
-            players.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.firstName} {p.lastName} ({p.email})
+            players.map(({id, fullName,email}) => (
+              <option key={id} value={id}>
+                {fullName} ({email})
               </option>
             ))}
         </select>
@@ -84,9 +85,9 @@ const NewLeagueGame: React.FC<Props> = ({
           value={formData.player2Id || ""}
         >
           {players &&
-            players.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.firstName} {p.lastName} ({p.email})
+            players.map(({id, fullName,email}) => (
+              <option key={id} value={id}>
+                {fullName} ({email})
               </option>
             ))}
         </select>
