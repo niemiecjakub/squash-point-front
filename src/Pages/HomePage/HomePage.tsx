@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { TableColumn } from "react-data-table-component";
-import NewPlayerForm from "../../Components/NewPlayerForm/NewPlayerForm";
 import { useAxiosFetch } from "../../Hooks/useAxiosFetch";
 import { GameProfile, LeagueGameProfile, LeagueProfile, PlayerProfile } from "../../squashpoint";
 import { useNavigate } from "react-router";
@@ -129,7 +128,6 @@ const HomePage: React.FC = () => {
           data={games}
           onRowClicked={handleGameClick}
         />
-        <NewPlayerForm className="w-1/2 mx-2"/>
       </div>
     </>
   );

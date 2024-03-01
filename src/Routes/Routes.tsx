@@ -4,6 +4,8 @@ import HomePage from "../Pages/HomePage/HomePage";
 import LeaguePage from "../Pages/LeaguePage/LeaguePage";
 import PlayerPage from "../Pages/PlayerPage/PlayerPage";
 import GamePage from "../Pages/GamePage/GamePage";
+import LoginPage from "../Pages/LoginPage/LoginPage";
+import RegisterPage from "../Pages/RegisterPage/RegisterPage";
 
 export const router = createBrowserRouter([
   {
@@ -11,6 +13,8 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       { path: "", element: <HomePage /> },
+      { path: "login", element: <LoginPage /> },
+      { path: "register", element: <RegisterPage /> },
       { path: "league/:id", element: <LeaguePage /> },
       { path: "player/:id", element: <PlayerPage /> },
       { path: "game/:id", element: <GamePage /> },

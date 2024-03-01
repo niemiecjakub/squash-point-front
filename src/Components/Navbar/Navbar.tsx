@@ -15,12 +15,16 @@ const Navbar = (props: Props) => {
         <button className="font-bold bg-slate-50 mx-2 px-4 py-2 rounded-xl">
           LEAGUES
         </button>
-        <button className="font-bold bg-slate-50 mx-2 px-4 py-2 rounded-xl">
-          REGISTER
-        </button>
+        <Link to="register">
+          <button className="font-bold bg-slate-50 mx-2 px-4 py-2 rounded-xl">
+            REGISTER
+          </button>
+        </Link>
+        <Link to="login">
         <button className="font-bold bg-slate-50 mx-2 px-4 py-2 rounded-xl">
           LOGIN
         </button>
+        </Link>
         <button className="font-bold bg-slate-50 mx-2 px-4 py-2 rounded-xl">
           ACCOUNT
         </button>
