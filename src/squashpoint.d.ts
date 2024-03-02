@@ -11,8 +11,8 @@ export interface GameProfile {
   players: PlayerProfile[];
 }
 
-export interface LeagueGameProfile extends GameProfile{
-  league: LeagueProfile
+export interface LeagueGameProfile extends GameProfile {
+  league: LeagueProfile;
 }
 
 export interface PlayerProfile {
@@ -48,22 +48,30 @@ export interface GameProfileDetails extends GameProfile {
 }
 
 export interface GameState {
-  setId : number,
-  player1Points: number,
-  player2Points: number
+  setId: number;
+  player1Points: number;
+  player2Points: number;
 }
 
-export interface SetDetails{
+export interface SetDetails {
   id: number;
-  winner: PlayerProfile| null;
+  winner: PlayerProfile | null;
   points: PointDetails[];
 }
 
-export interface PointDetails{
+export interface PointDetails {
   winner: PlayerProfile;
   pointType: string;
 }
 
+export interface RegisterFormState {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  repeatPassword: string;
+  sex: string;
+}
 
 export interface NewGameFormState {
   leagueId: number;

@@ -59,7 +59,7 @@ export const UserProvider = ({ children }: Props) => {
           localStorage.setItem("user", JSON.stringify(userObj));
           setToken(response?.data.token);
           setUser(userObj!);
-          toast.success("Login successfull");
+          toast.success("Account successfully created");
           navigate("/");
         }
       })
@@ -67,7 +67,6 @@ export const UserProvider = ({ children }: Props) => {
   };
 
   const loginUser = async (email: string, password: string) => {
-    console.log("1");
     await loginApi(email, password)
       .then((response) => {
         if (response) {
@@ -94,6 +93,7 @@ export const UserProvider = ({ children }: Props) => {
     localStorage.removeItem("user");
     setUser(null);
     setToken("");
+    toast.info("Logged out");
     navigate("/");
   };
 

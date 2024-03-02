@@ -1,10 +1,9 @@
 import React from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 
-
 export interface TableProps<T> {
   loading: boolean;
-  data: T[] | undefined;
+  data: T[] | null;
   columns: TableColumn<T>[];
   className?: string;
   title?: string;

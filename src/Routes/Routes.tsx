@@ -6,6 +6,7 @@ import PlayerPage from "../Pages/PlayerPage/PlayerPage";
 import GamePage from "../Pages/GamePage/GamePage";
 import LoginPage from "../Pages/LoginPage/LoginPage";
 import RegisterPage from "../Pages/RegisterPage/RegisterPage";
+import ProtectedRoute from "./ProtectedRoute";
 
 export const router = createBrowserRouter([
   {

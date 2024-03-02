@@ -2,9 +2,11 @@ import axios from "axios";
 import { handleError } from "../Helpers/ErrorHandler";
 import { UserProfileToken } from "../Models/User";
 
+const api = "http://localhost:5110/api/Account/";
+
 export const loginApi = async (email: string, password: string) => {
   try {
-    const response = await axios.post<UserProfileToken>("/Account/login", {
+    const response = await axios.post<UserProfileToken>(api + "login", {
       email,
       password,
     });
@@ -23,7 +25,7 @@ export const registerApi = async (
   sex: string
 ) => {
   try {
-    const response = await axios.post<UserProfileToken>("/Account/register", {
+    const response = await axios.post<UserProfileToken>(api + "register", {
       email,
       password,
       firstName,

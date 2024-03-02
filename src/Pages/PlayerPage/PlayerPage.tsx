@@ -5,9 +5,9 @@ import {
   PlayerProfileDetails,
 } from "../../squashpoint";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAxiosFetch } from "../../Hooks/useAxiosFetch";
-import LeagueScoreboard from "../../Components/Table/Table";
+import Table from "../../Components/Table/Table";
 import { TableColumn } from "react-data-table-component";
+import { playerGetByIdApi } from "../../Services/PlayerService";
 
 const leaguesColumns: TableColumn<LeagueProfile>[] = [
   {
@@ -44,17 +44,19 @@ const PlayerPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [playerInfo, setPlayerInfo] = useState<PlayerProfileDetails>();
-  const [playerData, error, loading] = useAxiosFetch({
-    method: "GET",
-    url: "/Player/" + id,
-  });
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (playerData) {
-      setPlayerInfo(playerData);
-      console.log(playerData);
-    }
-  }, [playerData]);
+    getPlayerInfo();
+  }, []);
+
+  const getPlayerInfo = () => {
+    setLoading(true);
+    playerGetByIdApi(id!).then((res) => {
+      setLoading(false);
+      setPlayerInfo(res?.data!);
+    });
+  };
 
   const handleLeagueClick = (row: LeagueProfile) => {
     navigate(`/league/${row.id}`);
@@ -66,18 +68,18 @@ const PlayerPage = () => {
 
   return (
     <div className="flex">
-      <LeagueScoreboard
+      <Table
         className="w-1/2 mx-2"
         title="Leagues"
-        data={playerInfo?.leagues}
+        data={playerInfo?.leagues!}
         loading={loading}
         onRowClicked={handleLeagueClick}
         columns={leaguesColumns}
       />
-      <LeagueScoreboard
+      <Table
         className="w-1/2 mx-2"
         title="Games"
-        data={playerInfo?.games}
+        data={playerInfo?.games!}
         loading={loading}
         onRowClicked={handleGameClick}
         columns={gamesColumns}

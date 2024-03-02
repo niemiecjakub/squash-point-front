@@ -6,10 +6,13 @@ import {
   PlayerProfile,
   LeaguePlayerScoreboard,
 } from "../../squashpoint";
-import { useAxiosFetch } from "../../Hooks/useAxiosFetch";
 import { TableColumn } from "react-data-table-component";
 import NewGame from "../../Components/NewGame/NewGame";
 import LeagueOptions from "../../Components/LeagueOptions/LeagueOptions";
+import {
+  leagueGamesGetApi,
+  leaguePlayersGetApi,
+} from "../../Services/LeagueService";
 
 const scoreboardColumns: TableColumn<LeaguePlayerScoreboard>[] = [
   {
@@ -65,36 +68,31 @@ const gamesColumns: TableColumn<GameProfile>[] = [
 const LeaguePage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-
-  const [data, error, loading, fetchData] = useAxiosFetch({
-    method: "GET",
-    url: `/League/${id}`,
-  });
-
-  const [playerData, setPlayerData] = useState<LeaguePlayerScoreboard[]>();
-  const [playerResponse, playerError, playerLoading, playerFetchData] =
-    useAxiosFetch({
-      method: "GET",
-      url: `/League/${id}/player-list`,
-    });
-
-  const [gameData, setGameData] = useState<GameProfile[]>();
-  const [gameResponse, gameError, gameLoading, gameFetchData] = useAxiosFetch({
-    method: "GET",
-    url: `/League/${id}/league-games`,
-  });
+  const [players, setPlayers] = useState<LeaguePlayerScoreboard[]>([]);
+  const [playersLoading, setPlayersLoading] = useState<boolean>(true);
+  const [games, setGames] = useState<GameProfile[]>([]);
+  const [gamesLoading, setGamesLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (data) {
-      console.log(data);
-    }
-    if (playerResponse) {
-      setPlayerData(playerResponse);
-    }
-    if (gameResponse) {
-      setGameData(gameResponse);
-    }
-  }, [playerResponse, gameResponse, data]);
+    getPlayers();
+    getGames();
+  }, []);
+
+  const getPlayers = () => {
+    setPlayersLoading(true);
+    leaguePlayersGetApi(id!).then((res) => {
+      setPlayersLoading(false);
+      setPlayers(res?.data!);
+    });
+  };
+
+  const getGames = () => {
+    setGamesLoading(true);
+    leagueGamesGetApi(id!).then((res) => {
+      setGamesLoading(false);
+      setGames(res?.data!);
+    });
+  };
 
   const handlePlayerClick = (row: PlayerProfile) => {
     navigate(`/player/${row.id}`);
@@ -110,8 +108,8 @@ const LeaguePage = () => {
         <Table
           className="w-1/2 mx-2"
           title="Scoreboard"
-          loading={playerLoading}
-          data={playerData?.sort((a, b) => b.score - a.score)}
+          loading={playersLoading}
+          data={players.sort((a, b) => b.score - a.score)}
           columns={scoreboardColumns}
           onRowClicked={handlePlayerClick}
         />
@@ -119,22 +117,22 @@ const LeaguePage = () => {
         <Table
           className="w-1/2 mx-2"
           title="Games"
-          loading={gameLoading}
-          data={gameData}
+          loading={gamesLoading}
+          data={games}
           columns={gamesColumns}
           onRowClicked={handleGameClick}
         />
       </div>
       <div className="flex">
-        <NewGame
+        {/* <NewGame
           className="mx-2 bg-blue-200 w-1/2"
-          players={playerData}
+          players={players}
           leagueId={parseInt(id || "0", 10)}
         />
         <LeagueOptions
           className="mx-2 bg-red-200 w-1/2"
           leagueId={parseInt(id || "0", 10)}
-        />
+        /> */}
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { TableColumn } from "react-data-table-component";
-import { useAxiosFetch } from "../../Hooks/useAxiosFetch";
 import {
   GameProfile,
   LeagueGameProfile,
@@ -10,6 +9,9 @@ import {
 import { useNavigate } from "react-router";
 import Table from "../../Components/Table/Table";
 import UpcommingGames from "../../Components/UpcommingGames/UpcommingGames";
+import { leaguesGetApi } from "../../Services/LeagueService";
+import { playersGetApi } from "../../Services/PlayerService";
+import { gamesGetApi } from "../../Services/GameService";
 
 const leaguesColumns: TableColumn<LeagueProfile>[] = [
   {
@@ -58,39 +60,42 @@ const gamesColumns: TableColumn<LeagueGameProfile>[] = [
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const [leagues, setLeagues] = useState<LeagueProfile[]>([]);
-  const [leaguesData, leaguesError, leaguesLoading, leagueFetchData] =
-    useAxiosFetch({
-      method: "GET",
-      url: "/League/league-list",
-    });
+  const [leaguesLoading, setLeaguesLoading] = useState<boolean>(true);
 
   const [players, setPlayers] = useState<PlayerProfile[]>([]);
-  const [playersData, playersError, playersLoading, playersFetchData] =
-    useAxiosFetch({
-      method: "GET",
-      url: "/Player/player-list",
-    });
+  const [playersLoading, setPlayersLoading] = useState<boolean>(true);
 
-  const [games, setGames] = useState<GameProfile[]>();
-  const [gamesData, gamesError, gamesLoading, gameFetchData] = useAxiosFetch({
-    method: "GET",
-    url: `/Game/game-list`,
-    params: {
-      GameStatus: "Unfinished",
-    },
-  });
+  const [games, setGames] = useState<GameProfile[]>([]);
+  const [gamesLoading, setGamesLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (leaguesData) {
-      setLeagues(leaguesData);
-    }
-    if (playersData) {
-      setPlayers(playersData);
-    }
-    if (gamesData) {
-      setGames(gamesData);
-    }
-  }, [leaguesData, playersData, gamesData]);
+    getLeagues();
+    getPlayers();
+    getGames();
+  }, []);
+
+  const getLeagues = () => {
+    setLeaguesLoading(true);
+    leaguesGetApi().then((res) => {
+      setLeaguesLoading(false);
+      setLeagues(res?.data!);
+    });
+  };
+  const getPlayers = () => {
+    setPlayersLoading(true);
+    playersGetApi().then((res) => {
+      setPlayersLoading(false);
+      setPlayers(res?.data!);
+    });
+  };
+  const getGames = () => {
+    setPlayersLoading(true);
+    gamesGetApi().then((res) => {
+      setPlayersLoading(false);
+      setGames(res?.data!);
+    });
+  };
+
 
   const handleLeagueClick = ({ id }: LeagueProfile) => {
     navigate(`/league/${id}`);
@@ -124,14 +129,14 @@ const HomePage: React.FC = () => {
         />
       </div>
       <div className="flex ">
-        {/* <Table
+        <Table
           className="w-1/2 mx-2"
           title="Upcomming league games"
           columns={gamesColumns}
           loading={gamesLoading}
           data={games}
           onRowClicked={handleGameClick}
-        /> */}
+        />
       </div>
     </>
   );

@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../../Context/useAuth";
 
 type Props = {};
 
 const Navbar = (props: Props) => {
+  const { isLoggedIn, user, logout } = useAuth();
   return (
     <div className="py-5 flex justify-between items-center">
       <Link to="/">
@@ -15,19 +17,38 @@ const Navbar = (props: Props) => {
         <button className="font-bold bg-slate-50 mx-2 px-4 py-2 rounded-xl">
           LEAGUES
         </button>
-        <Link to="register">
-          <button className="font-bold bg-slate-50 mx-2 px-4 py-2 rounded-xl">
-            REGISTER
-          </button>
-        </Link>
-        <Link to="login">
-        <button className="font-bold bg-slate-50 mx-2 px-4 py-2 rounded-xl">
-          LOGIN
-        </button>
-        </Link>
-        <button className="font-bold bg-slate-50 mx-2 px-4 py-2 rounded-xl">
-          ACCOUNT
-        </button>
+        {isLoggedIn() ? (
+          <>
+            <Link
+              to="/account"
+              className="font-bold bg-slate-50 mx-2 px-4 py-2 rounded-xl"
+            >
+              ACCOUNT
+            </Link>
+            <button
+              className="font-bold bg-slate-50 mx-2 px-4 py-2 rounded-xl"
+              onClick={logout}
+            >
+              LOGOUT
+            </button>
+          </>
+        ) : (
+          <>
+            <Link
+              to="/register"
+              className="font-bold bg-slate-50 mx-2 px-4 py-2 rounded-xl"
+            >
+              REGISTER
+            </Link>
+
+            <Link
+              to="/login"
+              className="font-bold bg-slate-50 mx-2 px-4 py-2 rounded-xl"
+            >
+              LOGIN
+            </Link>
+          </>
+        )}
       </div>
     </div>
   );
