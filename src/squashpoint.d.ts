@@ -81,7 +81,6 @@ export interface LoginFormState {
 
 export interface NewGameFormState {
   leagueId: number;
-  player1Id: number | null;
   player2Id: number | null;
   year: number;
   month: number;

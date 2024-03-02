@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
-import LeagueScoreboard from "../../Components/LeagueScoreboard/LeagueScoreboard";
+import Table from "../../Components/Table/Table";
 import {
   GameProfile,
   PlayerProfile,
-  LeaguePlayerScoreboard
+  LeaguePlayerScoreboard,
 } from "../../squashpoint";
 import { useAxiosFetch } from "../../Hooks/useAxiosFetch";
 import { TableColumn } from "react-data-table-component";
-import NewLeagueGame from "../../Components/NewLeagueGame/NewLeagueGame";
-import NewLeaguePlayer from "../../Components/NewLeaguePlayer/NewLeaguePlayer";
+import NewGame from "../../Components/NewGame/NewGame";
+import LeagueOptions from "../../Components/LeagueOptions/LeagueOptions";
 
 const scoreboardColumns: TableColumn<LeaguePlayerScoreboard>[] = [
   {
@@ -72,10 +72,11 @@ const LeaguePage = () => {
   });
 
   const [playerData, setPlayerData] = useState<LeaguePlayerScoreboard[]>();
-  const [playerResponse, playerError, playerLoading, playerFetchData] = useAxiosFetch({
-    method: "GET",
-    url: `/League/${id}/player-list`,
-  });
+  const [playerResponse, playerError, playerLoading, playerFetchData] =
+    useAxiosFetch({
+      method: "GET",
+      url: `/League/${id}/player-list`,
+    });
 
   const [gameData, setGameData] = useState<GameProfile[]>();
   const [gameResponse, gameError, gameLoading, gameFetchData] = useAxiosFetch({
@@ -84,8 +85,8 @@ const LeaguePage = () => {
   });
 
   useEffect(() => {
-    if (data){
-      console.log(data)
+    if (data) {
+      console.log(data);
     }
     if (playerResponse) {
       setPlayerData(playerResponse);
@@ -106,7 +107,7 @@ const LeaguePage = () => {
   return (
     <div className="flex flex-col">
       <div className="flex">
-        <LeagueScoreboard
+        <Table
           className="w-1/2 mx-2"
           title="Scoreboard"
           loading={playerLoading}
@@ -115,7 +116,7 @@ const LeaguePage = () => {
           onRowClicked={handlePlayerClick}
         />
 
-        <LeagueScoreboard
+        <Table
           className="w-1/2 mx-2"
           title="Games"
           loading={gameLoading}
@@ -125,13 +126,12 @@ const LeaguePage = () => {
         />
       </div>
       <div className="flex">
-        <NewLeagueGame
+        <NewGame
           className="mx-2 bg-blue-200 w-1/2"
           players={playerData}
           leagueId={parseInt(id || "0", 10)}
         />
-        <NewLeaguePlayer
-          players={playerData}
+        <LeagueOptions
           className="mx-2 bg-red-200 w-1/2"
           leagueId={parseInt(id || "0", 10)}
         />

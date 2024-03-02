@@ -3,7 +3,7 @@ import { TableColumn } from "react-data-table-component";
 import { useAxiosFetch } from "../../Hooks/useAxiosFetch";
 import { GameProfile, LeagueGameProfile, LeagueProfile, PlayerProfile } from "../../squashpoint";
 import { useNavigate } from "react-router";
-import LeagueScoreboard from "../../Components/LeagueScoreboard/LeagueScoreboard";
+import Table from "../../Components/Table/Table";
 import UpcommingGames from "../../Components/UpcommingGames/UpcommingGames";
 
 const leaguesColumns: TableColumn<LeagueProfile>[] = [
@@ -102,7 +102,7 @@ const HomePage: React.FC = () => {
   return (
     <>
       <div className="flex">
-        <LeagueScoreboard
+        <Table
           className="w-1/2 mx-2"
           title="Leagues"
           columns={leaguesColumns}
@@ -110,7 +110,7 @@ const HomePage: React.FC = () => {
           data={leagues}
           onRowClicked={handleLeagueClick}
         />
-        <LeagueScoreboard
+        <Table
           className="w-1/2 mx-2"
           title="Players"
           columns={playersColumns}
@@ -120,14 +120,14 @@ const HomePage: React.FC = () => {
         />
       </div>
       <div className="flex ">
-      <LeagueScoreboard
+      {/* <Table
           className="w-1/2 mx-2"
           title="Upcomming league games"
           columns={gamesColumns}
           loading={gamesLoading}
           data={games}
           onRowClicked={handleGameClick}
-        />
+        /> */}
       </div>
     </>
   );

@@ -8,15 +8,13 @@ interface Props {
   className?: string;
 }
 
-const NewLeagueGame: React.FC<Props> = ({
+const NewGame: React.FC<Props> = ({
   leagueId,
   players,
   className,
 }: Props): JSX.Element => {
-
   const [formData, setFormData] = useState<NewGameFormState>({
     leagueId: leagueId,
-    player1Id: null,
     player2Id: null,
     year: new Date().getFullYear(),
     month: new Date().getMonth(),
@@ -29,25 +27,14 @@ const NewLeagueGame: React.FC<Props> = ({
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-
-    if (name === "player1Id" || name === "player2Id") {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: parseInt(value, 10) || null,
-      }));
-    } else {
-      setFormData((prevData) => ({ ...prevData, [name]: parseInt(value, 10) }));
-    }
+    setFormData((prevData) => ({ ...prevData, [name]: parseInt(value, 10) }));
   };
 
   const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(formData);
     try {
-      console.log(formData);
-      const response = await axios.post(
-        "/Game",
-        null,
-        { params: formData }
-      );
+      const response = await axios.post("/Game", null, { params: formData });
       console.log(response);
     } catch (error) {
       console.error(error);
@@ -57,26 +44,7 @@ const NewLeagueGame: React.FC<Props> = ({
   return (
     <form onSubmit={handleSubmit} className={`${className}`}>
       <div>
-        <label htmlFor="player1">Player1</label>
-        <br />
-        <select
-          id="player1"
-          name="player1Id"
-          onChange={handleChange}
-          value={formData.player1Id || ""}
-        >
-          {players &&
-            players.map(({id, fullName,email}) => (
-              <option key={id} value={id}>
-                {fullName} ({email})
-              </option>
-            ))}
-        </select>
-        <br />
-      </div>
-
-      <div>
-        <label htmlFor="player2">Player2</label>
+        <label htmlFor="player2">Opponent</label>
         <br />
         <select
           id="player2"
@@ -85,7 +53,7 @@ const NewLeagueGame: React.FC<Props> = ({
           value={formData.player2Id || ""}
         >
           {players &&
-            players.map(({id, fullName,email}) => (
+            players.map(({ id, fullName, email }) => (
               <option key={id} value={id}>
                 {fullName} ({email})
               </option>
@@ -161,4 +129,4 @@ const NewLeagueGame: React.FC<Props> = ({
   );
 };
 
-export default NewLeagueGame;
+export default NewGame;

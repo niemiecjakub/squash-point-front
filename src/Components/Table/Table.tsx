@@ -1,7 +1,8 @@
 import React from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 
-interface LeagueScoreboardProps<T> {
+
+export interface TableProps<T> {
   loading: boolean;
   data: T[] | undefined;
   columns: TableColumn<T>[];
@@ -10,7 +11,7 @@ interface LeagueScoreboardProps<T> {
   onRowClicked?: any;
 }
 
-const LeagueScoreboard: React.FC<LeagueScoreboardProps<any>> = ({
+const Table: React.FC<TableProps<any>> = ({
   loading,
   className,
   title,
@@ -34,4 +35,4 @@ const LeagueScoreboard: React.FC<LeagueScoreboardProps<any>> = ({
   );
 };
 
-export default LeagueScoreboard;
+export default Table;

@@ -6,7 +6,7 @@ import {
 } from "../../squashpoint";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAxiosFetch } from "../../Hooks/useAxiosFetch";
-import LeagueScoreboard from "../../Components/LeagueScoreboard/LeagueScoreboard";
+import LeagueScoreboard from "../../Components/Table/Table";
 import { TableColumn } from "react-data-table-component";
 
 const leaguesColumns: TableColumn<LeagueProfile>[] = [
