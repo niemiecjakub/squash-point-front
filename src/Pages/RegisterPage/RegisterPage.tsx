@@ -1,63 +1,68 @@
-import axios from "axios";
-import React, { useState } from "react";
-import { RegisterFormState } from "../../squashpoint";
+import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useAuth } from "../../Context/useAuth";
+import { useForm } from "react-hook-form";
 
-type Props = {};
+type RegisterFormInputs = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  repeatPassword: string;
+  sex: string;
+};
 
-const RegisterPage = (props: Props) => {
-  const [formData, setFormData] = useState<RegisterFormState>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    sex: "",
-    password: "",
-    repeatPassword: "",
-  });
+const validation = Yup.object().shape({
+  firstName: Yup.string().required("First name is required"),
+  lastName: Yup.string().required("Last name is required"),
+  email: Yup.string().required("Email is required"),
+  password: Yup.string().required("Password is required"),
+  repeatPassword: Yup.string().required("Repeat password is required"),
+  sex: Yup.string().required("Sex is required"),
+});
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
+const RegisterPage = () => {
+  const { registerUser } = useAuth();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterFormInputs>({ resolver: yupResolver(validation) });
 
-  const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post("/Account/register", formData);
-      console.log(response);
-    } catch (error) {
-      console.error(error);
-    }
+  const handleRegister = ({
+    email,
+    password,
+    firstName,
+    lastName,
+    sex,
+  }: RegisterFormInputs) => {
+    registerUser(email, password, firstName, lastName, sex);
   };
 
   return (
     <div className="flex flex-col items-center">
-      <form onSubmit={handleSubmit} className="bg-red-400">
+      <form onSubmit={handleSubmit(handleRegister)} className="bg-red-400">
         <div>
           <label htmlFor="firstName">First Name</label>
           <br />
-          <input
-            name="firstName"
-            onChange={handleChange}
-            value={formData.firstName}
-          />
+          <input {...register("firstName")} placeholder="First name" />
+          {errors.firstName && <p>{errors.firstName.message}</p>}
           <br />
         </div>
 
         <div>
           <label htmlFor="lastName">Last Name</label>
           <br />
-          <input
-            name="lastName"
-            onChange={handleChange}
-            value={formData.lastName}
-          />
+          <input {...register("lastName")} placeholder="Last name" />
+          {errors.lastName && <p>{errors.lastName.message}</p>}
           <br />
         </div>
 
         <div>
           <label htmlFor="email">Email</label>
           <br />
-          <input name="email" onChange={handleChange} value={formData.email} />
+          <input {...register("email")} placeholder="Email" />
+          {errors.email && <p>{errors.email.message}</p>}
           <br />
         </div>
 
@@ -65,11 +70,11 @@ const RegisterPage = (props: Props) => {
           <label htmlFor="password">Password</label>
           <br />
           <input
-            name="password"
+            {...register("password")}
             type="password"
-            onChange={handleChange}
-            value={formData.password}
+            placeholder="•••••••••"
           />
+          {errors.password && <p>{errors.password.message}</p>}
           <br />
         </div>
 
@@ -77,37 +82,26 @@ const RegisterPage = (props: Props) => {
           <label htmlFor="repeatPassword">Password</label>
           <br />
           <input
-            name="repeatPassword"
+            {...register("repeatPassword")}
             type="password"
-            onChange={handleChange}
-            value={formData.repeatPassword}
+            placeholder="•••••••••"
           />
+          {errors.repeatPassword && <p>{errors.repeatPassword.message}</p>}
           <br />
         </div>
 
         <div>
           <label htmlFor="sex">Sex</label>
           <label>
-            <input
-              name="sex"
-              type="radio"
-              value="male"
-              checked={formData.sex === "male"}
-              onChange={handleChange}
-            />
+            <input {...register("sex")} type="radio" value="male" />
             Male
           </label>
 
           <label>
-            <input
-              name="sex"
-              type="radio"
-              value="female"
-              checked={formData.sex === "female"}
-              onChange={handleChange}
-            />
+            <input {...register("sex")} type="radio" value="female" />
             Female
           </label>
+          {errors.sex && <p>{errors.sex.message}</p>}
         </div>
 
         <button className="bg-green-200 p-2">Register</button>

@@ -65,20 +65,6 @@ export interface PointDetails{
 }
 
 
-export interface RegisterFormState {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  repeatPassword: string;
-  sex: string;
-}
-
-export interface LoginFormState {
-  email: string;
-  password: string;
-}
-
 export interface NewGameFormState {
   leagueId: number;
   player2Id: number | null;

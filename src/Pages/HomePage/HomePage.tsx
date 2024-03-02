@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { TableColumn } from "react-data-table-component";
 import { useAxiosFetch } from "../../Hooks/useAxiosFetch";
-import { GameProfile, LeagueGameProfile, LeagueProfile, PlayerProfile } from "../../squashpoint";
+import {
+  GameProfile,
+  LeagueGameProfile,
+  LeagueProfile,
+  PlayerProfile,
+} from "../../squashpoint";
 import { useNavigate } from "react-router";
 import Table from "../../Components/Table/Table";
 import UpcommingGames from "../../Components/UpcommingGames/UpcommingGames";
@@ -66,14 +71,14 @@ const HomePage: React.FC = () => {
       url: "/Player/player-list",
     });
 
-    const [games, setGames] = useState<GameProfile[]>();
-    const [gamesData, gamesError, gamesLoading, gameFetchData] = useAxiosFetch({
-      method: "GET",
-      url: `/Game/game-list`, 
-      params : {
-        GameStatus: "Unfinished"
-      }
-    });
+  const [games, setGames] = useState<GameProfile[]>();
+  const [gamesData, gamesError, gamesLoading, gameFetchData] = useAxiosFetch({
+    method: "GET",
+    url: `/Game/game-list`,
+    params: {
+      GameStatus: "Unfinished",
+    },
+  });
 
   useEffect(() => {
     if (leaguesData) {
@@ -83,20 +88,19 @@ const HomePage: React.FC = () => {
       setPlayers(playersData);
     }
     if (gamesData) {
-      console.log(gamesData)
       setGames(gamesData);
     }
   }, [leaguesData, playersData, gamesData]);
 
-  const handleLeagueClick = (row: LeagueProfile) => {
-    navigate(`/league/${row.id}`);
+  const handleLeagueClick = ({ id }: LeagueProfile) => {
+    navigate(`/league/${id}`);
   };
 
-  const handlePlayerClick = (row: PlayerProfile) => {
-    navigate(`/player/${row.id}`);
+  const handlePlayerClick = ({ id }: PlayerProfile) => {
+    navigate(`/player/${id}`);
   };
-  const handleGameClick = (row: PlayerProfile) => {
-    navigate(`/game/${row.id}`);
+  const handleGameClick = ({ id }: PlayerProfile) => {
+    navigate(`/game/${id}`);
   };
 
   return (
@@ -120,7 +124,7 @@ const HomePage: React.FC = () => {
         />
       </div>
       <div className="flex ">
-      {/* <Table
+        {/* <Table
           className="w-1/2 mx-2"
           title="Upcomming league games"
           columns={gamesColumns}

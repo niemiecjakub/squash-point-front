@@ -1,54 +1,55 @@
-import React, { useState } from "react";
-import { LoginFormState } from "../../squashpoint";
-import axios from "axios";
+import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useAuth } from "../../Context/useAuth";
+import { useForm } from "react-hook-form";
 
+type LoginFormInputs = {
+  email: string;
+  password: string;
+};
 
-const LoginPage = () : JSX.Element  => {
-  const [formData, setFormData] = useState<LoginFormState>({
-    email: "",
-    password: "",
-  });
+const validation = Yup.object().shape({
+  email: Yup.string().required("Email is required"),
+  password: Yup.string().required("Password is required"),
+});
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+const LoginPage = (): JSX.Element => {
+  const { loginUser } = useAuth();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormInputs>({ resolver: yupResolver(validation) });
+
+  const handleLogin = ({ email, password }: LoginFormInputs) => {
+    loginUser(email, password);
   };
 
-  const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      const {data: {token}} = await axios.post("/Account/login", formData);
-      console.log(token);
-    } catch (error) {
-      console.error(error);
-      console.error("something wrpong");
-    }
-  };
-  
   return (
     <div className="flex flex-col items-center">
-      <form onSubmit={handleSubmit} className="bg-red-400">
-      <div>
-        <label htmlFor="email">Email</label>
-        <br />
-        <input
-          name="email"
-          onChange={handleChange}
-          value={formData.email}
-        />
-        <br />
-      </div>
+      <form onSubmit={handleSubmit(handleLogin)} className="bg-red-400">
+        <div>
+          <label htmlFor="email">Email</label>
+          <br />
+          <input placeholder="email" {...register("email")} />
+          {errors.email && <p>{errors.email.message}</p>}
+          <br />
+        </div>
 
-      <div>
-        <label htmlFor="password">Password</label>
-        <br />
-        <input name="password" type="password" onChange={handleChange} value={formData.password} />
-        <br />
-      </div>
+        <div>
+          <label htmlFor="password">Password</label>
+          <br />
+          <input
+            type="password"
+            placeholder="•••••••••"
+            {...register("password")}
+          />
+          {errors.password && <p>{errors.password.message}</p>}
+          <br />
+        </div>
 
-      <button className="bg-green-200 p-2">Login</button>
-    </form>
+        <button className="bg-green-200 p-2">Login</button>
+      </form>
     </div>
   );
 };

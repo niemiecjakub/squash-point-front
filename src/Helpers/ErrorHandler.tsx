@@ -19,6 +19,8 @@ export const handleError = (error: any) => {
       window.history.pushState({}, "LoginPage", "/login");
     } else if (err) {
       toast.warning(err?.data);
+    } else {
+      toast.warning("Unknown error");
     }
   }
 };
