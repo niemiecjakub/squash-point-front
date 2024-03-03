@@ -43,7 +43,14 @@ const gamesColumns: TableColumn<GameProfile>[] = [
 const PlayerPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [playerInfo, setPlayerInfo] = useState<PlayerProfileDetails>();
+  const [playerInfo, setPlayerInfo] = useState<PlayerProfileDetails>({
+    id: "",
+    fullName: "",
+    email: "",
+    sex: "",
+    leagues: [],
+    games: [],
+  });
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -67,24 +74,27 @@ const PlayerPage = () => {
   };
 
   return (
-    <div className="flex">
-      <Table
-        className="w-1/2 mx-2"
-        title="Leagues"
-        data={playerInfo?.leagues!}
-        loading={loading}
-        onRowClicked={handleLeagueClick}
-        columns={leaguesColumns}
-      />
-      <Table
-        className="w-1/2 mx-2"
-        title="Games"
-        data={playerInfo?.games!}
-        loading={loading}
-        onRowClicked={handleGameClick}
-        columns={gamesColumns}
-      />
-    </div>
+    <>
+      <h1 className="text-2xl my-4">League: {playerInfo.fullName}</h1>
+      <div className="flex">
+        <Table
+          className="w-1/2 mx-2"
+          title="Leagues"
+          data={playerInfo.leagues}
+          loading={loading}
+          onRowClicked={handleLeagueClick}
+          columns={leaguesColumns}
+        />
+        <Table
+          className="w-1/2 mx-2"
+          title="Games"
+          data={playerInfo.games}
+          loading={loading}
+          onRowClicked={handleGameClick}
+          columns={gamesColumns}
+        />
+      </div>
+    </>
   );
 };
 

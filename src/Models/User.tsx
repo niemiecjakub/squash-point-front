@@ -1,8 +1,10 @@
-export type UserProfileToken = {
+export interface UserProfile {
+  id: string;
+  fullName: string;
   email: string;
-  token: string;
-}
+};
 
-export type UserProfile = {
-  email: string;
-}
+
+export interface UserProfileToken extends UserProfile  {
+  token: string;
+};

@@ -21,3 +21,51 @@ export const gameGetByIdApi = async (id: string) => {
     handleError(error);
   }
 };
+
+export const updateGameApi = async (
+  gameId: string,
+  status: string,
+  winnerId: string | null
+) => {
+  try {
+    const data = await axios.put(api + gameId, {
+      status,
+      winnerId,
+    });
+    return data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+export const createGameApi = async (gameId: string) => {
+  try {
+    const data = await axios.post(api, null, {
+      params: {
+        GameId: gameId,
+      },
+    });
+    return data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+export const createNewGameApi = async (
+  leagueId: string,
+  opponentId: string,
+  date: Date
+) => {
+  try {
+    const data = await axios.post(api, null, {
+      params: {
+        leagueId,
+        opponentId,
+        date,
+      },
+    });
+    return data;
+  } catch (error) {
+    handleError(error);
+  }
+};

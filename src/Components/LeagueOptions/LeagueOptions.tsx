@@ -1,47 +1,29 @@
-import React from "react";
-import axios from "axios";
+import React, { MouseEventHandler } from "react";
 
 interface Props {
-  leagueId: number;
+  isLoggedIn: boolean;
   className?: string;
+  leagueJoin: MouseEventHandler<HTMLButtonElement>;
+  leagueLeave: MouseEventHandler<HTMLButtonElement>;
 }
 
-const LeagueOptions: React.FC<Props> = ({ leagueId, className }) => {
-  const handleLeagueJoin = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    try {
-      const response = await axios.post("/League/join", null, {
-        params: {
-          leagueId,
-        },
-      });
-      console.log(response);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleLeagueLeave = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    try {
-      const response = await axios.post("/League/leave", null, {
-        params: {
-          leagueId,
-        },
-      });
-      console.log(response);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  return (
+const LeagueOptions: React.FC<Props> = ({
+  isLoggedIn,
+  className,
+  leagueJoin,
+  leagueLeave,
+}) => {
+  return isLoggedIn ? (
     <>
-      <button className="bg-green-300 p-2" onClick={handleLeagueJoin}>
+      <button className="bg-green-300 p-2" onClick={leagueJoin}>
         Join league
       </button>
-      <button className="bg-red-300 p-2" onClick={handleLeagueLeave}>
+      <button className="bg-red-300 p-2" onClick={leagueLeave}>
         Leave league
       </button>
     </>
+  ) : (
+    <div className="bg-red-100">please log in</div>
   );
 };
 

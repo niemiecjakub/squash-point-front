@@ -13,9 +13,9 @@ export const playersGetApi = async () => {
   }
 };
 
-export const playerGetByIdApi = async (id: string) => {
+export const playerGetByIdApi = async (playerId: string) => {
   try {
-    const data = await axios.get<PlayerProfileDetails>(api + id);
+    const data = await axios.get<PlayerProfileDetails>(api + playerId);
     return data;
   } catch (error) {
     handleError(error);

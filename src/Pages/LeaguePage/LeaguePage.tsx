@@ -5,14 +5,17 @@ import {
   GameProfile,
   PlayerProfile,
   LeaguePlayerScoreboard,
+  LeagueProfileDetails,
 } from "../../squashpoint";
 import { TableColumn } from "react-data-table-component";
 import NewGame from "../../Components/NewGame/NewGame";
 import LeagueOptions from "../../Components/LeagueOptions/LeagueOptions";
 import {
-  leagueGamesGetApi,
-  leaguePlayersGetApi,
+  leagueGetByIdApi,
+  leagueJoinApi,
+  leagueLeaveApi,
 } from "../../Services/LeagueService";
+import { useAuth } from "../../Context/useAuth";
 
 const scoreboardColumns: TableColumn<LeaguePlayerScoreboard>[] = [
   {
@@ -68,29 +71,24 @@ const gamesColumns: TableColumn<GameProfile>[] = [
 const LeaguePage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [players, setPlayers] = useState<LeaguePlayerScoreboard[]>([]);
-  const [playersLoading, setPlayersLoading] = useState<boolean>(true);
-  const [games, setGames] = useState<GameProfile[]>([]);
-  const [gamesLoading, setGamesLoading] = useState<boolean>(true);
+  const { isLoggedIn } = useAuth();
+  const [leagueInfo, setLeagueInfo] = useState<LeagueProfileDetails>({
+    id: "",
+    name: "",
+    players: [],
+    games: [],
+  });
+  const [leagueLoading, setLeagueLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    getPlayers();
-    getGames();
+    getLeagueInfo();
   }, []);
 
-  const getPlayers = () => {
-    setPlayersLoading(true);
-    leaguePlayersGetApi(id!).then((res) => {
-      setPlayersLoading(false);
-      setPlayers(res?.data!);
-    });
-  };
-
-  const getGames = () => {
-    setGamesLoading(true);
-    leagueGamesGetApi(id!).then((res) => {
-      setGamesLoading(false);
-      setGames(res?.data!);
+  const getLeagueInfo = () => {
+    setLeagueLoading(true);
+    leagueGetByIdApi(id!).then((res) => {
+      setLeagueLoading(false);
+      setLeagueInfo(res?.data!);
     });
   };
 
@@ -102,14 +100,23 @@ const LeaguePage = () => {
     navigate(`/game/${row.id}`);
   };
 
+  const handleLeagueJoin = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    leagueJoinApi(id!).then(() => getLeagueInfo());
+  };
+
+  const handleLeaguLeave = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    leagueLeaveApi(id!).then(() => getLeagueInfo());
+  };
+
   return (
     <div className="flex flex-col">
+      <h1 className="text-2xl my-4">League: {leagueInfo.name}</h1>
       <div className="flex">
         <Table
           className="w-1/2 mx-2"
           title="Scoreboard"
-          loading={playersLoading}
-          data={players.sort((a, b) => b.score - a.score)}
+          loading={leagueLoading}
+          data={leagueInfo.players.sort((a, b) => b.score - a.score)}
           columns={scoreboardColumns}
           onRowClicked={handlePlayerClick}
         />
@@ -117,22 +124,24 @@ const LeaguePage = () => {
         <Table
           className="w-1/2 mx-2"
           title="Games"
-          loading={gamesLoading}
-          data={games}
+          loading={leagueLoading}
+          data={leagueInfo.games}
           columns={gamesColumns}
           onRowClicked={handleGameClick}
         />
       </div>
       <div className="flex">
-        {/* <NewGame
+        <NewGame
           className="mx-2 bg-blue-200 w-1/2"
-          players={players}
-          leagueId={parseInt(id || "0", 10)}
+          players={leagueInfo.players}
+          leagueId={id!}
         />
         <LeagueOptions
+          isLoggedIn={isLoggedIn()}
           className="mx-2 bg-red-200 w-1/2"
-          leagueId={parseInt(id || "0", 10)}
-        /> */}
+          leagueLeave={handleLeaguLeave}
+          leagueJoin={handleLeagueJoin}
+        />
       </div>
     </div>
   );
