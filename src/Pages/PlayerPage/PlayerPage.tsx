@@ -75,7 +75,7 @@ const PlayerPage = () => {
 
   return (
     <>
-      <h1 className="text-2xl my-4">League: {playerInfo.fullName}</h1>
+      <h1 className="text-2xl my-4">Player: {playerInfo.fullName}</h1>
       <div className="flex">
         <Table
           className="w-1/2 mx-2"

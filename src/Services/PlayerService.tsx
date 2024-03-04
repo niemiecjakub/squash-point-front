@@ -1,6 +1,10 @@
 import axios from "axios";
 import { handleError } from "../Helpers/ErrorHandler";
-import { PlayerProfile, PlayerProfileDetails } from "../squashpoint";
+import {
+  LeagueProfile,
+  PlayerProfile,
+  PlayerProfileDetails,
+} from "../squashpoint";
 
 const api = "http://localhost:5110/api/Player/";
 
@@ -16,6 +20,15 @@ export const playersGetApi = async () => {
 export const playerGetByIdApi = async (playerId: string) => {
   try {
     const data = await axios.get<PlayerProfileDetails>(api + playerId);
+    return data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+export const playerLeaguesGetByIdApi = async (playerId: string) => {
+  try {
+    const data = await axios.get<LeagueProfile[]>(api + `${playerId}/leagues`);
     return data;
   } catch (error) {
     handleError(error);

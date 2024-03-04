@@ -38,20 +38,7 @@ export const updateGameApi = async (
   }
 };
 
-export const createGameApi = async (gameId: string) => {
-  try {
-    const data = await axios.post(api, null, {
-      params: {
-        GameId: gameId,
-      },
-    });
-    return data;
-  } catch (error) {
-    handleError(error);
-  }
-};
-
-export const createNewGameApi = async (
+export const createGameApi = async (
   leagueId: string,
   opponentId: string,
   date: Date

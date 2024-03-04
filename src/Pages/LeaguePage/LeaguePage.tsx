@@ -16,6 +16,7 @@ import {
   leagueLeaveApi,
 } from "../../Services/LeagueService";
 import { useAuth } from "../../Context/useAuth";
+import { playerLeaguesGetByIdApi } from "../../Services/PlayerService";
 
 const scoreboardColumns: TableColumn<LeaguePlayerScoreboard>[] = [
   {
@@ -71,7 +72,7 @@ const gamesColumns: TableColumn<GameProfile>[] = [
 const LeaguePage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, user } = useAuth();
   const [leagueInfo, setLeagueInfo] = useState<LeagueProfileDetails>({
     id: "",
     name: "",
@@ -87,9 +88,9 @@ const LeaguePage = () => {
   const getLeagueInfo = () => {
     setLeagueLoading(true);
     leagueGetByIdApi(id!).then((res) => {
-      setLeagueLoading(false);
       setLeagueInfo(res?.data!);
     });
+    setLeagueLoading(false);
   };
 
   const handlePlayerClick = (row: PlayerProfile) => {
@@ -137,6 +138,9 @@ const LeaguePage = () => {
           leagueId={id!}
         />
         <LeagueOptions
+          isUserJoined={
+            leagueInfo.players.filter((p) => p.id == user?.id).length == 0
+          }
           isLoggedIn={isLoggedIn()}
           className="mx-2 bg-red-200 w-1/2"
           leagueLeave={handleLeaguLeave}

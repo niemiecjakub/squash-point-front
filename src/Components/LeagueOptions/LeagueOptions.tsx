@@ -1,6 +1,7 @@
 import React, { MouseEventHandler } from "react";
 
 interface Props {
+  isUserJoined: boolean;
   isLoggedIn: boolean;
   className?: string;
   leagueJoin: MouseEventHandler<HTMLButtonElement>;
@@ -8,6 +9,7 @@ interface Props {
 }
 
 const LeagueOptions: React.FC<Props> = ({
+  isUserJoined,
   isLoggedIn,
   className,
   leagueJoin,
@@ -15,12 +17,15 @@ const LeagueOptions: React.FC<Props> = ({
 }) => {
   return isLoggedIn ? (
     <>
-      <button className="bg-green-300 p-2" onClick={leagueJoin}>
-        Join league
-      </button>
-      <button className="bg-red-300 p-2" onClick={leagueLeave}>
-        Leave league
-      </button>
+      {isUserJoined ? (
+        <button className="bg-green-300 p-2" onClick={leagueJoin}>
+          Join league
+        </button>
+      ) : (
+        <button className="bg-red-300 p-2" onClick={leagueLeave}>
+          Leave league
+        </button>
+      )}
     </>
   ) : (
     <div className="bg-red-100">please log in</div>

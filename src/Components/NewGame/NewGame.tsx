@@ -6,7 +6,7 @@ import {
   PlayerProfile,
 } from "../../squashpoint";
 import DatePicker from "react-datepicker";
-import { createNewGameApi } from "../../Services/GameService";
+import { createGameApi } from "../../Services/GameService";
 import { useAuth } from "../../Context/useAuth";
 
 interface Props {
@@ -29,7 +29,7 @@ const NewGame: React.FC<Props> = ({
 
   const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
     const { leagueId, opponentId, date } = formData;
-    createNewGameApi(leagueId, opponentId, date);
+    createGameApi(leagueId, opponentId, date);
   };
 
   return (

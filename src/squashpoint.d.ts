@@ -7,7 +7,7 @@ export interface GameProfile {
   id: string;
   status: string;
   date: string;
-  winner: string | null;
+  winner?: string | null;
   players: PlayerProfile[];
 }
 
@@ -41,10 +41,10 @@ export interface LeagueProfileDetails extends LeagueProfile {
 
 export interface GameProfileDetails extends GameProfile {
   sets: SetDetails[];
-  player1Sets: number;
-  player2Sets: number;
-  player1Points: number;
-  player2Points: number;
+  player1Sets?: number;
+  player2Sets?: number;
+  player1Points?: number;
+  player2Points?: number;
 }
 
 export interface GameState {
@@ -76,5 +76,5 @@ export interface RegisterFormState {
 export interface NewGameFormState {
   leagueId: string;
   opponentId: string;
-  date: Date ;
+  date: Date;
 }
