@@ -1,14 +1,10 @@
 import { useEffect, useState } from "react";
-import {
-  GameProfileDetails,
-  GameState,
-  PlayerProfile,
-} from "../../squashpoint";
+import { GameProfileDetails, PlayerProfile } from "../../squashpoint";
 import { useNavigate, useParams } from "react-router";
-import { gameGetByIdApi, updateGameApi } from "../../Services/GameService";
-import { createSetApi } from "../../Services/SetService";
+import { gameGetByIdApi } from "../../Services/GameService";
 import GameInProgress from "../../Components/GameInProgress/GameInProgress";
 import GameOptions from "../../Components/GameOptions/GameOptions";
+import GameFinished from "../../Components/GameFinished/GameFinished";
 
 const GamePage = () => {
   const navigate = useNavigate();
@@ -26,9 +22,9 @@ const GamePage = () => {
     getGameInfo();
   }, []);
 
-  const getGameInfo = () => {
+  const getGameInfo = async () => {
     setLoading(true);
-    gameGetByIdApi(id!).then((res) => {
+    await gameGetByIdApi(id!).then((res) => {
       setLoading(false);
       setGameInfo(res?.data!);
     });
@@ -44,23 +40,27 @@ const GamePage = () => {
         <p>loading</p>
       ) : (
         <>
-          <h1>{gameInfo?.status}</h1>
           <h1 className="font-bold">
             {gameInfo?.players[0].fullName} vs {gameInfo?.players[1].fullName}
           </h1>
           <h1>date: {gameInfo?.date}</h1>
-          {gameInfo?.status == "Started" ? (
-            <GameInProgress
-              gameInfo={gameInfo}
-              gameId={id!}
-              getGameInfo={getGameInfo}
-            />
-          ) : (
+
+          {gameInfo?.status == "Unfinished" && (
             <GameOptions
               gameInfo={gameInfo}
               gameId={id!}
               getGameInfo={getGameInfo}
             />
+          )}
+          {gameInfo?.status == "Started" && (
+            <GameInProgress
+              gameInfo={gameInfo}
+              gameId={id!}
+              getGameInfo={getGameInfo}
+            />
+          )}
+          {gameInfo?.status == "Finished" && (
+            <GameFinished gameInfo={gameInfo} />
           )}
         </>
       )}

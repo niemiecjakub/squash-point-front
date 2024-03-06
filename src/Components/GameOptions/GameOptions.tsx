@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { GameProfileDetails } from "../../squashpoint";
+import { GameProfileDetails, PlayerProfile } from "../../squashpoint";
 import { updateGameApi } from "../../Services/GameService";
-import { createSetApi } from "../../Services/SetService";
-import { all } from "axios";
+import { createSetApi, updateSetApi } from "../../Services/SetService";
+import { createPointApi } from "../../Services/PointService";
 
 interface SetScore {
   player1: number;
@@ -20,16 +20,36 @@ interface Props {
   getGameInfo: () => void;
 }
 
+const getGameWinner = (
+  gameScore: GameScore,
+  players: PlayerProfile[]
+): PlayerProfile | null => {
+  const player1SetsWon = gameScore.sets.filter(
+    (set) => set.winner === players[0].id
+  ).length;
+  const player2SetsWon = gameScore.sets.filter(
+    (set) => set.winner === players[1].id
+  ).length;
+
+  if (player1SetsWon >= 3) {
+    return players[0];
+  } else if (player2SetsWon >= 3) {
+    return players[1];
+  } else {
+    return null;
+  }
+};
+
 const isValidSquashSetScore = ({ player1, player2 }: SetScore): boolean => {
   const minScore = 11;
   const pointDifference = Math.abs(player1 - player2);
 
-  if (player1 == minScore || player2 == minScore) {
-    return pointDifference >= 2;
+  if (player1 > minScore || player2 > minScore) {
+    return pointDifference == 2;
   }
 
-  if (player1 >= minScore || player2 >= minScore) {
-    return pointDifference == 2;
+  if (player1 == minScore || player2 == minScore) {
+    return pointDifference >= 2;
   }
 
   return false;
@@ -70,8 +90,8 @@ const GameOptions: React.FC<Props> = ({ gameInfo, gameId, getGameInfo }) => {
         return;
       }
       player1 > player2
-        ? setSetWinner(gameInfo.players[0].fullName, setIndex)
-        : setSetWinner(gameInfo.players[1].fullName, setIndex);
+        ? setSetWinner(gameInfo.players[0].id, setIndex)
+        : setSetWinner(gameInfo.players[1].id, setIndex);
     });
   };
 
@@ -92,6 +112,29 @@ const GameOptions: React.FC<Props> = ({ gameInfo, gameId, getGameInfo }) => {
     updateGameApi(gameId!, "Started", null)
       .then(() => createSetApi(gameId!))
       .then(() => getGameInfo());
+  };
+
+  const handleGameEnd = async () => {
+    const gameWinner = getGameWinner(gameScore, gameInfo.players);
+    if (gameWinner) {
+      await gameScore.sets
+        .filter((set) => set.winner != "")
+        .forEach(({ player1, player2, winner }) => {
+          createSetApi(gameId)
+            .then((res) => {
+              const setId = res?.data.id;
+              updateSetApi(setId, winner);
+              [...Array(player1)].forEach(async (p) =>
+                createPointApi(setId, gameInfo.players[0].id, "N")
+              );
+              [...Array(player2)].forEach(async (p) =>
+                createPointApi(setId, gameInfo.players[1].id, "N")
+              );
+            })
+            .then(() => updateGameApi(gameId, "Finished", gameWinner.id))
+            .then(() => getGameInfo());
+        });
+    }
   };
 
   return (
@@ -131,7 +174,8 @@ const GameOptions: React.FC<Props> = ({ gameInfo, gameId, getGameInfo }) => {
               />
               ){gameInfo.players[1].fullName}
               <br />
-              winner : {set.winner}
+              winner :{" "}
+              {gameInfo.players.filter((p) => set.winner == p.id)[0]?.fullName}
             </div>
           ))}
           <button
@@ -142,17 +186,21 @@ const GameOptions: React.FC<Props> = ({ gameInfo, gameId, getGameInfo }) => {
           </button>
           {gameInfo.players[0].fullName}
           {
-            gameScore.sets.filter(
-              (s) => s.winner == gameInfo.players[0].fullName
-            ).length
+            gameScore.sets.filter((s) => s.winner == gameInfo.players[0].id)
+              .length
           }
           :{" "}
           {
-            gameScore.sets.filter(
-              (s) => s.winner == gameInfo.players[1].fullName
-            ).length
+            gameScore.sets.filter((s) => s.winner == gameInfo.players[1].id)
+              .length
           }
           {gameInfo.players[1].fullName}
+          <button
+            className="w-full bg-blue-300 py-4 my-2"
+            onClick={handleGameEnd}
+          >
+            end game
+          </button>
         </div>
       )}
     </>
