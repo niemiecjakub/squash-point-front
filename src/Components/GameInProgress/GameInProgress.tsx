@@ -30,10 +30,12 @@ const GameInProgress: React.FC<Props> = ({ gameInfo, gameId, getGameInfo }) => {
       if (player2Points == 11 || player1Points == 11) {
         const winnerId = player1Points == 11 ? players[0].id : players[1].id;
         newSet(winnerId, currentSet.id);
+        return;
       }
       if (player1Sets == 3 || player2Sets == 3) {
         const winnerId = player1Sets == 3 ? players[0].id : players[1].id;
-        handleGameWinner(winnerId);
+        gameFinished(winnerId);
+        return;
       }
       setCurrentSetData({
         setId: currentSet.id,
@@ -41,26 +43,26 @@ const GameInProgress: React.FC<Props> = ({ gameInfo, gameId, getGameInfo }) => {
         player2Points,
       });
     }
-  }, [gameInfo]);
+  }, []);
 
-  const handlePointScored = async (
+  const pointScored = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     winnerId: string,
     pointType: string
   ) => {
-    createPointApi(currentSetData?.setId!, winnerId, pointType).then(() =>
+    await createPointApi(currentSetData?.setId!, winnerId, pointType).then(() =>
       getGameInfo()
     );
   };
 
   const newSet = async (winnerId: string, setId: string) => {
-    updateSetApi(setId, winnerId);
-    createSetApi(gameId);
-    getGameInfo();
+    updateSetApi(setId, winnerId)
+      .then(() => createSetApi(gameId))
+      .then(() => getGameInfo());
   };
 
-  const handleGameWinner = async (playerId: string) => {
-    updateGameApi(gameId, "Finished", playerId).then(() => getGameInfo());
+  const gameFinished = async (playerId: string) => {
+    await updateGameApi(gameId, "Finished", playerId).then(() => getGameInfo());
   };
 
   return (
@@ -77,7 +79,7 @@ const GameInProgress: React.FC<Props> = ({ gameInfo, gameId, getGameInfo }) => {
         {gameInfo?.players.map(({ fullName, id }) => (
           <button
             key={id}
-            onClick={(e) => handlePointScored(e, id, "N")}
+            onClick={(e) => pointScored(e, id, "N")}
             className="bg-green-300 p-3 w-1/2 mx-1"
           >
             {fullName} +1 N

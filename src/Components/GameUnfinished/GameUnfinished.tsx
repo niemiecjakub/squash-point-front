@@ -55,7 +55,7 @@ const isValidSquashSetScore = ({ player1, player2 }: SetScore): boolean => {
   return false;
 };
 
-const GameOptions: React.FC<Props> = ({ gameInfo, gameId, getGameInfo }) => {
+const GameUnfinished: React.FC<Props> = ({ gameInfo, gameId, getGameInfo }) => {
   const [isGameEditOpen, setIsGameEditOpen] = useState<boolean>(false);
   const [gameScore, setGameScore] = useState<GameScore>({
     sets: [
@@ -207,4 +207,4 @@ const GameOptions: React.FC<Props> = ({ gameInfo, gameId, getGameInfo }) => {
   );
 };
 
-export default GameOptions;
+export default GameUnfinished;

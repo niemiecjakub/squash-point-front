@@ -3,7 +3,7 @@ import { GameProfileDetails, PlayerProfile } from "../../squashpoint";
 import { useNavigate, useParams } from "react-router";
 import { gameGetByIdApi } from "../../Services/GameService";
 import GameInProgress from "../../Components/GameInProgress/GameInProgress";
-import GameOptions from "../../Components/GameOptions/GameOptions";
+import GameUnfinished from "../../Components/GameUnfinished/GameUnfinished";
 import GameFinished from "../../Components/GameFinished/GameFinished";
 
 const GamePage = () => {
@@ -46,7 +46,7 @@ const GamePage = () => {
           <h1>date: {gameInfo?.date}</h1>
 
           {gameInfo?.status == "Unfinished" && (
-            <GameOptions
+            <GameUnfinished
               gameInfo={gameInfo}
               gameId={id!}
               getGameInfo={getGameInfo}
