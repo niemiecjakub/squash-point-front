@@ -30,10 +30,6 @@ const GamePage = () => {
     });
   };
 
-  const handlePlayerClick = (row: PlayerProfile) => {
-    navigate(`/player/${row.id}`);
-  };
-
   return (
     <div className="flex flex-col items-center">
       {loading ? (
@@ -60,7 +56,7 @@ const GamePage = () => {
             />
           )}
           {gameInfo?.status == "Finished" && (
-            <GameFinished gameInfo={gameInfo} />
+            <GameFinished gameId={id!} players={gameInfo.players} />
           )}
         </>
       )}

@@ -78,3 +78,24 @@ export interface NewGameFormState {
   opponentId: string;
   date: Date;
 }
+
+export interface GameSummary {
+  id: string;
+  league: string;
+  winner: string;
+  status: string;
+  sets: SetSummary[];
+}
+
+export interface SetSummary {
+  id: number;
+  createdAt: string;
+  winner: string;
+  player1: PlayerSetPoint;
+  player2: PlayerSetPoint;
+}
+
+export interface PlayerSetPoint {
+  fullName: string;
+  points: number;
+}
