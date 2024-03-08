@@ -9,6 +9,9 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
 } from "recharts";
 import { gameSummaryGetByIdApi } from "../../Services/GameService";
 
@@ -25,12 +28,26 @@ const getSetsSummary = (sets: SetSummary[]) => {
   }));
 };
 
+const COLORS = ["#0088FE", "#00C49F"];
+
+const getPieChartSummary = (sets: SetSummary[]) => {
+  const summary = sets.reduce((accumulator, { player1, player2 }) => {
+    accumulator[player1.fullName] =
+      (accumulator[player1.fullName] || 0) + player1.points;
+    accumulator[player2.fullName] =
+      (accumulator[player2.fullName] || 0) + player2.points;
+    return accumulator;
+  }, {} as Record<string, number>);
+
+  return Object.entries(summary).map(([name, value]) => ({ name, value }));
+};
+
 const GameFinished: React.FC<Props> = ({ gameId, players }: Props) => {
   const [gameInfo, setGameInfo] = useState<GameSummary>();
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    getGameInfo().then((g) => console.log(g));
+    getGameInfo();
   }, []);
 
   const getGameInfo = async () => {
@@ -77,9 +94,29 @@ const GameFinished: React.FC<Props> = ({ gameId, players }: Props) => {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey={`${players[0].fullName}`} fill="#8884d8" />
-                <Bar dataKey={`${players[1].fullName}`} fill="#82ca9d" />
+                {players.map((player, i) => (
+                  <Bar dataKey={`${player.fullName}`} fill={`${COLORS[i]}`} />
+                ))}
               </BarChart>
+            </ResponsiveContainer>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart width={400} height={400}>
+                <Legend />
+                <Pie
+                  data={getPieChartSummary(gameInfo?.sets!)}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                  label
+                >
+                  {getPieChartSummary(gameInfo?.sets!).map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                  ))}
+                </Pie>
+              </PieChart>
             </ResponsiveContainer>
           </div>
         </>
