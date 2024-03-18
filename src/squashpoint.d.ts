@@ -101,12 +101,11 @@ export interface PlayerSetPoint {
 }
 
 export interface PlayerGamesOverview {
-  games: StatisticsOverview;
-  sets: StatisticsOverview;
-  points: StatisticsOverview;
+  data: StatisticsOverview[];
 }
 
 export interface StatisticsOverview {
+  name: string,
   played: number;
   won: number;
   lost: number;

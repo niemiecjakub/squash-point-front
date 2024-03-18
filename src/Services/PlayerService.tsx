@@ -5,6 +5,7 @@ import {
   PlayerGamesOverview,
   PlayerProfile,
   PlayerProfileDetails,
+  StatisticsOverview,
 } from "../squashpoint";
 
 const api = "http://localhost:5110/api/Player/";
@@ -38,10 +39,11 @@ export const playerLeaguesGetByIdApi = async (playerId: string) => {
 
 export const playerGamesOverviewGetByIdApi = async (playerId: string) => {
   try {
-    const data = await axios.get<PlayerGamesOverview>(api + `${playerId}/games/overview`);
+    const data = await axios.get<StatisticsOverview[]>(
+      api + `${playerId}/games/overview`
+    );
     return data;
   } catch (error) {
     handleError(error);
   }
 };
-
