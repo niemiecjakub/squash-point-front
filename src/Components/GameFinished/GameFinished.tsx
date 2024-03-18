@@ -22,7 +22,7 @@ interface Props {
 
 const getSetsSummary = (sets: SetSummary[]) => {
   return sets.map(({ player1, player2 }, i) => ({
-    setNumber: i,
+    setNumber: i + 1,
     [player1.fullName]: player1.points,
     [player2.fullName]: player2.points,
   }));
@@ -76,7 +76,7 @@ const GameFinished: React.FC<Props> = ({ gameId, players }: Props) => {
               ))}
             </div>
           </div>
-          <div className="flex h-56 w-full">
+          <div className="flex h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 width={500}
@@ -108,7 +108,6 @@ const GameFinished: React.FC<Props> = ({ gameId, players }: Props) => {
                   cy="50%"
                   labelLine={false}
                   outerRadius={80}
-                  fill="#8884d8"
                   dataKey="value"
                   label
                 >

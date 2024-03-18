@@ -2,6 +2,7 @@ import axios from "axios";
 import { handleError } from "../Helpers/ErrorHandler";
 import {
   LeagueProfile,
+  PlayerGamesOverview,
   PlayerProfile,
   PlayerProfileDetails,
 } from "../squashpoint";
@@ -34,3 +35,13 @@ export const playerLeaguesGetByIdApi = async (playerId: string) => {
     handleError(error);
   }
 };
+
+export const playerGamesOverviewGetByIdApi = async (playerId: string) => {
+  try {
+    const data = await axios.get<PlayerGamesOverview>(api + `${playerId}/games/overview`);
+    return data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+

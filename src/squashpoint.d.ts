@@ -99,3 +99,15 @@ export interface PlayerSetPoint {
   fullName: string;
   points: number;
 }
+
+export interface PlayerGamesOverview {
+  games: StatisticsOverview;
+  sets: StatisticsOverview;
+  points: StatisticsOverview;
+}
+
+export interface StatisticsOverview {
+  played: number;
+  won: number;
+  lost: number;
+}
