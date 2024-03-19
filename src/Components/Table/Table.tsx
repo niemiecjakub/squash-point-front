@@ -1,5 +1,6 @@
 import React from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
+import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 
 export interface TableProps<T> {
   loading: boolean;
@@ -26,7 +27,7 @@ const Table: React.FC<TableProps<any>> = ({
           columns={columns}
           data={data}
           progressPending={loading}
-          progressComponent={<p>loading:P</p>}
+          progressComponent={<LoadingSpinner />}
           onRowClicked={onRowClicked}
         />
       )}

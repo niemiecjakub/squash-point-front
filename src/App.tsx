@@ -9,11 +9,11 @@ function App() {
     <UserProvider>
       <div className="bg-slate-400 min-h-screen">
         <div className="w-screen bg-red-400">
-          <div className="w-5/6 m-auto">
+          <div className="w-4/6 m-auto">
             <Navbar />
           </div>
         </div>
-        <div className="w-5/6 mx-auto mt-5 h-full">
+        <div className="w-4/6 mx-auto mt-5 h-full">
           <Outlet />
         </div>
         <ToastContainer />

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { playerGamesOverviewGetByIdApi } from "../../Services/PlayerService";
 import { StatisticsOverview } from "../../squashpoint";
 import PlayerStatisticsOverview from "../PlayerStatisticsOverview/PlayerStatisticsOverview";
+import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
 
@@ -36,14 +37,20 @@ const PlayerStatisticsOverviewList = ({ playerId }: Props) => {
 
   return (
     <div className="flex h-80 w-full">
-      {playerGamesOverview &&
-        playerGamesOverview.map((stats) => (
-          <PlayerStatisticsOverview
-            name={stats.name}
-            data={getOverviewData(stats)}
-            colors={COLORS}
-          />
-        ))}
+      {playerGamesOverviewLoadig ? (
+        <LoadingSpinner />
+      ) : (
+        <>
+          {playerGamesOverview &&
+            playerGamesOverview.map((stats) => (
+              <PlayerStatisticsOverview
+                name={stats.name}
+                data={getOverviewData(stats)}
+                colors={COLORS}
+              />
+            ))}
+        </>
+      )}
     </div>
   );
 };
