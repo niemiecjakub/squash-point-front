@@ -1,12 +1,13 @@
 import axios from "axios";
 import { handleError } from "../Helpers/ErrorHandler";
-import { UserProfileToken } from "../Models/User";
+import { UserProfileToken, UserSocialProfile } from "../Models/User";
 
-const api = "http://localhost:5110/api/Account/";
+const accountApi = "http://localhost:5110/api/Account/";
+const playerApi = "http://localhost:5110/api/Player/";
 
 export const loginApi = async (email: string, password: string) => {
   try {
-    const response = await axios.post<UserProfileToken>(api + "login", {
+    const response = await axios.post<UserProfileToken>(accountApi + "login", {
       email,
       password,
     });
@@ -25,7 +26,7 @@ export const registerApi = async (
   sex: string
 ) => {
   try {
-    const response = await axios.post<UserProfileToken>(api + "register", {
+    const response = await axios.post<UserProfileToken>(accountApi + "register", {
       email,
       password,
       firstName,
@@ -37,3 +38,12 @@ export const registerApi = async (
     handleError(error);
   }
 };
+
+export const getUserSocialDataApi = async (playerId : string) => {
+    try{
+        const response = await axios.get<UserSocialProfile>(playerApi + `${playerId}/social`)
+        return response
+    } catch(error) {
+        handleError(error)
+    }
+}

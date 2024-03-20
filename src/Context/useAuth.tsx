@@ -1,15 +1,14 @@
 import { createContext, useEffect, useState } from "react";
-import { UserProfile } from "../Models/User";
+import { UserProfile, UserSocialProfile } from "../Models/User";
 import { useNavigate } from "react-router";
-import { loginApi, registerApi } from "../Services/AuthService";
+import { getUserSocialDataApi, loginApi, registerApi } from "../Services/AuthService";
 import { toast } from "react-toastify";
 import React from "react";
 import axios from "axios";
-import { LeagueProfile } from "../squashpoint";
-import { playerLeaguesGetByIdApi } from "../Services/PlayerService";
 
 type UserContextType = {
   user: UserProfile | null;
+  socialData: UserSocialProfile | null;
   token: string | null;
   registerUser: (
     email: string,
@@ -21,6 +20,7 @@ type UserContextType = {
   loginUser: (email: string, password: string) => void;
   logout: () => void;
   isLoggedIn: () => boolean;
+  getUserSocialData: (playerId: string) => void;
 };
 
 type Props = { children: React.ReactNode };
@@ -31,6 +31,7 @@ export const UserProvider = ({ children }: Props) => {
   const navigate = useNavigate();
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<UserProfile | null>(null);
+  const [socialData, setSocialData] = useState<UserSocialProfile | null>(null);
   const [isReady, setIsReady] = useState<boolean>(false);
 
   useEffect(() => {
@@ -62,16 +63,29 @@ export const UserProvider = ({ children }: Props) => {
           };
           localStorage.setItem("user", JSON.stringify(userObj));
           setToken(response?.data.token);
-          setUser(userObj!);
           toast.success("Account successfully created");
-          navigate("/");
+          navigate("/login");
         }
       })
       .catch((e) => toast.warning("Server error occured"));
   };
 
+  const getUserSocialData = async (userId: string) => {
+    await getUserSocialDataApi(userId)
+        .then((response) => {
+            if (response) {
+                const userSocialObj = {
+                    following: response.data.following,
+                    followers: response.data.followers,
+                  };
+                setSocialData(userSocialObj)
+            }
+        })
+        .catch((e) => toast.warning("Server error occured"));
+  }
+
   const loginUser = async (email: string, password: string) => {
-    await loginApi(email, password)
+    loginApi(email, password)
       .then((response) => {
         if (response) {
           localStorage.setItem("token", response?.data.token);
@@ -80,6 +94,7 @@ export const UserProvider = ({ children }: Props) => {
             id: response.data.id,
             fullName: response.data.fullName,
           };
+          getUserSocialData(response.data.id)
           localStorage.setItem("user", JSON.stringify(userObj));
           setToken(response?.data.token);
           setUser(userObj!);
@@ -88,6 +103,8 @@ export const UserProvider = ({ children }: Props) => {
         }
       })
       .catch((e) => toast.warning("Server error occured"));
+
+
   };
 
   const isLoggedIn = () => {
@@ -103,15 +120,18 @@ export const UserProvider = ({ children }: Props) => {
     navigate("/");
   };
 
+
   return (
     <UserContext.Provider
       value={{
         user,
         token,
+        socialData,
         loginUser,
         registerUser,
         isLoggedIn,
         logout,
+        getUserSocialData
       }}
     >
       {isReady ? children : null}

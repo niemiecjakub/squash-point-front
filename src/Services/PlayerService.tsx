@@ -50,10 +50,21 @@ export const followPlayerApi = async (playerId: string) => {
     try {
         const data = await axios.post(api + `follow`, null, {
             params: {
-                playerId
-            }
+                playerId,
+            },
         });
         return data;
+    } catch (error) {
+        handleError(error);
+    }
+};
+
+export const unfollowPlayerApi = async (playerId: string) => {
+    try {
+        const response = await axios.delete(api + `unfollow`, {
+            params: { playerId },
+        });
+        return response;
     } catch (error) {
         handleError(error);
     }
