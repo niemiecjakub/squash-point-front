@@ -6,23 +6,24 @@ import { playerGetByIdApi } from "../../Services/PlayerService";
 import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
 import Table from "../../Components/Table/Table";
 import { gamesColumns, leaguesColumns } from "../../Helpers/TableColumns";
+import PlayerInfo from "../../Components/PlayerInfo/PlayerInfo";
 
 const PlayerPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [playerInfo, setPlayerInfo] = useState<PlayerProfileDetails>();
-    const [playerInfoLoading, setPlayerInfoLoading] = useState<boolean>(true);
+    const [playerData, setplayerData] = useState<PlayerProfileDetails>();
+    const [playerDataLoading, setplayerDataLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        getPlayerInfo();
+        getplayerData();
     }, []);
 
-    const getPlayerInfo = () => {
-        setPlayerInfoLoading(true);
+    const getplayerData = () => {
+        setplayerDataLoading(true);
         playerGetByIdApi(id!).then((res) => {
-            setPlayerInfo(res?.data!);
+            setplayerData(res?.data!);
         });
-        setPlayerInfoLoading(false);
+        setplayerDataLoading(false);
     };
 
     const handleLeagueClick = (row: LeagueProfile): void => {
@@ -35,19 +36,19 @@ const PlayerPage = () => {
 
     return (
         <>
-            {playerInfoLoading ? (
+            {playerDataLoading ? (
                 <LoadingSpinner />
             ) : (
                 <>
-                    {playerInfo && (
+                    {playerData && (
                         <>
-                            <h1 className="text-xl py-4 mx-2">{playerInfo.fullName}</h1>
+                            <PlayerInfo data={playerData} />
                             <div className="flex w-full">
                                 <div className="flex-col w-full px-2">
                                     <Table
                                         title="Leagues"
-                                        data={playerInfo.leagues}
-                                        loading={playerInfoLoading}
+                                        data={playerData.leagues}
+                                        loading={playerDataLoading}
                                         onRowClicked={handleLeagueClick}
                                         columns={leaguesColumns}
                                     />
@@ -55,8 +56,8 @@ const PlayerPage = () => {
                                 <div className="flex-col w-full px-2">
                                     <Table
                                         title="Games"
-                                        data={playerInfo.games}
-                                        loading={playerInfoLoading}
+                                        data={playerData.games}
+                                        loading={playerDataLoading}
                                         onRowClicked={handleGameClick}
                                         columns={gamesColumns}
                                     />
@@ -66,7 +67,9 @@ const PlayerPage = () => {
                     )}
                 </>
             )}
-            <PlayerStatisticsOverviewList playerId={id!} />
+            <div className="w-full">
+                <PlayerStatisticsOverviewList playerId={id!} />
+            </div>
         </>
     );
 };

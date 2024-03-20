@@ -25,6 +25,8 @@ export interface PlayerProfile {
 export interface PlayerProfileDetails extends PlayerProfile {
     leagues: LeagueProfile[];
     games: GameProfile[];
+    following: number;
+    followers: number;
 }
 
 export interface LeaguePlayerScoreboard extends PlayerProfile {

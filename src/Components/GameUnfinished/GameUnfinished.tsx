@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { GameProfileDetails, PlayerProfile } from "../../squashpoint";
-import { updateGameApi } from "../../Services/GameService";
+import { deleteGameApi, updateGameApi } from "../../Services/GameService";
 import { createSetApi, updateSetApi } from "../../Services/SetService";
 import { createPointApi } from "../../Services/PointService";
+import { useNavigate } from "react-router";
 
 interface SetScore {
     player1: number;
@@ -49,6 +50,7 @@ const isValidSquashSetScore = ({ player1, player2 }: SetScore): boolean => {
 };
 
 const GameUnfinished: React.FC<Props> = ({ gameInfo, gameId, getGameInfo }) => {
+    const navigate = useNavigate();
     const [isGameEditOpen, setIsGameEditOpen] = useState<boolean>(false);
     const [gameScore, setGameScore] = useState<GameScore>({
         sets: [
@@ -124,6 +126,10 @@ const GameUnfinished: React.FC<Props> = ({ gameInfo, gameId, getGameInfo }) => {
         }
     };
 
+    const handleDeleteGame = () => {
+        deleteGameApi(gameId!).then(() => navigate(-1));
+    };
+
     return (
         <>
             <div className="bg-green-200 p-4 w-full">
@@ -134,6 +140,11 @@ const GameUnfinished: React.FC<Props> = ({ gameInfo, gameId, getGameInfo }) => {
             <div className="bg-yellow-200 p-4 w-full">
                 <button className="w-full" onClick={() => setIsGameEditOpen((o) => !o)}>
                     Enter score
+                </button>
+            </div>
+            <div className="bg-red-200 p-4 w-full">
+                <button className="w-full" onClick={handleDeleteGame}>
+                    Delete game
                 </button>
             </div>
             {isGameEditOpen && (

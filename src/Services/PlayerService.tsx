@@ -45,3 +45,16 @@ export const playerGamesOverviewGetByIdApi = async (playerId: string) => {
         handleError(error);
     }
 };
+
+export const followPlayerApi = async (playerId: string) => {
+    try {
+        const data = await axios.post(api + `follow`, null, {
+            params: {
+                playerId
+            }
+        });
+        return data;
+    } catch (error) {
+        handleError(error);
+    }
+};

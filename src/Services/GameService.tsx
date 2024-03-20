@@ -71,3 +71,12 @@ export const createGameApi = async (leagueId: string, opponentId: string, date: 
         handleError(error);
     }
 };
+
+export const deleteGameApi = async (gameId: string) => {
+    try {
+        const data = await axios.delete(api + gameId);
+        return data;
+    } catch (error) {
+        handleError(error);
+    }
+};
