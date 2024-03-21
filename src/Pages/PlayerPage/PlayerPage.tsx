@@ -65,14 +65,6 @@ const PlayerPage = () => {
         toast.warning(`You are no longer following ${playerData!.fullName}`);
     };
 
-    const handleFollowersClick = () => {
-        // navigate()
-    };
-
-    const handleFollowingClick = () => {
-        // navigate()
-    };
-
     return (
         <>
             {playerDataLoading ? (
@@ -87,8 +79,6 @@ const PlayerPage = () => {
                                 isFollowing={isFollowing}
                                 handlePlayerFollow={handlePlayerFollow}
                                 handlePlayerUnfollow={handlePlayerUnfollow}
-                                handleFollowersClick={handleFollowersClick}
-                                handleFollowingClick={handleFollowingClick}
                             />
                             <div className="flex w-full">
                                 <div className="flex-col w-full px-2">

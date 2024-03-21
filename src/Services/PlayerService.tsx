@@ -12,8 +12,8 @@ const api = "http://localhost:5110/api/Player/";
 
 export const playersGetApi = async () => {
     try {
-        const data = await axios.get<PlayerProfile[]>(api + "all");
-        return data;
+        const response = await axios.get<PlayerProfile[]>(api + "all");
+        return response;
     } catch (error) {
         handleError(error);
     }
@@ -21,8 +21,8 @@ export const playersGetApi = async () => {
 
 export const playerGetByIdApi = async (playerId: string) => {
     try {
-        const data = await axios.get<PlayerProfileDetails>(api + playerId);
-        return data;
+        const response = await axios.get<PlayerProfileDetails>(api + playerId);
+        return response;
     } catch (error) {
         handleError(error);
     }
@@ -30,8 +30,8 @@ export const playerGetByIdApi = async (playerId: string) => {
 
 export const playerLeaguesGetByIdApi = async (playerId: string) => {
     try {
-        const data = await axios.get<LeagueProfile[]>(api + `${playerId}/leagues`);
-        return data;
+        const response = await axios.get<LeagueProfile[]>(api + `${playerId}/leagues`);
+        return response;
     } catch (error) {
         handleError(error);
     }
@@ -39,8 +39,8 @@ export const playerLeaguesGetByIdApi = async (playerId: string) => {
 
 export const playerGamesOverviewGetByIdApi = async (playerId: string) => {
     try {
-        const data = await axios.get<StatisticsOverview[]>(api + `${playerId}/games/overview`);
-        return data;
+        const response = await axios.get<StatisticsOverview[]>(api + `${playerId}/games/overview`);
+        return response;
     } catch (error) {
         handleError(error);
     }
@@ -48,12 +48,12 @@ export const playerGamesOverviewGetByIdApi = async (playerId: string) => {
 
 export const followPlayerApi = async (playerId: string) => {
     try {
-        const data = await axios.post(api + `follow`, null, {
+        const response = await axios.post(api + `follow`, null, {
             params: {
                 playerId,
             },
         });
-        return data;
+        return response;
     } catch (error) {
         handleError(error);
     }
@@ -64,6 +64,24 @@ export const unfollowPlayerApi = async (playerId: string) => {
         const response = await axios.delete(api + `unfollow`, {
             params: { playerId },
         });
+        return response;
+    } catch (error) {
+        handleError(error);
+    }
+};
+
+export const playerFollowersGetApi = async (playerId: string) => {
+    try {
+        const response = await axios.get<PlayerProfile[]>(api + `${playerId}/followers`);
+        return response;
+    } catch (error) {
+        handleError(error);
+    }
+};
+
+export const playerFollowingGetApi = async (playerId: string) => {
+    try {
+        const response = await axios.get<PlayerProfile[]>(api + `${playerId}/followees`);
         return response;
     } catch (error) {
         handleError(error);

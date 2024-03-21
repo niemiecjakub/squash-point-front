@@ -17,7 +17,7 @@ export const router = createBrowserRouter([
       { path: "login", element: <LoginPage /> },
       { path: "register", element: <RegisterPage /> },
       { path: "league/:id", element: <LeaguePage /> },
-      { path: "player/:id", element: <PlayerPage /> },
+      { path: "player/:id", element: <PlayerPage />},
       { path: "game/:id", element: <GamePage /> },
     ],
   },
