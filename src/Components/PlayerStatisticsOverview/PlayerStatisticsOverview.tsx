@@ -8,12 +8,12 @@ type Props = {
 
 const PlayerStatisticsOverview = ({ data, name, colors }: Props) => {
     return (
-        <div className="w-1/3 flex-col">
-            <p className="w-full">{name}</p>
+        <div className="w-full flex-col h-64 mb-6">
+            <h1 className="text-center w-full text-xl font-semibold">{name}</h1>
             <ResponsiveContainer width="100%" height="100%">
-                <PieChart width={400} height={400}>
+                <PieChart>
                     <Legend />
-                    <Pie data={data} cx="50%" cy="50%" labelLine={false} outerRadius={80} dataKey="value" label>
+                    <Pie data={data} cx="50%" cy="50%" labelLine={true} outerRadius={80} dataKey="value" label>
                         {data.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
                         ))}

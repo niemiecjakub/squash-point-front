@@ -8,16 +8,16 @@ interface Props {
     leagueLeave: MouseEventHandler<HTMLButtonElement>;
 }
 
-const LeagueOptions: React.FC<Props> = ({ isUserJoined, isLoggedIn, className, leagueJoin, leagueLeave }) => {
+const LeagueMembershipOptions: React.FC<Props> = ({ isUserJoined, isLoggedIn, className, leagueJoin, leagueLeave }) => {
     return isLoggedIn ? (
         <div className={`${className}`}>
             {isUserJoined ? (
-                <button className="bg-green-300 p-2" onClick={leagueJoin}>
-                    Join league
-                </button>
-            ) : (
                 <button className="bg-red-300 p-2" onClick={leagueLeave}>
                     Leave league
+                </button>
+            ) : (
+                <button className="bg-green-300 p-2" onClick={leagueJoin}>
+                    Join league
                 </button>
             )}
         </div>
@@ -26,4 +26,4 @@ const LeagueOptions: React.FC<Props> = ({ isUserJoined, isLoggedIn, className, l
     );
 };
 
-export default LeagueOptions;
+export default LeagueMembershipOptions;

@@ -10,6 +10,7 @@ import LeagueSideMenu from "../../Components/LeagueSideMenu/LeagueSideMenu";
 const LeaguePage = () => {
     const navigate = useNavigate();
     const { id } = useParams();
+    const { isLoggedIn, user } = useAuth();
     const [leagueInfo, setLeagueInfo] = useState<LeagueProfileDetails>();
     const [leagueLoading, setLeagueLoading] = useState<boolean>(true);
 
@@ -39,7 +40,13 @@ const LeaguePage = () => {
                 <>
                     <div className="flex w-full">
                         <div className="flex-col w-2/5 px-2">
-                            <LeagueSideMenu leagueInfo={leagueInfo} leagueId={id!} getLeagueInfo={getLeagueInfo} />
+                            <LeagueSideMenu
+                                isUserJoined={leagueInfo.players.filter((p) => p.id == user?.id).length != 0}
+                                isLoggedIn={isLoggedIn()}
+                                leagueInfo={leagueInfo}
+                                leagueId={id!}
+                                getLeagueInfo={getLeagueInfo}
+                            />
                         </div>
                         <div className="flex-col w-3/5 px-2">
                             <Table

@@ -11,7 +11,7 @@ interface Props {
     className?: string;
 }
 
-const NewGame: React.FC<Props> = ({ leagueId, players, className }: Props): JSX.Element => {
+const NewGameForm: React.FC<Props> = ({ leagueId, players, className }: Props): JSX.Element => {
     const { user } = useAuth();
     const [formData, setFormData] = useState<NewGameFormState>({
         leagueId: leagueId,
@@ -25,39 +25,43 @@ const NewGame: React.FC<Props> = ({ leagueId, players, className }: Props): JSX.
     };
 
     return (
-        <form onSubmit={handleSubmit} className={`${className} flex`}>
-            <div>
+        <form onSubmit={handleSubmit} className={`${className}`}>
+            <div className="flex justify-between items-center pb-3 w-full">
+                <p>Play vs. : </p>
                 <select
+                    className="ml-8 px-6 bg-slate-200 rounded-lg"
                     id="opponentId"
                     name="opponentId"
                     onChange={(e) => setFormData((prev) => ({ ...prev, opponentId: e.target.value }))}
                     value={formData.opponentId}
                 >
-                    <option>Select opponent</option>
+                    <option>Select player</option>
                     {players
                         .filter((p) => p.id != user?.id)
-                        .map(({ id, fullName, email }) => (
+                        .map(({ id, fullName }) => (
                             <option key={id} value={id}>
-                                {fullName} ({email})
+                                {fullName}
                             </option>
                         ))}
                 </select>
             </div>
 
-            <DatePicker
-                name="gameDate"
-                selected={formData.date}
-                onChange={(date) => date && setFormData((prev) => ({ ...prev, date: date }))}
-                showTimeSelect
-                timeFormat="HH:mm"
-                dateFormat="MMMM d, yyyy h:mm aa"
-            />
-
-            <button type="submit" className="bg-green-200 p-2">
-                Add game
+            <div className="w-full">
+                <DatePicker
+                    name="gameDate"
+                    selected={formData.date}
+                    onChange={(date) => date && setFormData((prev) => ({ ...prev, date: date }))}
+                    showTimeSelect
+                    inline
+                    timeFormat="HH:mm"
+                    dateFormat="MMMM d, yyyy h:mm aa"
+                />
+            </div>
+            <button type="submit" className="bg-green-200 rounded-full w-full py-2 my-2">
+                Create game
             </button>
         </form>
     );
 };
 
-export default NewGame;
+export default NewGameForm;

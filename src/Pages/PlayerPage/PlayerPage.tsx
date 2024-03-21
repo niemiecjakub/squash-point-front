@@ -80,33 +80,38 @@ const PlayerPage = () => {
                                 handlePlayerFollow={handlePlayerFollow}
                                 handlePlayerUnfollow={handlePlayerUnfollow}
                             />
-                            <div className="flex w-full">
-                                <div className="flex-col w-full px-2">
-                                    <Table
-                                        title="Leagues"
-                                        data={playerData.leagues}
-                                        loading={playerDataLoading}
-                                        onRowClicked={handleLeagueClick}
-                                        columns={leaguesColumns}
-                                    />
-                                </div>
-                                <div className="flex-col w-full px-2">
-                                    <Table
-                                        title="Games"
-                                        data={playerData.games}
-                                        loading={playerDataLoading}
-                                        onRowClicked={handleGameClick}
-                                        columns={gamesColumns}
-                                    />
+                            <div className="flex-col">
+                                <div className="flex w-full ">
+                                    {playerData.games.length ? (
+                                        <div className="w-1/3 bg-white ml-2 py-2">
+                                            <PlayerStatisticsOverviewList playerId={id!} />
+                                        </div>
+                                    ) : (
+                                        <p className="bg-white mx-2 my-4 py-4">No game data found</p>
+                                    )}
+                                    <div className="w-full px-2">
+                                        <Table
+                                            className="pb-4"
+                                            title="Leagues"
+                                            data={playerData.leagues}
+                                            loading={playerDataLoading}
+                                            onRowClicked={handleLeagueClick}
+                                            columns={leaguesColumns}
+                                        />
+                                        <Table
+                                            title="Games"
+                                            data={playerData.games}
+                                            loading={playerDataLoading}
+                                            onRowClicked={handleGameClick}
+                                            columns={gamesColumns}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </>
                     )}
                 </>
             )}
-            <div className="w-full">
-                <PlayerStatisticsOverviewList playerId={id!} />
-            </div>
         </>
     );
 };

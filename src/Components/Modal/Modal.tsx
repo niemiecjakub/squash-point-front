@@ -6,9 +6,10 @@ interface ModalProps {
     hasCloseBtn?: boolean;
     onClose?: () => void;
     children: React.ReactNode;
+    className?: string;
 }
 
-const Modal: React.FC<ModalProps> = ({ title, isOpen, hasCloseBtn = true, onClose, children }) => {
+const Modal: React.FC<ModalProps> = ({ className, title, isOpen, hasCloseBtn = true, onClose, children }) => {
     const [isModalOpen, setModalOpen] = useState(isOpen);
     const modalRef = useRef<HTMLDialogElement | null>(null);
 
@@ -45,7 +46,7 @@ const Modal: React.FC<ModalProps> = ({ title, isOpen, hasCloseBtn = true, onClos
         <dialog
             ref={modalRef}
             onKeyDown={handleKeyDown}
-            className="shadow-2xl fixed w-1/4 h-1/2 rounded-xl border-2 border-blue-400 px-5 py-4"
+            className={`shadow-2xl fixed ${className} rounded-xl border-2 border-blue-400 px-5 py-4`}
         >
             {hasCloseBtn && (
                 <button
@@ -56,7 +57,9 @@ const Modal: React.FC<ModalProps> = ({ title, isOpen, hasCloseBtn = true, onClos
                 </button>
             )}
             {title && <h1 className="absolute top-3 left-5 text-xl py-1 font-bold">{title}</h1>}
-            <div className="my-12">{children}</div>
+            <div className="mt-12">
+                {children}
+            </div>
         </dialog>
     );
 };
