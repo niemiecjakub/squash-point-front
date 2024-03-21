@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import Modal from "../Modal/Modal";
 import { PlayerProfile } from "../../squashpoint";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
-import { AxiosResponse } from "axios";
+import PlayerBar from "../PlayerBar/PlayerBar";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
     title: string;
@@ -12,6 +13,7 @@ interface Props {
 }
 
 const SocialModal: React.FC<Props> = ({ title, isOpen, onClose, getPlayers }: Props) => {
+    const navigate = useNavigate();
     const [players, setPlayers] = useState<PlayerProfile[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     useEffect(() => {
@@ -35,10 +37,8 @@ const SocialModal: React.FC<Props> = ({ title, isOpen, onClose, getPlayers }: Pr
                 <LoadingSpinner />
             ) : (
                 <>
-                    {players.map(({ fullName, id }) => (
-                        <h1 key={id} className="py-2">
-                            {fullName}
-                        </h1>
+                    {players.map((player) => (
+                        <PlayerBar player={player} />
                     ))}
                 </>
             )}
