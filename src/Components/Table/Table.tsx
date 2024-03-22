@@ -29,6 +29,7 @@ const Table: React.FC<TableProps<any>> = ({
           progressPending={loading}
           progressComponent={<LoadingSpinner />}
           onRowClicked={onRowClicked}
+          pagination
         />
       )}
     </div>

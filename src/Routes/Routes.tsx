@@ -7,18 +7,27 @@ import GamePage from "../Pages/GamePage/GamePage";
 import LoginPage from "../Pages/LoginPage/LoginPage";
 import RegisterPage from "../Pages/RegisterPage/RegisterPage";
 import ProtectedRoute from "./ProtectedRoute";
+import AccountPage from "../Pages/AccountPage/AccountPage";
 
 export const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-    children: [
-      { path: "", element: <HomePage /> },
-      { path: "login", element: <LoginPage /> },
-      { path: "register", element: <RegisterPage /> },
-      { path: "league/:id", element: <LeaguePage /> },
-      { path: "player/:id", element: <PlayerPage />},
-      { path: "game/:id", element: <GamePage /> },
-    ],
-  },
+    {
+        path: "/",
+        element: <App />,
+        children: [
+            { path: "", element: <HomePage /> },
+            { path: "login", element: <LoginPage /> },
+            { path: "register", element: <RegisterPage /> },
+            { path: "league/:id", element: <LeaguePage /> },
+            { path: "player/:id", element: <PlayerPage /> },
+            { path: "game/:id", element: <GamePage /> },
+            {
+                path: "account",
+                element: (
+                    <ProtectedRoute>
+                        <AccountPage />
+                    </ProtectedRoute>
+                ),
+            },
+        ],
+    },
 ]);

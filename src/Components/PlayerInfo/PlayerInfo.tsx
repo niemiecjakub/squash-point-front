@@ -69,7 +69,7 @@ const PlayerInfo = ({
                             )}
                         </>
                     ) : (
-                        <button className="bg-green-200 px-4 py-2">Log in to follow</button>
+                        <button className="bg-green-200 px-4 py-2 mx-2 rounded-full">Log in to follow</button>
                     )}
 
                     <button className="bg-blue-200 px-4 py-2 rounded-full mx-2" onClick={handleOpenFollowersModal}>

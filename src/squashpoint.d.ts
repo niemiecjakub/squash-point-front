@@ -1,6 +1,8 @@
 export interface LeagueProfile {
     id: string;
     name: string;
+    owner: string;
+    playerCount: number
 }
 
 export interface GameProfile {

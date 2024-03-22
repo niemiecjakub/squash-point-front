@@ -4,6 +4,7 @@ import { NewGameFormState, PlayerProfile } from "../../squashpoint";
 import DatePicker from "react-datepicker";
 import { createGameApi } from "../../Services/GameService";
 import { useAuth } from "../../Context/useAuth";
+import { toast } from "react-toastify";
 
 interface Props {
     players: PlayerProfile[];
@@ -21,6 +22,18 @@ const NewGameForm: React.FC<Props> = ({ leagueId, players, className }: Props): 
 
     const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
         const { leagueId, opponentId, date } = formData;
+        console.log(opponentId)
+        const currentDate = new Date();
+        if (opponentId == "") {
+            e.preventDefault();
+            toast.error("Please select opponent");
+            return;
+        }
+        if (date < currentDate) {
+            e.preventDefault();
+            toast.error("Past date cannot be selected");
+            return;
+        }
         createGameApi(leagueId, opponentId, date);
     };
 

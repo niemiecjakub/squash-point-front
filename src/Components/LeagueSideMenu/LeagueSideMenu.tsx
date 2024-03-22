@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { LeagueProfileDetails } from "../../squashpoint";
 import NewGameForm from "../NewGameForm/NewGameForm";
 import LeagueMembershipOptions from "../LeagueMembershipOptions/LeagueMembershipOptions";
-import { useAuth } from "../../Context/useAuth";
 import { leagueJoinApi, leagueLeaveApi } from "../../Services/LeagueService";
 import Modal from "../Modal/Modal";
 import LeagueStatisticsOverview from "../LeagueStatisticsOverview/LeagueStatisticsOverview";
@@ -43,12 +42,8 @@ const LeagueSideMenu = ({ isUserJoined, isLoggedIn, leagueInfo, leagueId, getLea
                     isLoggedIn={isLoggedIn}
                     leagueLeave={handleLeaguLeave}
                     leagueJoin={handleLeagueJoin}
+                    handleNewGameOpen={handleNewGameOpen}
                 />
-                {isUserJoined && (
-                    <button className="p-2 bg-blue-300" onClick={handleNewGameOpen}>
-                        New game
-                    </button>
-                )}
 
                 <LeagueStatisticsOverview data={leagueInfo} />
             </div>
