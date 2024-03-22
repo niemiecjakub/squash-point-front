@@ -30,6 +30,7 @@ export interface PlayerProfileDetails extends PlayerProfile {
     games: GameProfile[];
     following: number;
     followers: number;
+    friends: number;
 }
 
 export interface LeaguePlayerScoreboard extends PlayerProfile {

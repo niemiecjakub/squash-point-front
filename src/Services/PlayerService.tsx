@@ -19,7 +19,7 @@ export const playersGetApi = async () => {
     }
 };
 
-export const playerGetByIdApi = async (playerId: string) => {
+export const    playerGetByIdApi = async (playerId: string) => {
     try {
         const response = await axios.get<PlayerProfileDetails>(api + playerId);
         return response;
@@ -82,6 +82,19 @@ export const playerFollowersGetApi = async (playerId: string) => {
 export const playerFollowingGetApi = async (playerId: string) => {
     try {
         const response = await axios.get<PlayerProfile[]>(api + `${playerId}/followees`);
+        return response;
+    } catch (error) {
+        handleError(error);
+    }
+};
+
+export const friendRequestApi = async (playerId: string) => {
+    try {
+        const response = await axios.post(api + `friend/request`, null, {
+            params: {
+                playerId,
+            },
+        });
         return response;
     } catch (error) {
         handleError(error);

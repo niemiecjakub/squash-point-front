@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { PlayerProfileDetails } from "../../squashpoint";
-import SocialModal from "../PlayerBarList/PlayerBarList";
 import { playerFollowingGetApi, playerFollowersGetApi } from "../../Services/PlayerService";
 import Modal from "../Modal/Modal";
 import PlayerBarList from "../PlayerBarList/PlayerBarList";
@@ -10,14 +9,16 @@ type Props = {
     data: PlayerProfileDetails;
     isLoggedIn: boolean;
     isFollowing: boolean;
+    isFriend: boolean;
     handlePlayerFollow: () => void;
     handlePlayerUnfollow: () => void;
 };
 
 const PlayerInfo = ({
-    data: { fullName, followers, following, id },
+    data: { fullName, friends, followers, following, id },
     handlePlayerFollow,
     handlePlayerUnfollow,
+    isFriend,
     isLoggedIn,
     isFollowing,
 }: Props) => {
@@ -50,6 +51,15 @@ const PlayerInfo = ({
                         <>
                             {user.id != id && (
                                 <>
+                                    {isFriend ? (
+                                        <button className="bg-red-200 px-4 py-2 mx-2 rounded-full">
+                                            - Remove friend
+                                        </button>
+                                    ) : (
+                                        <button className="bg-green-200 px-4 py-2 mx-2 rounded-full">
+                                            + Add friend
+                                        </button>
+                                    )}
                                     {isFollowing ? (
                                         <button
                                             onClick={handlePlayerUnfollow}
@@ -72,6 +82,7 @@ const PlayerInfo = ({
                         <button className="bg-green-200 px-4 py-2 mx-2 rounded-full">Log in to follow</button>
                     )}
 
+                    <button className="bg-yellow-200 px-4 py-2 rounded-full mx-2">Friends: {friends}</button>
                     <button className="bg-blue-200 px-4 py-2 rounded-full mx-2" onClick={handleOpenFollowersModal}>
                         Followers: {followers}
                     </button>
@@ -80,6 +91,7 @@ const PlayerInfo = ({
                     </button>
                 </div>
             </div>
+
             <Modal
                 title="Followers"
                 isOpen={isFollowersModalOpen}

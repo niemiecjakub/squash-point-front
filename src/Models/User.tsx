@@ -11,4 +11,5 @@ export interface UserProfileToken extends UserProfile {
 export interface UserSocialProfile {
     following: UserProfile[];
     followers: UserProfile[];
+    friends: UserProfile[];
 }

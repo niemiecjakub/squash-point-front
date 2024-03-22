@@ -77,6 +77,7 @@ export const UserProvider = ({ children }: Props) => {
                 const userSocialObj = {
                     following: response.data.following,
                     followers: response.data.followers,
+                    friends: response.data.friends
                   };
                 setSocialData(userSocialObj)
             }
