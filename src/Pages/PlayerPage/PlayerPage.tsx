@@ -17,6 +17,8 @@ const PlayerPage = () => {
     const [playerDataLoading, setplayerDataLoading] = useState<boolean>(true);
     const [isFollowing, setIsFollowing] = useState<boolean>(false);
     const [isFriend, setIsFriend] = useState<boolean>(false);
+    const [isFriendRequestSent, setIsFriendRequestSent] = useState<boolean>(false);
+    const [isFriendRequestReceived, setIsFriendRequestReceived] = useState<boolean>(false);
     const { user, socialData, getUserSocialData, isLoggedIn } = useAuth();
 
     useEffect(() => {
@@ -30,6 +32,8 @@ const PlayerPage = () => {
         if (socialData) {
             setIsFollowing(socialData.following.some((u) => u.id === id));
             setIsFriend(socialData.friends.some((u) => u.id === id));
+            setIsFriendRequestSent(socialData.sentFriendRequests.some((u) => u.id === id));
+            setIsFriendRequestReceived(socialData.receivedFriendRequests.some((u) => u.id === id));
         }
     }, [socialData]);
 
@@ -79,6 +83,8 @@ const PlayerPage = () => {
                                 isLoggedIn={isLoggedIn()}
                                 isFollowing={isFollowing}
                                 isFriend={isFriend}
+                                isFriendRequestReceived={isFriendRequestReceived}
+                                isFriendRequestSent={isFriendRequestSent}
                                 handlePlayerFollow={handlePlayerFollow}
                                 handlePlayerUnfollow={handlePlayerUnfollow}
                             />

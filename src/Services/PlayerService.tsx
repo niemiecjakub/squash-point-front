@@ -88,6 +88,15 @@ export const playerFollowingGetApi = async (playerId: string) => {
     }
 };
 
+export const playerFriendsGetApi = async (playerId: string) => {
+    try {
+        const response = await axios.get<PlayerProfile[]>(api + `${playerId}/friends`);
+        return response;
+    } catch (error) {
+        handleError(error);
+    }
+};
+
 export const friendRequestApi = async (playerId: string) => {
     try {
         const response = await axios.post(api + `friend/request`, null, {

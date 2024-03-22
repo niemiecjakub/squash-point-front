@@ -31,28 +31,38 @@ const AccountPage = (props: Props) => {
                 <button className="bg-green-300 px-4 py-2" onClick={handleOpenNewLeagueForm}>
                     Create new league
                 </button>
-                
-                <div>
-                    <h1>Followers</h1>
-                    {socialData?.followers.map((p) => (
-                        <PlayerBar player={p} className="w-1/4 bg-blue-100"/>
-                    ))}
-                </div>
+                <div className="flex w-full">
+                    <div className="w-full">
+                        <h1>Followers</h1>
+                        {socialData?.followers.map((p) => (
+                            <PlayerBar player={p} className=" bg-blue-100" />
+                        ))}
+                    </div>
 
-                <div>
-                    <h1>Following</h1>
-                    {socialData?.following.map((p) => (
-                        <PlayerBar player={p} className="w-1/4 bg-red-100"/>
-                    ))}
-                </div>
-                <div>
-                    <h1>Friends</h1>
-                    {socialData?.friends.map((p) => (
-                        <PlayerBar player={p} className="w-1/4 bg-yellow-100"/>
-                    ))}
-                </div>
-                <div>
-                    <h1>Friend requests:</h1>
+                    <div className="w-full">
+                        <h1>Following:</h1>
+                        {socialData?.following.map((p) => (
+                            <PlayerBar player={p} className="bg-red-100" />
+                        ))}
+                    </div>
+                    <div className="w-full">
+                        <h1>Friends:</h1>
+                        {socialData?.friends.map((p) => (
+                            <PlayerBar player={p} className=" bg-yellow-100" />
+                        ))}
+                    </div>
+                    <div className="w-full">
+                        <h1>Sent Friend Requests:</h1>
+                        {socialData?.sentFriendRequests.map((p) => (
+                            <PlayerBar player={p} className=" bg-yellow-100" />
+                        ))}
+                    </div>
+                    <div className="w-full">
+                        <h1>Received Friend Requests:</h1>
+                        {socialData?.receivedFriendRequests.map((p) => (
+                            <PlayerBar player={p} className=" bg-yellow-100" />
+                        ))}
+                    </div>
                 </div>
             </div>
             <Modal isOpen={isNewLeagueFormOpen} hasCloseBtn={true} onClose={handleCloseNewLeagueForm}>

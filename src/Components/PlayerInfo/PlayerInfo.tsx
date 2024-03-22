@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { PlayerProfileDetails } from "../../squashpoint";
-import { playerFollowingGetApi, playerFollowersGetApi } from "../../Services/PlayerService";
+import { playerFollowingGetApi, playerFollowersGetApi, playerFriendsGetApi } from "../../Services/PlayerService";
 import Modal from "../Modal/Modal";
 import PlayerBarList from "../PlayerBarList/PlayerBarList";
 import { useAuth } from "../../Context/useAuth";
@@ -10,6 +10,8 @@ type Props = {
     isLoggedIn: boolean;
     isFollowing: boolean;
     isFriend: boolean;
+    isFriendRequestSent: boolean;
+    isFriendRequestReceived: boolean;
     handlePlayerFollow: () => void;
     handlePlayerUnfollow: () => void;
 };
@@ -21,10 +23,13 @@ const PlayerInfo = ({
     isFriend,
     isLoggedIn,
     isFollowing,
+    isFriendRequestSent,
+    isFriendRequestReceived,
 }: Props) => {
     const { user } = useAuth();
     const [isFollowingModalOpen, setIsFollowingModalOpen] = useState<boolean>(false);
     const [isFollowersModalOpen, setIsFollowersModalOpen] = useState<boolean>(false);
+    const [isFriendsModalOpen, setIsFriendsModalOpen] = useState<boolean>(false);
 
     const handleOpenFollowingModal = () => {
         setIsFollowingModalOpen(true);
@@ -42,6 +47,14 @@ const PlayerInfo = ({
         setIsFollowersModalOpen(false);
     };
 
+    const handleOpenFriendsModal = () => {
+        setIsFriendsModalOpen(true);
+    };
+
+    const handleCloseFriendsModal = () => {
+        setIsFriendsModalOpen(false);
+    };
+
     return (
         <>
             <div className="flex justify-between items-center text-xl my-4 mx-2 p-2 bg-white rounded-t-xl">
@@ -56,9 +69,23 @@ const PlayerInfo = ({
                                             - Remove friend
                                         </button>
                                     ) : (
-                                        <button className="bg-green-200 px-4 py-2 mx-2 rounded-full">
-                                            + Add friend
-                                        </button>
+                                        <>
+                                            {isFriendRequestReceived && (
+                                                <button className="bg-green-200 px-4 py-2 mx-2 rounded-full">
+                                                    Accept friend request
+                                                </button>
+                                            )}
+                                            {isFriendRequestSent && (
+                                                <button className="bg-green-200 px-4 py-2 mx-2 rounded-full">
+                                                    Friend request sent
+                                                </button>
+                                            )}
+                                            {!isFriendRequestReceived && !isFriendRequestSent && (
+                                                <button className="bg-green-200 px-4 py-2 mx-2 rounded-full">
+                                                    + Add friend
+                                                </button>
+                                            )}
+                                        </>
                                     )}
                                     {isFollowing ? (
                                         <button
@@ -82,7 +109,7 @@ const PlayerInfo = ({
                         <button className="bg-green-200 px-4 py-2 mx-2 rounded-full">Log in to follow</button>
                     )}
 
-                    <button className="bg-yellow-200 px-4 py-2 rounded-full mx-2">Friends: {friends}</button>
+                    <button className="bg-yellow-200 px-4 py-2 rounded-full mx-2" onClick={handleOpenFriendsModal}>Friends: {friends}</button>
                     <button className="bg-blue-200 px-4 py-2 rounded-full mx-2" onClick={handleOpenFollowersModal}>
                         Followers: {followers}
                     </button>
@@ -111,7 +138,19 @@ const PlayerInfo = ({
             >
                 <PlayerBarList getPlayers={() => playerFollowingGetApi(id)} isOpen={isFollowingModalOpen} />
             </Modal>
+
+            <Modal
+                title="Friends"
+                isOpen={isFriendsModalOpen}
+                onClose={handleCloseFriendsModal}
+                className="w-1/4 max-h-1/3"
+                hasCloseBtn={true}
+            >
+                <PlayerBarList getPlayers={() => playerFriendsGetApi(id)} isOpen={isFriendsModalOpen} />
+            </Modal>
         </>
+
+
     );
 };
 

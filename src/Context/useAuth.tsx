@@ -77,7 +77,10 @@ export const UserProvider = ({ children }: Props) => {
                 const userSocialObj = {
                     following: response.data.following,
                     followers: response.data.followers,
-                    friends: response.data.friends
+                    friends: response.data.friends,
+                    sentFriendRequests: response.data.sentFriendRequests,
+                    receivedFriendRequests: response.data.receivedFriendRequests
+
                   };
                 setSocialData(userSocialObj)
             }

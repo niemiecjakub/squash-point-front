@@ -12,4 +12,6 @@ export interface UserSocialProfile {
     following: UserProfile[];
     followers: UserProfile[];
     friends: UserProfile[];
+    sentFriendRequests: UserProfile[];
+    receivedFriendRequests: UserProfile[];
 }

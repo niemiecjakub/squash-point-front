@@ -15,7 +15,6 @@ const PlayerBarList: React.FC<Props> = ({ isOpen, getPlayers }: Props) => {
     useEffect(() => {
         const fetchData = async () => {
             const data = await getPlayers();
-            console.log(data);
             setPlayers(data.data);
             return data;
         };
@@ -34,7 +33,7 @@ const PlayerBarList: React.FC<Props> = ({ isOpen, getPlayers }: Props) => {
     ) : (
         <>
             {players.map((player) => (
-                <PlayerBar player={player} />
+                <PlayerBar key={player.id} player={player} />
             ))}
         </>
     );
