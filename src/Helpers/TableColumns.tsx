@@ -17,6 +17,11 @@ export const gamesColumns: TableColumn<GameProfile>[] = [
         selector: (row) => row.status,
         sortable: true,
     },
+    {
+        name: "League",
+        selector: (row) => row.league,
+        sortable: true,
+    },
 ];
 
 export const leaguesColumns: TableColumn<LeagueProfile>[] = [
@@ -31,7 +36,7 @@ export const leaguesColumns: TableColumn<LeagueProfile>[] = [
         sortable: true,
     },
     {
-        name: "Players",
+        name: "Players",    
         selector: (row) => row.playerCount,
         sortable: true,
     },
@@ -58,6 +63,7 @@ export const leagueGamesColumns: TableColumn<LeagueGameProfile>[] = [
         selector: (row) => row.status,
         sortable: true,
     },
+    
 ];
 
 export const playersColumns: TableColumn<PlayerProfile>[] = [

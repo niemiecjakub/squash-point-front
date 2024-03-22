@@ -15,6 +15,7 @@ const GamePage = () => {
         date: "",
         players: [],
         sets: [],
+        league: ""
     });
     const [loading, setLoading] = useState<boolean>(true);
 

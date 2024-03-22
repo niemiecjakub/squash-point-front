@@ -11,6 +11,7 @@ export interface GameProfile {
     date: string;
     winner?: string | null;
     players: PlayerProfile[];
+    league: string;
 }
 
 export interface LeagueGameProfile extends GameProfile {
