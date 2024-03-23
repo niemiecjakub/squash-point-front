@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import PlayerStatisticsOverviewList from "../../Components/PlayerStatisticsOverviewList/PlayerStatisticsOverviewList";
 import { GameProfile, LeagueProfile, PlayerProfileDetails } from "../../squashpoint";
 import { useEffect, useState } from "react";
-import { followPlayerApi, playerGetByIdApi, unfollowPlayerApi } from "../../Services/PlayerService";
+import { followPlayerApi, sendFriendRequestApi, playerGetByIdApi, unfollowPlayerApi, acceptFriendRequestApi, deleteFriendApi } from "../../Services/PlayerService";
 import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
 import Table from "../../Components/Table/Table";
 import { gamesColumns, leaguesColumns } from "../../Helpers/TableColumns";
@@ -70,6 +70,25 @@ const PlayerPage = () => {
         toast.warning(`You are no longer following ${playerData!.fullName}`);
     };
 
+    const handleSendFriendRequest = async () => {
+        const response = await sendFriendRequestApi(id!);
+        console.log(response?.data)
+        await refreshData();
+        toast.success(`Friend request sent to ${playerData!.fullName}`);
+    }
+
+    const handleAcceptFriendRequest = async () => {
+        await acceptFriendRequestApi(id!)
+        await refreshData();
+        toast.success(`You are now friends with ${playerData!.fullName}`);
+    }
+
+    const handleDeleteFriend = async () => {
+        await deleteFriendApi(id!)
+        await refreshData();
+        toast.info(`${playerData!.fullName} removed from friend list`);
+    }
+
     return (
         <>
             {playerDataLoading ? (
@@ -87,6 +106,9 @@ const PlayerPage = () => {
                                 isFriendRequestSent={isFriendRequestSent}
                                 handlePlayerFollow={handlePlayerFollow}
                                 handlePlayerUnfollow={handlePlayerUnfollow}
+                                handleSendFriendRequest={handleSendFriendRequest}
+                                handleAcceptFriendRequest={handleAcceptFriendRequest}
+                                handleDeleteFriend={handleDeleteFriend}
                             />
                             <div className="flex-col">
                                 <div className="flex w-full ">

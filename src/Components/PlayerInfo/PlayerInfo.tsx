@@ -14,12 +14,18 @@ type Props = {
     isFriendRequestReceived: boolean;
     handlePlayerFollow: () => void;
     handlePlayerUnfollow: () => void;
+    handleSendFriendRequest: () => void;
+    handleAcceptFriendRequest: () => void;
+    handleDeleteFriend: () => void;
 };
 
 const PlayerInfo = ({
     data: { fullName, friends, followers, following, id },
     handlePlayerFollow,
     handlePlayerUnfollow,
+    handleSendFriendRequest,
+    handleAcceptFriendRequest,
+    handleDeleteFriend,
     isFriend,
     isLoggedIn,
     isFollowing,
@@ -65,23 +71,29 @@ const PlayerInfo = ({
                             {user.id != id && (
                                 <>
                                     {isFriend ? (
-                                        <button className="bg-red-200 px-4 py-2 mx-2 rounded-full">
+                                        <button className="bg-red-200 px-4 py-2 mx-2 rounded-full" onClick={handleDeleteFriend}>
                                             - Remove friend
                                         </button>
                                     ) : (
                                         <>
                                             {isFriendRequestReceived && (
-                                                <button className="bg-green-200 px-4 py-2 mx-2 rounded-full">
+                                                <button
+                                                    className="bg-green-200 px-4 py-2 mx-2 rounded-full"
+                                                    onClick={handleAcceptFriendRequest}
+                                                >
                                                     Accept friend request
                                                 </button>
                                             )}
                                             {isFriendRequestSent && (
-                                                <button className="bg-green-200 px-4 py-2 mx-2 rounded-full">
-                                                    Friend request sent
+                                                <button className="bg-yellow-200 px-4 py-2 mx-2 rounded-full" onClick={handleDeleteFriend}>
+                                                    Friend request sent // click to remove
                                                 </button>
                                             )}
                                             {!isFriendRequestReceived && !isFriendRequestSent && (
-                                                <button className="bg-green-200 px-4 py-2 mx-2 rounded-full">
+                                                <button
+                                                    className="bg-green-200 px-4 py-2 mx-2 rounded-full"
+                                                    onClick={handleSendFriendRequest}
+                                                >
                                                     + Add friend
                                                 </button>
                                             )}
@@ -109,7 +121,9 @@ const PlayerInfo = ({
                         <button className="bg-green-200 px-4 py-2 mx-2 rounded-full">Log in to follow</button>
                     )}
 
-                    <button className="bg-yellow-200 px-4 py-2 rounded-full mx-2" onClick={handleOpenFriendsModal}>Friends: {friends}</button>
+                    <button className="bg-yellow-200 px-4 py-2 rounded-full mx-2" onClick={handleOpenFriendsModal}>
+                        Friends: {friends}
+                    </button>
                     <button className="bg-blue-200 px-4 py-2 rounded-full mx-2" onClick={handleOpenFollowersModal}>
                         Followers: {followers}
                     </button>
@@ -149,8 +163,6 @@ const PlayerInfo = ({
                 <PlayerBarList getPlayers={() => playerFriendsGetApi(id)} isOpen={isFriendsModalOpen} />
             </Modal>
         </>
-
-
     );
 };
 

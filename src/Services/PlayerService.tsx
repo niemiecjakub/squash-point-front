@@ -19,7 +19,7 @@ export const playersGetApi = async () => {
     }
 };
 
-export const    playerGetByIdApi = async (playerId: string) => {
+export const playerGetByIdApi = async (playerId: string) => {
     try {
         const response = await axios.get<PlayerProfileDetails>(api + playerId);
         return response;
@@ -97,12 +97,36 @@ export const playerFriendsGetApi = async (playerId: string) => {
     }
 };
 
-export const friendRequestApi = async (playerId: string) => {
+export const sendFriendRequestApi = async (playerId: string) => {
     try {
         const response = await axios.post(api + `friend/request`, null, {
             params: {
                 playerId,
             },
+        });
+        return response;
+    } catch (error) {
+        handleError(error);
+    }
+};
+
+export const acceptFriendRequestApi = async (playerId: string) => {
+    try {
+        const response = await axios.post(api + `friend/accept`, null, {
+            params: {
+                playerId,
+            },
+        });
+        return response;
+    } catch (error) {
+        handleError(error);
+    }
+};
+
+export const deleteFriendApi = async (playerId: string) => {
+    try {
+        const response = await axios.delete(api + `friend/delete`, {
+            params: { playerId },
         });
         return response;
     } catch (error) {
