@@ -4,12 +4,10 @@ interface Props {
     data: LeagueProfileDetails;
 }
 
-const LeagueStatisticsOverview = ({ data: { games, players } }: Props) => {
+const LeagueStatisticsOverview = ({ data }: Props) => {
+    console.log(data)
     return (
         <div className="flex-col">
-            <p>players: {players.length}</p>
-            <p>games: {games.length}</p>
-
             <p>CHARTS...</p>
         </div>
     );

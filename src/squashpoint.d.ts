@@ -2,7 +2,10 @@ export interface LeagueProfile {
     id: string;
     name: string;
     owner: string;
-    playerCount: number
+    playerCount: number;
+    description: string;
+    public: boolean;
+    maxPlayers: number;
 }
 
 export interface GameProfile {

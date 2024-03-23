@@ -37,7 +37,7 @@ export const leaguesColumns: TableColumn<LeagueProfile>[] = [
     },
     {
         name: "Players",    
-        selector: (row) => row.playerCount,
+        selector: (row) => `${row.playerCount} / ${row.maxPlayers}`,
         sortable: true,
     },
 ];
