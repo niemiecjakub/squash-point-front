@@ -6,6 +6,7 @@ export interface LeagueProfile {
     description: string;
     public: boolean;
     maxPlayers: number;
+
 }
 
 export interface GameProfile {
@@ -46,6 +47,7 @@ export interface LeaguePlayerScoreboard extends PlayerProfile {
 export interface LeagueProfileDetails extends LeagueProfile {
     players: LeaguePlayerScoreboard[];
     games: GameProfile[];
+    photo: string;
 }
 
 export interface GameProfileDetails extends GameProfile {

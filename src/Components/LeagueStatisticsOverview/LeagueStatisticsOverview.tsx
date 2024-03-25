@@ -5,7 +5,6 @@ interface Props {
 }
 
 const LeagueStatisticsOverview = ({ data }: Props) => {
-    console.log(data)
     return (
         <div className="flex-col">
             <p>CHARTS...</p>

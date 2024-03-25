@@ -1,6 +1,7 @@
 import axios from "axios";
 import { handleError } from "../Helpers/ErrorHandler";
 import { GameProfile, LeaguePlayerScoreboard, LeagueProfile, LeagueProfileDetails } from "../squashpoint";
+import { LeagueUpdate } from "../Models/League";
 
 const api = "http://localhost:5110/api/League/";
 
@@ -76,5 +77,30 @@ export const leagueCreateApi = async (name: string) => {
         return data;
     } catch (error) {
         handleError(error);
+    }
+};
+
+export const leagueUpdateApi = async (leagueId: string, image: File | null, leagueInfo: LeagueUpdate) => {
+    try {
+        console.log(image);
+        console.log(leagueInfo);
+        // const response = await axios.put(
+        //     api + leagueId,
+        //     {
+        //         imageFile: image,
+        //         name: leagueInfo.name,
+        //         description: leagueInfo.description,
+        //         maxPlayers: leagueInfo.maxPlayers,
+        //         public: leagueInfo.public,
+        //     },
+        //     {
+        //         headers: {
+        //             "Content-Type": "multipart/form-data",
+        //         },
+        //     }
+        // );
+        // return response;
+    } catch (error) {
+        handleError(`An error occurred while uploading the image: ${error}`);
     }
 };
