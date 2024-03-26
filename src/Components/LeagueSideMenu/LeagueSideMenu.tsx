@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { LeagueProfileDetails } from "../../squashpoint";
 import NewGameForm from "../NewGameForm/NewGameForm";
 import LeagueMembershipOptions from "../LeagueMembershipOptions/LeagueMembershipOptions";
-import { leagueJoinApi, leagueLeaveApi, leagueUpdateApi } from "../../Services/LeagueService";
+import { leagueJoinApi, leagueLeaveApi, leagueEditApi } from "../../Services/LeagueService";
 import Modal from "../Modal/Modal";
 import LeagueStatisticsOverview from "../LeagueStatisticsOverview/LeagueStatisticsOverview";
 import { toast } from "react-toastify";
 import { LeagueUpdate } from "../../Models/League";
+import LeagueEdit from "../LeagueEdit/LeagueEdit";
 
 type Props = {
     leagueInfo: LeagueProfileDetails;
@@ -25,11 +26,15 @@ const LeagueSideMenu = ({ isUserJoined, isLoggedIn, leagueInfo, leagueId, getLea
         description: leagueInfo.description,
         maxPlayers: leagueInfo.maxPlayers,
         public: leagueInfo.public,
+        image: null,
     });
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
-            setImageFile(event.target.files[0]);
+            setLeagueEdit((prevLeagueEdit) => ({
+                ...prevLeagueEdit,
+                image: event.target.files![0],
+            }));
         }
     };
 
@@ -55,12 +60,6 @@ const LeagueSideMenu = ({ isUserJoined, isLoggedIn, leagueInfo, leagueId, getLea
 
     const handlePhotoEditClose = () => {
         setIsPhotoEditOpen(false);
-    };
-
-    const handlePhotoUpload = async () => {
-        await leagueUpdateApi(leagueId, imageFile, leagueEdit)
-            .then(() => toast.success("Photo uploaded"))
-            .catch((e) => toast.error(e));
     };
 
     return (
@@ -117,34 +116,7 @@ const LeagueSideMenu = ({ isUserJoined, isLoggedIn, leagueInfo, leagueId, getLea
                 <NewGameForm players={leagueInfo.players} leagueId={leagueId} />
             </Modal>
             <Modal isOpen={isPhotoEditOpen} title="Edit photo" onClose={handlePhotoEditClose} hasCloseBtn={true}>
-                <div className="w-1/2">
-                    <label htmlFor="leagueName">League name</label>
-                    <input placeholder={`${leagueEdit.name}`} defaultValue={leagueEdit.name} />
-                    <br />
-
-                    <label htmlFor="leagueDescription">League description</label>
-                    <input placeholder={`${leagueEdit.description}`} defaultValue={leagueEdit.description} />
-                    <br />
-
-                    <label htmlFor="leagueMaxPlayers">League max players</label>
-                    <input
-                        type="number"
-                        placeholder={`${leagueEdit.maxPlayers}`}
-                        defaultValue={leagueEdit.maxPlayers}
-                    />
-                    <br />
-
-                    <label htmlFor="leaguePublic">League public status</label>
-                    <input placeholder={`${leagueEdit.public}`} />
-                    <br />
-
-                    <label htmlFor="leaguePublic">League image</label>
-                    <input type="file" onChange={handleFileChange} />
-                    <br />
-                    <button className="px-4 py-2 bg-green-400" onClick={handlePhotoUpload}>
-                        Submit
-                    </button>
-                </div>
+                <LeagueEdit leagueId={leagueId} leagueInfo={leagueInfo}/>
             </Modal>
         </>
     );
