@@ -2,7 +2,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import PlayerStatisticsOverviewList from "../../Components/PlayerStatisticsOverviewList/PlayerStatisticsOverviewList";
 import { GameProfile, LeagueProfile, PlayerProfileDetails } from "../../squashpoint";
 import { useEffect, useState } from "react";
-import { followPlayerApi, sendFriendRequestApi, playerGetByIdApi, unfollowPlayerApi, acceptFriendRequestApi, deleteFriendApi } from "../../Services/PlayerService";
+import {
+    followPlayerApi,
+    sendFriendRequestApi,
+    playerGetByIdApi,
+    unfollowPlayerApi,
+    acceptFriendRequestApi,
+    deleteFriendApi,
+} from "../../Services/PlayerService";
 import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
 import Table from "../../Components/Table/Table";
 import { gamesColumns, leaguesColumns } from "../../Helpers/TableColumns";
@@ -13,7 +20,7 @@ import { toast } from "react-toastify";
 const PlayerPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [playerData, setplayerData] = useState<PlayerProfileDetails>();
+    const [playerInfo, setPlayerInfo] = useState<PlayerProfileDetails>();
     const [playerDataLoading, setplayerDataLoading] = useState<boolean>(true);
     const [isFollowing, setIsFollowing] = useState<boolean>(false);
     const [isFriend, setIsFriend] = useState<boolean>(false);
@@ -45,7 +52,7 @@ const PlayerPage = () => {
     const getplayerData = () => {
         setplayerDataLoading(true);
         playerGetByIdApi(id!).then((res) => {
-            setplayerData(res?.data!);
+            setPlayerInfo(res?.data!);
         });
         setplayerDataLoading(false);
     };
@@ -61,33 +68,32 @@ const PlayerPage = () => {
     const handlePlayerFollow = async () => {
         await followPlayerApi(id!);
         await refreshData();
-        toast.success(`You are now following ${playerData!.fullName}`);
+        toast.success(`You are now following ${playerInfo!.fullName}`);
     };
 
     const handlePlayerUnfollow = async () => {
         await unfollowPlayerApi(id!);
         await refreshData();
-        toast.warning(`You are no longer following ${playerData!.fullName}`);
+        toast.warning(`You are no longer following ${playerInfo!.fullName}`);
     };
 
     const handleSendFriendRequest = async () => {
-        const response = await sendFriendRequestApi(id!);
-        console.log(response?.data)
+        await sendFriendRequestApi(id!);
         await refreshData();
-        toast.success(`Friend request sent to ${playerData!.fullName}`);
-    }
+        toast.success(`Friend request sent to ${playerInfo!.fullName}`);
+    };
 
     const handleAcceptFriendRequest = async () => {
-        await acceptFriendRequestApi(id!)
+        await acceptFriendRequestApi(id!);
         await refreshData();
-        toast.success(`You are now friends with ${playerData!.fullName}`);
-    }
+        toast.success(`You are now friends with ${playerInfo!.fullName}`);
+    };
 
     const handleDeleteFriend = async () => {
-        await deleteFriendApi(id!)
+        await deleteFriendApi(id!);
         await refreshData();
-        toast.info(`${playerData!.fullName} removed from friend list`);
-    }
+        toast.info(`${playerInfo!.fullName} removed from friend list`);
+    };
 
     return (
         <>
@@ -95,10 +101,10 @@ const PlayerPage = () => {
                 <LoadingSpinner />
             ) : (
                 <>
-                    {playerData && (
+                    {playerInfo && (
                         <>
                             <PlayerInfo
-                                data={playerData}
+                                playerInfo={playerInfo}
                                 isLoggedIn={isLoggedIn()}
                                 isFollowing={isFollowing}
                                 isFriend={isFriend}
@@ -112,7 +118,7 @@ const PlayerPage = () => {
                             />
                             <div className="flex-col">
                                 <div className="flex w-full ">
-                                    {playerData.games.length ? (
+                                    {playerInfo.games.length ? (
                                         <div className="w-1/3 bg-white ml-2 py-2">
                                             <PlayerStatisticsOverviewList playerId={id!} />
                                         </div>
@@ -123,14 +129,14 @@ const PlayerPage = () => {
                                         <Table
                                             className="pb-4"
                                             title="Leagues"
-                                            data={playerData.leagues}
+                                            data={playerInfo.leagues}
                                             loading={playerDataLoading}
                                             onRowClicked={handleLeagueClick}
                                             columns={leaguesColumns}
                                         />
                                         <Table
                                             title="Games"
-                                            data={playerData.games}
+                                            data={playerInfo.games}
                                             loading={playerDataLoading}
                                             onRowClicked={handleGameClick}
                                             columns={gamesColumns}

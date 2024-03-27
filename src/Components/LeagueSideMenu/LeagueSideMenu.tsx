@@ -5,7 +5,6 @@ import LeagueMembershipOptions from "../LeagueMembershipOptions/LeagueMembership
 import { leagueJoinApi, leagueLeaveApi, leagueEditApi } from "../../Services/LeagueService";
 import Modal from "../Modal/Modal";
 import LeagueStatisticsOverview from "../LeagueStatisticsOverview/LeagueStatisticsOverview";
-import { toast } from "react-toastify";
 import { LeagueUpdate } from "../../Models/League";
 import LeagueEdit from "../LeagueEdit/LeagueEdit";
 
@@ -19,24 +18,7 @@ type Props = {
 
 const LeagueSideMenu = ({ isUserJoined, isLoggedIn, leagueInfo, leagueId, getLeagueInfo }: Props) => {
     const [isNewGameOpen, setIsNewGameOpen] = useState<boolean>(false);
-    const [isPhotoEditOpen, setIsPhotoEditOpen] = useState<boolean>(false);
-    const [imageFile, setImageFile] = useState<File | null>(null);
-    const [leagueEdit, setLeagueEdit] = useState<LeagueUpdate>({
-        name: leagueInfo.name,
-        description: leagueInfo.description,
-        maxPlayers: leagueInfo.maxPlayers,
-        public: leagueInfo.public,
-        image: null,
-    });
-
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files && event.target.files.length > 0) {
-            setLeagueEdit((prevLeagueEdit) => ({
-                ...prevLeagueEdit,
-                image: event.target.files![0],
-            }));
-        }
-    };
+    const [isLegueEditOpen, setIsLegueEditOpen] = useState<boolean>(false);
 
     const handleLeagueJoin = async (e: React.MouseEvent<HTMLButtonElement>) => {
         leagueJoinApi(leagueId).then(() => getLeagueInfo());
@@ -54,12 +36,12 @@ const LeagueSideMenu = ({ isUserJoined, isLoggedIn, leagueInfo, leagueId, getLea
         setIsNewGameOpen(false);
     };
 
-    const handlePhotoEditOpen = () => {
-        setIsPhotoEditOpen(true);
+    const handleLeagueEditOpen = () => {
+        setIsLegueEditOpen(true);
     };
 
-    const handlePhotoEditClose = () => {
-        setIsPhotoEditOpen(false);
+    const handleLeagueEditClose = () => {
+        setIsLegueEditOpen(false);
     };
 
     return (
@@ -71,10 +53,10 @@ const LeagueSideMenu = ({ isUserJoined, isLoggedIn, leagueInfo, leagueId, getLea
                         src={
                             leagueInfo.photo
                                 ? `data:image/png;base64,${leagueInfo.photo} `
-                                : "https://foundations.projectpythia.org/_images/GitHub-logo.png"
+                                : `${process.env.PUBLIC_URL}` + "/league.png"
                         }
                         alt="league image"
-                        onClick={handlePhotoEditOpen}
+                        onClick={handleLeagueEditOpen}
                     />
 
                     <div className="flex-col ">
@@ -115,8 +97,8 @@ const LeagueSideMenu = ({ isUserJoined, isLoggedIn, leagueInfo, leagueId, getLea
             <Modal isOpen={isNewGameOpen} title="New Game" onClose={handleNewGameClose} hasCloseBtn={true}>
                 <NewGameForm players={leagueInfo.players} leagueId={leagueId} />
             </Modal>
-            <Modal isOpen={isPhotoEditOpen} title="Edit photo" onClose={handlePhotoEditClose} hasCloseBtn={true}>
-                <LeagueEdit leagueId={leagueId} leagueInfo={leagueInfo}/>
+            <Modal isOpen={isLegueEditOpen} title="Edit league" onClose={handleLeagueEditClose} hasCloseBtn={true}>
+                <LeagueEdit leagueId={leagueId} leagueInfo={leagueInfo} />
             </Modal>
         </>
     );

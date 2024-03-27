@@ -2,30 +2,39 @@ import { useEffect, useRef, useState } from "react";
 import { PlayerProfile } from "../../squashpoint";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 import PlayerBar from "../PlayerBar/PlayerBar";
+import { UserProfile } from "../../Models/User";
 
 interface Props {
     isOpen: boolean;
-    getPlayers: () => any;
+    getPlayers?: () => any;
+    data?: UserProfile[];
+    className?: string;
 }
 
-const PlayerBarList: React.FC<Props> = ({ isOpen, getPlayers }: Props) => {
-    const [players, setPlayers] = useState<PlayerProfile[]>([]);
+const PlayerBarList: React.FC<Props> = ({ isOpen, getPlayers, data, className }: Props) => {
+    const [players, setPlayers] = useState<PlayerProfile[] | UserProfile[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = await getPlayers();
-            setPlayers(data.data);
-            return data;
+            if (getPlayers) {
+                const data = await getPlayers();
+                setPlayers(data.data);
+                return data;
+            }
         };
 
-        if (isOpen) {
-            setLoading(true);
-            fetchData();
-            setLoading(false);
+        if (data) {
+            setPlayers(data);
+            setLoading(false)
+        } else {
+            if (isOpen) {
+                setLoading(true);
+                fetchData();
+                setLoading(false);
+            }
         }
     }, [isOpen]);
-
     return loading ? (
         <div className="flex items-center justify-center ">
             <LoadingSpinner />
@@ -33,7 +42,7 @@ const PlayerBarList: React.FC<Props> = ({ isOpen, getPlayers }: Props) => {
     ) : (
         <>
             {players.map((player) => (
-                <PlayerBar key={player.id} player={player} />
+                <PlayerBar className={className} key={player.id} player={player} />
             ))}
         </>
     );

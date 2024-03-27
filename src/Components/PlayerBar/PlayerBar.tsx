@@ -7,7 +7,7 @@ interface Props {
     className?: string;
 }
 
-const PlayerBar = ({ player: { fullName, id }, className }: Props) => {
+const PlayerBar = ({ player: { fullName, id, photo }, className }: Props) => {
     const navigate = useNavigate();
     const handleProfileNavigate = () => {
         navigate(`/Player/${id}`);
@@ -15,7 +15,14 @@ const PlayerBar = ({ player: { fullName, id }, className }: Props) => {
     };
     return (
         <div className={`flex justify-between items-center my-5 mx-2 rounded-r-full hover:bg-slate-200 ${className}`}>
-            <h1 className="text-lg px-2">{fullName}</h1>
+            <div className="flex items-center">
+                <img
+                    className="h-12 rounded-full"
+                    src={photo ? `data:image/png;base64,${photo} ` : `${process.env.PUBLIC_URL}` + "/player.png"}
+                    alt="player photo"
+                />
+                <h1 className="text-lg px-2">{fullName}</h1>
+            </div>
             <button className="bg-yellow-200 rounded-xl px-3 py-2" onClick={handleProfileNavigate}>
                 view profile
             </button>

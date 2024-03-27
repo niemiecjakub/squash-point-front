@@ -6,7 +6,7 @@ import PlayerBarList from "../PlayerBarList/PlayerBarList";
 import { useAuth } from "../../Context/useAuth";
 
 type Props = {
-    data: PlayerProfileDetails;
+    playerInfo: PlayerProfileDetails;
     isLoggedIn: boolean;
     isFollowing: boolean;
     isFriend: boolean;
@@ -20,7 +20,7 @@ type Props = {
 };
 
 const PlayerInfo = ({
-    data: { fullName, friends, followers, following, id },
+    playerInfo: { fullName, friends, followers, following, id, photo },
     handlePlayerFollow,
     handlePlayerUnfollow,
     handleSendFriendRequest,
@@ -63,15 +63,25 @@ const PlayerInfo = ({
 
     return (
         <>
-            <div className="flex justify-between items-center text-xl my-4 mx-2 p-2 bg-white rounded-t-xl">
-                <h1 className="font-semibold text-2xl">{fullName}</h1>
+            <div className="flex justify-between items-start text-xl my-4 mx-2 p-2 bg-white rounded-t-xl">
+                <div className="flex items-center">
+                    <img
+                        className="h-32 w-32 rounded-full"
+                        src={photo ? `data:image/png;base64,${photo} ` : `${process.env.PUBLIC_URL}` + "/player.png"}
+                        alt="player photo"
+                    />
+                    <h1 className="font-semibold text-2xl">{fullName}</h1>
+                </div>
                 <div className="flex">
                     {isLoggedIn && user ? (
                         <>
                             {user.id != id && (
                                 <>
                                     {isFriend ? (
-                                        <button className="bg-red-200 px-4 py-2 mx-2 rounded-full" onClick={handleDeleteFriend}>
+                                        <button
+                                            className="bg-red-200 px-4 py-2 mx-2 rounded-full"
+                                            onClick={handleDeleteFriend}
+                                        >
                                             - Remove friend
                                         </button>
                                     ) : (
@@ -85,7 +95,10 @@ const PlayerInfo = ({
                                                 </button>
                                             )}
                                             {isFriendRequestSent && (
-                                                <button className="bg-yellow-200 px-4 py-2 mx-2 rounded-full" onClick={handleDeleteFriend}>
+                                                <button
+                                                    className="bg-yellow-200 px-4 py-2 mx-2 rounded-full"
+                                                    onClick={handleDeleteFriend}
+                                                >
                                                     Friend request sent // click to remove
                                                 </button>
                                             )}

@@ -2,6 +2,7 @@ export interface UserProfile {
     id: string;
     fullName: string;
     email: string;
+    photo: string;
 }
 
 export interface UserProfileToken extends UserProfile {
@@ -15,3 +16,10 @@ export interface UserSocialProfile {
     sentFriendRequests: UserProfile[];
     receivedFriendRequests: UserProfile[];
 }
+
+export type PlayerEditInputs = {
+    firstName: string;
+    lastName: number;
+    email: string;
+    image: FileList;
+};

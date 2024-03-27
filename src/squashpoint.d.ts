@@ -27,6 +27,7 @@ export interface PlayerProfile {
     fullName: string;
     email: string;
     sex: string;
+    photo: string;
 }
 
 export interface PlayerProfileDetails extends PlayerProfile {
