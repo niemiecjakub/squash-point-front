@@ -2,20 +2,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import PlayerStatisticsOverviewList from "../../Components/PlayerStatisticsOverviewList/PlayerStatisticsOverviewList";
 import { GameProfile, LeagueProfile, PlayerProfileDetails } from "../../squashpoint";
 import { useEffect, useState } from "react";
-import {
-    followPlayerApi,
-    sendFriendRequestApi,
-    playerGetByIdApi,
-    unfollowPlayerApi,
-    acceptFriendRequestApi,
-    deleteFriendApi,
-} from "../../Services/PlayerService";
+import { playerGetByIdApi } from "../../Services/PlayerService";
 import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
 import Table from "../../Components/Table/Table";
 import { gamesColumns, leaguesColumns } from "../../Helpers/TableColumns";
 import PlayerInfo from "../../Components/PlayerInfo/PlayerInfo";
 import { useAuth } from "../../Context/useAuth";
 import { toast } from "react-toastify";
+import { acceptFriendRequestApi, deleteFriendApi, followPlayerApi, sendFriendRequestApi, unfollowPlayerApi } from "../../Services/AccountService";
 
 const PlayerPage = () => {
     const { id } = useParams();

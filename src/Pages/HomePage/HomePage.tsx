@@ -6,6 +6,7 @@ import { leaguesGetApi } from "../../Services/LeagueService";
 import { playersGetApi } from "../../Services/PlayerService";
 import { upcommingGamesGetApi } from "../../Services/GameService";
 import { gamesColumns, leaguesColumns, playersColumns } from "../../Helpers/TableColumns";
+import GameListTest from "../../Components/GameListTest/GameListTest";
 
 const HomePage: React.FC = () => {
     const navigate = useNavigate();
@@ -49,7 +50,6 @@ const HomePage: React.FC = () => {
     const handleLeagueClick = ({ id }: LeagueProfile) => {
         navigate(`/league/${id}`);
     };
-
     const handlePlayerClick = ({ id }: PlayerProfile) => {
         navigate(`/player/${id}`);
     };
@@ -85,6 +85,7 @@ const HomePage: React.FC = () => {
                         data={games}
                         onRowClicked={handleGameClick}
                     />
+                    <GameListTest games={games}/>
                 </div>
             </div>
         </>

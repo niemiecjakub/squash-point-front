@@ -8,6 +8,8 @@ import LoginPage from "../Pages/LoginPage/LoginPage";
 import RegisterPage from "../Pages/RegisterPage/RegisterPage";
 import ProtectedRoute from "./ProtectedRoute";
 import AccountPage from "../Pages/AccountPage/AccountPage";
+import PlayerSearchPage from "../Pages/PlayerSearchPage/PlayerSearchPage";
+import LeagueSearchPage from "../Pages/LeagueSearchPage/LeagueSearchPage";
 
 export const router = createBrowserRouter([
     {
@@ -17,7 +19,9 @@ export const router = createBrowserRouter([
             { path: "", element: <HomePage /> },
             { path: "login", element: <LoginPage /> },
             { path: "register", element: <RegisterPage /> },
+            { path: "leagues", element: <LeagueSearchPage /> },
             { path: "league/:id", element: <LeaguePage /> },
+            { path: "players", element: <PlayerSearchPage /> },
             { path: "player/:id", element: <PlayerPage /> },
             { path: "game/:id", element: <GamePage /> },
             {

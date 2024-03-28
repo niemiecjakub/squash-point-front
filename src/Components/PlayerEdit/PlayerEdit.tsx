@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { PlayerEditInputs, UserProfile } from "../../Models/User";
 import { useForm } from "react-hook-form";
+import { playerEditApi } from "../../Services/AccountService";
 
 type Props = {
     playeInfo: UserProfile;
@@ -23,12 +24,12 @@ const PlayerEdit = ({ playeInfo: { fullName, id, email } }: Props) => {
     } = useForm<PlayerEditInputs>({});
 
     const handlePlayerEdit = async (formState: PlayerEditInputs) => {
-        // await playerEditApi(formState)
-        //     .then((res) => {
-        //         window.location.reload();
-        //         toast.success("Player profile updated");
-        //     })
-        //     .catch((e) => toast.error(e));
+        await playerEditApi(id, formState)
+            .then((res) => {
+                window.location.reload();
+                toast.success("League updated");
+            })
+            .catch((e) => toast.error(e));
     };
 
     return (
