@@ -18,6 +18,19 @@ export interface GameProfile {
     league: string;
 }
 
+export interface FinishedGameProfile {
+    id: string;
+    league: string;
+    winner?: string | null;
+    status: string;
+    players: {
+        fullName: string;
+        sets: number;
+        photo?: string
+    }[];
+}
+
+
 export interface LeagueGameProfile extends GameProfile {
     league: LeagueProfile;
 }
@@ -32,7 +45,7 @@ export interface PlayerProfile {
 
 export interface PlayerProfileDetails extends PlayerProfile {
     leagues: LeagueProfile[];
-    lastGames: GameProfile[];
+    lastGames: FinishedGameProfile[];
     nextGames: GameProfile[];
     following: number;
     followers: number;
@@ -48,7 +61,7 @@ export interface LeaguePlayerScoreboard extends PlayerProfile {
 
 export interface LeagueProfileDetails extends LeagueProfile {
     players: LeaguePlayerScoreboard[];
-    finishedGames: GameProfile[];
+    finishedGames: FinishedGameProfile[];
     upcommingGames: GameProfile[];
     liveGames: GameProfile[];
     photo: string;

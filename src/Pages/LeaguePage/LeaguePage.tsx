@@ -4,7 +4,7 @@ import Table from "../../Components/Table/Table";
 import { GameProfile, PlayerProfile, LeagueProfileDetails } from "../../squashpoint";
 import { leagueGetByIdApi } from "../../Services/LeagueService";
 import { useAuth } from "../../Context/useAuth";
-import { leagueGameTest, scoreboardColumns } from "../../Helpers/TableColumns";
+import { leagueGameTest, playerPageLastGamesGamesColumns, scoreboardColumns } from "../../Helpers/TableColumns";
 import LeagueSideMenu from "../../Components/LeagueSideMenu/LeagueSideMenu";
 
 const LeaguePage = () => {
@@ -22,6 +22,7 @@ const LeaguePage = () => {
         setLeagueLoading(true);
         leagueGetByIdApi(id!).then((res) => {
             setLeagueInfo(res?.data!);
+            console.log(res?.data!.finishedGames)
         });
         setLeagueLoading(false);
     };
@@ -72,7 +73,7 @@ const LeaguePage = () => {
                                 title="Finished games"
                                 loading={leagueLoading}
                                 data={leagueInfo.finishedGames}
-                                columns={leagueGameTest}
+                                columns={playerPageLastGamesGamesColumns}
                                 onRowClicked={handleGameClick}
                                 pagination={true}
                             />

@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import PlayerStatisticsOverviewList from "../../Components/PlayerStatisticsOverviewList/PlayerStatisticsOverviewList";
-import { GameProfile, LeagueProfile, PlayerProfileDetails } from "../../squashpoint";
+import { FinishedGameProfile, GameProfile, LeagueProfile, PlayerProfileDetails } from "../../squashpoint";
 import { useEffect, useState } from "react";
 import { playerGetByIdApi } from "../../Services/PlayerService";
 import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
@@ -68,7 +68,7 @@ const PlayerPage = () => {
         navigate(`/league/${row.id}`);
     };
 
-    const handleGameClick = (row: GameProfile): void => {
+    const handleGameClick = (row: GameProfile | FinishedGameProfile): void => {
         navigate(`/game/${row.id}`);
     };
 

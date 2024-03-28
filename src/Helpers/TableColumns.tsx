@@ -1,5 +1,5 @@
 import { TableColumn } from "react-data-table-component";
-import { GameProfile, LeagueGameProfile, LeaguePlayerScoreboard, LeagueProfile, PlayerProfile } from "../squashpoint";
+import { FinishedGameProfile, GameProfile, LeagueGameProfile, LeaguePlayerScoreboard, LeagueProfile, PlayerProfile } from "../squashpoint";
 
 export const leagueGameTest: TableColumn<GameProfile>[] = [
     {
@@ -96,9 +96,9 @@ export const playerPageUpcommingGamesColumns: TableColumn<GameProfile>[] = [
     },
 ];
 
-export const playerPageLastGamesGamesColumns: TableColumn<GameProfile>[] = [
+export const playerPageLastGamesGamesColumns: TableColumn<FinishedGameProfile>[] = [
     {
-        cell: ({ date, league, players, winner }) => (
+        cell: ({ league, players, winner }) => (
             <div className="flex w-full items-center justify-between">
                 <div className="flex justify-start items-center w-1/3">
                     <img
@@ -124,7 +124,7 @@ export const playerPageLastGamesGamesColumns: TableColumn<GameProfile>[] = [
                         {league}
                     </h1>
                     <h1 className="text-md text-center" data-tag="allowRowEvents">
-                        {winner}
+                        {players[0].sets} : {players[1].sets}
                     </h1>
                 </div>
 
