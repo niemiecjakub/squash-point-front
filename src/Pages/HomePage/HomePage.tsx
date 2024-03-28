@@ -5,8 +5,7 @@ import Table from "../../Components/Table/Table";
 import { leaguesGetApi } from "../../Services/LeagueService";
 import { playersGetApi } from "../../Services/PlayerService";
 import { upcommingGamesGetApi } from "../../Services/GameService";
-import { HomePageGamesColumns, leaguesColumns, playersColumns } from "../../Helpers/TableColumns";
-import GameListTest from "../../Components/GameListTest/GameListTest";
+import { HomePageGamesColumns, leagueGameTest, leaguesColumns, playersColumns } from "../../Helpers/TableColumns";
 
 const HomePage: React.FC = () => {
     const navigate = useNavigate();
@@ -80,12 +79,11 @@ const HomePage: React.FC = () => {
                 <div className="flex-col w-full px-2">
                     <Table
                         title="Upcomming league games"
-                        columns={HomePageGamesColumns}
+                        columns={leagueGameTest}
                         loading={gamesLoading}
                         data={games}
                         onRowClicked={handleGameClick}
                     />
-                    <GameListTest games={games}/>
                 </div>
             </div>
         </>

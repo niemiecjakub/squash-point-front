@@ -4,7 +4,7 @@ import Table from "../../Components/Table/Table";
 import { GameProfile, PlayerProfile, LeagueProfileDetails } from "../../squashpoint";
 import { leagueGetByIdApi } from "../../Services/LeagueService";
 import { useAuth } from "../../Context/useAuth";
-import { LeaguePageGamesColumns, scoreboardColumns } from "../../Helpers/TableColumns";
+import { leagueGameTest, scoreboardColumns } from "../../Helpers/TableColumns";
 import LeagueSideMenu from "../../Components/LeagueSideMenu/LeagueSideMenu";
 
 const LeaguePage = () => {
@@ -55,6 +55,7 @@ const LeaguePage = () => {
                                 data={leagueInfo.players.sort((a, b) => b.score - a.score)}
                                 columns={scoreboardColumns}
                                 onRowClicked={handlePlayerClick}
+                                pagination={true}
                             />
 
                             <Table
@@ -62,16 +63,18 @@ const LeaguePage = () => {
                                 title="Upcomming games"
                                 loading={leagueLoading}
                                 data={leagueInfo.upcommingGames}
-                                columns={LeaguePageGamesColumns}
+                                columns={leagueGameTest}
                                 onRowClicked={handleGameClick}
+                                pagination={true}
                             />
                             <Table
                                 className="py-4"
                                 title="Finished games"
                                 loading={leagueLoading}
                                 data={leagueInfo.finishedGames}
-                                columns={LeaguePageGamesColumns}
+                                columns={leagueGameTest}
                                 onRowClicked={handleGameClick}
+                                pagination={true}
                             />
 
                             <Table
@@ -79,8 +82,9 @@ const LeaguePage = () => {
                                 title="Live games"
                                 loading={leagueLoading}
                                 data={leagueInfo.liveGames}
-                                columns={LeaguePageGamesColumns}
+                                columns={leagueGameTest}
                                 onRowClicked={handleGameClick}
+                                pagination={true}
                             />
                         </div>
                     </div>

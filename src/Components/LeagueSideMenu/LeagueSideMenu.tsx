@@ -2,10 +2,8 @@ import React, { useState } from "react";
 import { LeagueProfileDetails } from "../../squashpoint";
 import NewGameForm from "../NewGameForm/NewGameForm";
 import LeagueMembershipOptions from "../LeagueMembershipOptions/LeagueMembershipOptions";
-import { leagueJoinApi, leagueLeaveApi, leagueEditApi } from "../../Services/LeagueService";
+import { leagueJoinApi, leagueLeaveApi } from "../../Services/LeagueService";
 import Modal from "../Modal/Modal";
-import LeagueStatisticsOverview from "../LeagueStatisticsOverview/LeagueStatisticsOverview";
-import { LeagueUpdate } from "../../Models/League";
 import LeagueEdit from "../LeagueEdit/LeagueEdit";
 
 type Props = {
@@ -68,15 +66,9 @@ const LeagueSideMenu = ({ isUserJoined, isLoggedIn, leagueInfo, leagueId, getLea
                     </div>
                 </div>
                 <h1 className="text-2xl px-2">Public: {leagueInfo.public ? "Yes" : "No"}</h1>
-                <h1 className="text-2xl px-2">
-                    Total games played: {leagueInfo.finishedGames.length}
-                </h1>
-                <h1 className="text-2xl px-2">
-                    Upcomming games: {leagueInfo.upcommingGames.length}
-                </h1>
-                <h1 className="text-2xl px-2">
-                    Live games: {leagueInfo.liveGames.length}
-                </h1>
+                <h1 className="text-2xl px-2">Total games played: {leagueInfo.finishedGames.length}</h1>
+                <h1 className="text-2xl px-2">Upcomming games: {leagueInfo.upcommingGames.length}</h1>
+                <h1 className="text-2xl px-2">Live games: {leagueInfo.liveGames.length}</h1>
 
                 <div className="flex-col items-center">
                     <LeagueMembershipOptions
@@ -91,7 +83,6 @@ const LeagueSideMenu = ({ isUserJoined, isLoggedIn, leagueInfo, leagueId, getLea
                             New game
                         </button>
                     )}
-                    <LeagueStatisticsOverview data={leagueInfo} />
                 </div>
             </div>
             <Modal isOpen={isNewGameOpen} title="New Game" onClose={handleNewGameClose} hasCloseBtn={true}>

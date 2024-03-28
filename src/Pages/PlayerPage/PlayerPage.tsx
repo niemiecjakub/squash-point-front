@@ -6,9 +6,12 @@ import { playerGetByIdApi } from "../../Services/PlayerService";
 import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
 import Table from "../../Components/Table/Table";
 import {
+    leagueGameTest,
     playerPageLastGamesColumns,
+    playerPageLastGamesGamesColumns,
     playerPageLeaguesColumns,
     playerPageNextGamesColumns,
+    playerPageUpcommingGamesColumns,
 } from "../../Helpers/TableColumns";
 import PlayerInfo from "../../Components/PlayerInfo/PlayerInfo";
 import { useAuth } from "../../Context/useAuth";
@@ -123,14 +126,14 @@ const PlayerPage = () => {
                             <div className="flex-col">
                                 <div className="flex w-full ">
                                     <Table
-                                        className="pb-4 mx-2 w-1/3"
+                                        className="pb-4 mx-2 w-1/4"
                                         title="Leagues"
                                         data={playerInfo.leagues}
                                         loading={playerDataLoading}
                                         onRowClicked={handleLeagueClick}
                                         columns={playerPageLeaguesColumns}
                                     />
-                                    <div className="w-full px-2">
+                                    <div className="w-full px-2 flex-col">
                                         {playerInfo.lastGames.length ? (
                                             <div className="bg-white py-2 mb-4">
                                                 <PlayerStatisticsOverviewList playerId={id!} />
@@ -138,22 +141,24 @@ const PlayerPage = () => {
                                         ) : (
                                             <p className="bg-white mx-2 my-4 py-4">No game data found</p>
                                         )}
-                                        <Table
-                                            title="Last Games"
-                                            className="pb-4"
-                                            data={playerInfo.lastGames}
-                                            loading={playerDataLoading}
-                                            onRowClicked={handleGameClick}
-                                            columns={playerPageLastGamesColumns}
-                                        />
-                                        <Table
-                                            title="Next Games"
-                                            className="pb-4"
-                                            data={playerInfo.nextGames}
-                                            loading={playerDataLoading}
-                                            onRowClicked={handleGameClick}
-                                            columns={playerPageNextGamesColumns}
-                                        />
+                                        <div className="flex w-full">
+                                            <Table
+                                                title="Last Games"
+                                                className="pb-4 w-1/2 pr-2"
+                                                data={playerInfo.lastGames}
+                                                loading={playerDataLoading}
+                                                onRowClicked={handleGameClick}
+                                                columns={playerPageLastGamesGamesColumns}
+                                            />
+                                            <Table
+                                                title="Next Games"
+                                                className="pb-4 w-1/2 pl-2"
+                                                data={playerInfo.nextGames}
+                                                loading={playerDataLoading}
+                                                onRowClicked={handleGameClick}
+                                                columns={playerPageUpcommingGamesColumns}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
