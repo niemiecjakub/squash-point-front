@@ -34,7 +34,7 @@ const PlayerStatisticsOverviewList = ({ playerId }: Props) => {
     };
 
     return (
-        <div className="flex-col w-full">
+        <div className="flex w-full">
             {playerGamesOverviewLoadig ? (
                 <LoadingSpinner />
             ) : (

@@ -69,13 +69,13 @@ const LeagueSideMenu = ({ isUserJoined, isLoggedIn, leagueInfo, leagueId, getLea
                 </div>
                 <h1 className="text-2xl px-2">Public: {leagueInfo.public ? "Yes" : "No"}</h1>
                 <h1 className="text-2xl px-2">
-                    Total games played: {leagueInfo.games.filter((g) => g.status == "Finished").length}
+                    Total games played: {leagueInfo.finishedGames.length}
                 </h1>
                 <h1 className="text-2xl px-2">
-                    Upcomming games: {leagueInfo.games.filter((g) => g.status == "Unfinished").length}
+                    Upcomming games: {leagueInfo.upcommingGames.length}
                 </h1>
                 <h1 className="text-2xl px-2">
-                    Live games: {leagueInfo.games.filter((g) => g.status == "Started").length}
+                    Live games: {leagueInfo.liveGames.length}
                 </h1>
 
                 <div className="flex-col items-center">

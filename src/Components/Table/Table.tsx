@@ -9,6 +9,7 @@ export interface TableProps<T> {
   className?: string;
   title?: string;
   onRowClicked?: any;
+  pagination?: boolean
 }
 
 const Table: React.FC<TableProps<any>> = ({
@@ -17,6 +18,7 @@ const Table: React.FC<TableProps<any>> = ({
   title,
   data,
   onRowClicked,
+  pagination,
   columns,
 }) => {
   return (
@@ -29,7 +31,10 @@ const Table: React.FC<TableProps<any>> = ({
           progressPending={loading}
           progressComponent={<LoadingSpinner />}
           onRowClicked={onRowClicked}
-          pagination
+          pagination = {pagination ? true : false}
+          striped
+          highlightOnHover
+          pointerOnHover
         />
       )}
     </div>

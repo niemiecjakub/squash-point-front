@@ -1,8 +1,41 @@
 import axios from "axios";
-import { PlayerEditInputs } from "../Models/User";
+import { PlayerEditInputs, UserProfileToken } from "../Models/User";
 import { handleError } from "../Helpers/ErrorHandler";
 
 const api = "http://localhost:5110/api/Account/";
+
+export const loginApi = async (email: string, password: string) => {
+    try {
+        const response = await axios.post<UserProfileToken>(api + "login", {
+            email,
+            password,
+        });
+        return response;
+    } catch (error) {
+        handleError(error);
+    }
+};
+
+export const registerApi = async (
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string,
+    sex: string
+) => {
+    try {
+        const response = await axios.post<UserProfileToken>(api + "register", {
+            email,
+            password,
+            firstName,
+            lastName,
+            sex,
+        });
+        return response;
+    } catch (error) {
+        handleError(error);
+    }
+};
 
 export const followPlayerApi = async (playerId: string) => {
     try {

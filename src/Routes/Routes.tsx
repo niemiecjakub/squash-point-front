@@ -10,6 +10,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import AccountPage from "../Pages/AccountPage/AccountPage";
 import PlayerSearchPage from "../Pages/PlayerSearchPage/PlayerSearchPage";
 import LeagueSearchPage from "../Pages/LeagueSearchPage/LeagueSearchPage";
+import UserHomePage from "../Pages/UserHomePage/UserHomePage";
 
 export const router = createBrowserRouter([
     {
@@ -17,6 +18,14 @@ export const router = createBrowserRouter([
         element: <App />,
         children: [
             { path: "", element: <HomePage /> },
+            // {
+            //     path: "",
+            //     element: (
+            //         <ProtectedRoute>
+            //             <UserHomePage />
+            //         </ProtectedRoute>
+            //     ),
+            // },
             { path: "login", element: <LoginPage /> },
             { path: "register", element: <RegisterPage /> },
             { path: "leagues", element: <LeagueSearchPage /> },

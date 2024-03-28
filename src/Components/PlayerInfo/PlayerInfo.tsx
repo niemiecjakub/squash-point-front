@@ -64,7 +64,7 @@ const PlayerInfo = ({
     return (
         <>
             <div className="flex justify-between items-start text-xl my-4 mx-2 p-2 bg-white rounded-t-xl">
-                <div className="flex items-center">
+                <div className="flex items-start">
                     <img
                         className="h-32 w-32 rounded-full"
                         src={photo ? `data:image/png;base64,${photo} ` : `${process.env.PUBLIC_URL}` + "/player.png"}

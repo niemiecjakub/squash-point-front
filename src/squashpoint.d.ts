@@ -32,7 +32,8 @@ export interface PlayerProfile {
 
 export interface PlayerProfileDetails extends PlayerProfile {
     leagues: LeagueProfile[];
-    games: GameProfile[];
+    lastGames: GameProfile[];
+    nextGames: GameProfile[];
     following: number;
     followers: number;
     friends: number;
@@ -47,7 +48,9 @@ export interface LeaguePlayerScoreboard extends PlayerProfile {
 
 export interface LeagueProfileDetails extends LeagueProfile {
     players: LeaguePlayerScoreboard[];
-    games: GameProfile[];
+    finishedGames: GameProfile[];
+    upcommingGames: GameProfile[];
+    liveGames: GameProfile[];
     photo: string;
 }
 

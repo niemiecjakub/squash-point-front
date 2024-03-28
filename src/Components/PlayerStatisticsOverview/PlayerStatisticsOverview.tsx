@@ -9,7 +9,7 @@ type Props = {
 const PlayerStatisticsOverview = ({ data, name, colors }: Props) => {
     return (
         <div className="w-full flex-col h-64 mb-6">
-            <h1 className="text-center w-full text-xl font-semibold">{name}</h1>
+            <p className="text-center w-full text-xl font-semibold">{name}</p>
             <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                     <Legend />

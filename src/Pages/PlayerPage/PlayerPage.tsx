@@ -5,11 +5,21 @@ import { useEffect, useState } from "react";
 import { playerGetByIdApi } from "../../Services/PlayerService";
 import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
 import Table from "../../Components/Table/Table";
-import { gamesColumns, leaguesColumns } from "../../Helpers/TableColumns";
+import {
+    playerPageLastGamesColumns,
+    playerPageLeaguesColumns,
+    playerPageNextGamesColumns,
+} from "../../Helpers/TableColumns";
 import PlayerInfo from "../../Components/PlayerInfo/PlayerInfo";
 import { useAuth } from "../../Context/useAuth";
 import { toast } from "react-toastify";
-import { acceptFriendRequestApi, deleteFriendApi, followPlayerApi, sendFriendRequestApi, unfollowPlayerApi } from "../../Services/AccountService";
+import {
+    acceptFriendRequestApi,
+    deleteFriendApi,
+    followPlayerApi,
+    sendFriendRequestApi,
+    unfollowPlayerApi,
+} from "../../Services/AccountService";
 
 const PlayerPage = () => {
     const { id } = useParams();
@@ -112,28 +122,37 @@ const PlayerPage = () => {
                             />
                             <div className="flex-col">
                                 <div className="flex w-full ">
-                                    {playerInfo.games.length ? (
-                                        <div className="w-1/3 bg-white ml-2 py-2">
-                                            <PlayerStatisticsOverviewList playerId={id!} />
-                                        </div>
-                                    ) : (
-                                        <p className="bg-white mx-2 my-4 py-4">No game data found</p>
-                                    )}
+                                    <Table
+                                        className="pb-4 mx-2 w-1/3"
+                                        title="Leagues"
+                                        data={playerInfo.leagues}
+                                        loading={playerDataLoading}
+                                        onRowClicked={handleLeagueClick}
+                                        columns={playerPageLeaguesColumns}
+                                    />
                                     <div className="w-full px-2">
+                                        {playerInfo.lastGames.length ? (
+                                            <div className="bg-white py-2 mb-4">
+                                                <PlayerStatisticsOverviewList playerId={id!} />
+                                            </div>
+                                        ) : (
+                                            <p className="bg-white mx-2 my-4 py-4">No game data found</p>
+                                        )}
                                         <Table
+                                            title="Last Games"
                                             className="pb-4"
-                                            title="Leagues"
-                                            data={playerInfo.leagues}
-                                            loading={playerDataLoading}
-                                            onRowClicked={handleLeagueClick}
-                                            columns={leaguesColumns}
-                                        />
-                                        <Table
-                                            title="Games"
-                                            data={playerInfo.games}
+                                            data={playerInfo.lastGames}
                                             loading={playerDataLoading}
                                             onRowClicked={handleGameClick}
-                                            columns={gamesColumns}
+                                            columns={playerPageLastGamesColumns}
+                                        />
+                                        <Table
+                                            title="Next Games"
+                                            className="pb-4"
+                                            data={playerInfo.nextGames}
+                                            loading={playerDataLoading}
+                                            onRowClicked={handleGameClick}
+                                            columns={playerPageNextGamesColumns}
                                         />
                                     </div>
                                 </div>

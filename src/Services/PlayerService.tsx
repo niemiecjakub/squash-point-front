@@ -1,6 +1,7 @@
 import axios from "axios";
 import { handleError } from "../Helpers/ErrorHandler";
 import { LeagueProfile, PlayerProfile, PlayerProfileDetails, StatisticsOverview } from "../squashpoint";
+import { UserSocialProfile } from "../Models/User";
 
 const api = "http://localhost:5110/api/Player/";
 
@@ -61,6 +62,15 @@ export const playerFollowingGetApi = async (playerId: string) => {
 export const playerFriendsGetApi = async (playerId: string) => {
     try {
         const response = await axios.get<PlayerProfile[]>(api + `${playerId}/friends`);
+        return response;
+    } catch (error) {
+        handleError(error);
+    }
+};
+
+export const getUserSocialDataApi = async (playerId: string) => {
+    try {
+        const response = await axios.get<UserSocialProfile>(api + `${playerId}/social`);
         return response;
     } catch (error) {
         handleError(error);

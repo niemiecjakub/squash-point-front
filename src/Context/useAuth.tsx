@@ -1,10 +1,11 @@
 import { createContext, useEffect, useState } from "react";
 import { UserProfile, UserSocialProfile } from "../Models/User";
 import { useNavigate } from "react-router";
-import { getUserSocialDataApi, loginApi, registerApi } from "../Services/AuthService";
 import { toast } from "react-toastify";
 import React from "react";
 import axios from "axios";
+import { loginApi, registerApi } from "../Services/AccountService";
+import { getUserSocialDataApi } from "../Services/PlayerService";
 
 type UserContextType = {
     user: UserProfile | null;
@@ -76,7 +77,7 @@ export const UserProvider = ({ children }: Props) => {
     };
 
     const loginUser = async (email: string, password: string) => {
-        loginApi(email, password)
+        await loginApi(email, password)
             .then((response) => {
                 if (response) {
                     localStorage.setItem("token", response?.data.token);

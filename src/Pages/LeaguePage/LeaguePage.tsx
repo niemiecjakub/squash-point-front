@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import Table from "../../Components/Table/Table";
 import { GameProfile, PlayerProfile, LeagueProfileDetails } from "../../squashpoint";
-import { leagueGetByIdApi, leagueJoinApi, leagueLeaveApi } from "../../Services/LeagueService";
+import { leagueGetByIdApi } from "../../Services/LeagueService";
 import { useAuth } from "../../Context/useAuth";
-import { gamesColumns, scoreboardColumns } from "../../Helpers/TableColumns";
+import { LeaguePageGamesColumns, scoreboardColumns } from "../../Helpers/TableColumns";
 import LeagueSideMenu from "../../Components/LeagueSideMenu/LeagueSideMenu";
 
 const LeaguePage = () => {
@@ -59,10 +59,27 @@ const LeaguePage = () => {
 
                             <Table
                                 className="py-4"
-                                title="Games"
+                                title="Upcomming games"
                                 loading={leagueLoading}
-                                data={leagueInfo.games}
-                                columns={gamesColumns}
+                                data={leagueInfo.upcommingGames}
+                                columns={LeaguePageGamesColumns}
+                                onRowClicked={handleGameClick}
+                            />
+                            <Table
+                                className="py-4"
+                                title="Finished games"
+                                loading={leagueLoading}
+                                data={leagueInfo.finishedGames}
+                                columns={LeaguePageGamesColumns}
+                                onRowClicked={handleGameClick}
+                            />
+
+                            <Table
+                                className="py-4"
+                                title="Live games"
+                                loading={leagueLoading}
+                                data={leagueInfo.liveGames}
+                                columns={LeaguePageGamesColumns}
                                 onRowClicked={handleGameClick}
                             />
                         </div>
