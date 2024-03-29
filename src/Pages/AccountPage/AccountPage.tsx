@@ -4,18 +4,20 @@ import Modal from "../../Components/Modal/Modal";
 import NewLeagueForm from "../../Components/NewLeagueForm/NewLeagueForm";
 import PlayerEdit from "../../Components/PlayerEdit/PlayerEdit";
 import PlayerBarList from "../../Components/PlayerBarList/PlayerBarList";
+import useSocial from "../../Hooks/usePlayer";
 
 type Props = {};
 
 const AccountPage = (props: Props) => {
-    const { user, getUserSocialData, socialData } = useAuth();
+    const { user } = useAuth();
+    // const { getUserSocialData } = useSocial({});
 
     const [isNewLeagueFormOpen, setIsNewLeagueFormOpen] = useState<boolean>(false);
     const [isPlayerEditOpen, setIsPlayerEditOpen] = useState<boolean>(false);
 
-    useEffect(() => {
-        getUserSocialData(user!.id);
-    }, []);
+    // useEffect(() => {
+    //     getUserSocialData(user!.id);
+    // }, []);
 
     useEffect(() => {});
     const handleOpenNewLeagueForm = () => {
@@ -44,7 +46,7 @@ const AccountPage = (props: Props) => {
                 <button className="bg-blue-300 px-4 py-2" onClick={handlePlayerEditOpen}>
                     Edit info
                 </button>
-                <div className="flex w-full">
+                {/* <div className="flex w-full">
                     <div className="w-full">
                         <h1>Followers</h1>
                         <PlayerBarList isOpen={true} data={socialData?.followers!} />
@@ -67,7 +69,7 @@ const AccountPage = (props: Props) => {
                         <h1>Received Friend Requests:</h1>
                         <PlayerBarList isOpen={true} data={socialData?.receivedFriendRequests} />
                     </div>
-                </div>
+                </div> */}
             </div>
             <Modal isOpen={isNewLeagueFormOpen} hasCloseBtn={true} onClose={handleCloseNewLeagueForm}>
                 <NewLeagueForm close={handleCloseNewLeagueForm} />

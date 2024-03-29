@@ -5,17 +5,14 @@ import { toast } from "react-toastify";
 import React from "react";
 import axios from "axios";
 import { loginApi, registerApi } from "../Services/AccountService";
-import { getUserSocialDataApi } from "../Services/PlayerService";
 
 type UserContextType = {
     user: UserProfile | null;
-    socialData: UserSocialProfile | null;
     token: string | null;
     registerUser: (email: string, password: string, firstName: string, lastName: string, sex: string) => void;
     loginUser: (email: string, password: string) => void;
     logout: () => void;
     isLoggedIn: () => boolean;
-    getUserSocialData: (playerId: string) => void;
 };
 
 type Props = { children: React.ReactNode };
@@ -26,7 +23,6 @@ export const UserProvider = ({ children }: Props) => {
     const navigate = useNavigate();
     const [token, setToken] = useState<string | null>(null);
     const [user, setUser] = useState<UserProfile | null>(null);
-    const [socialData, setSocialData] = useState<UserSocialProfile | null>(null);
     const [isReady, setIsReady] = useState<boolean>(false);
 
     useEffect(() => {
@@ -59,23 +55,6 @@ export const UserProvider = ({ children }: Props) => {
             .catch((e) => toast.warning("Server error occured"));
     };
 
-    const getUserSocialData = async (userId: string) => {
-        await getUserSocialDataApi(userId)
-            .then((response) => {
-                if (response) {
-                    const userSocialObj = {
-                        following: response.data.following,
-                        followers: response.data.followers,
-                        friends: response.data.friends,
-                        sentFriendRequests: response.data.sentFriendRequests,
-                        receivedFriendRequests: response.data.receivedFriendRequests,
-                    };
-                    setSocialData(userSocialObj);
-                }
-            })
-            .catch((e) => toast.warning("Server error occured"));
-    };
-
     const loginUser = async (email: string, password: string) => {
         await loginApi(email, password)
             .then((response) => {
@@ -87,7 +66,6 @@ export const UserProvider = ({ children }: Props) => {
                         fullName: response.data.fullName,
                         photo: response.data.photo,
                     };
-                    getUserSocialData(response.data.id);
                     localStorage.setItem("user", JSON.stringify(userObj));
                     setToken(response?.data.token);
                     setUser(userObj!);
@@ -116,12 +94,10 @@ export const UserProvider = ({ children }: Props) => {
             value={{
                 user,
                 token,
-                socialData,
                 loginUser,
                 registerUser,
                 isLoggedIn,
                 logout,
-                getUserSocialData,
             }}
         >
             {isReady ? children : null}

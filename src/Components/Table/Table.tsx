@@ -8,7 +8,7 @@ export interface TableProps<T> {
   columns: TableColumn<T>[];
   className?: string;
   title?: string;
-  onRowClicked?: any;
+  onRowClicked?: (row: any, e: React.MouseEvent<Element, MouseEvent>) => void;
   pagination?: boolean
 }
 

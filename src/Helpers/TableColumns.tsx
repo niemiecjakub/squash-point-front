@@ -112,7 +112,7 @@ export const playerPageLastGamesGamesColumns: TableColumn<FinishedGameProfile>[]
                         alt="player photo"
                     />
                     <h1
-                        className={`${winner == players[0].fullName ? "font-bold" : ""} placeholder:text-lg ml-4`}
+                        className={`${winner == players[0].fullName ? "font-bold" : ""} text-lg ml-4`}
                         data-tag="allowRowEvents"
                     >
                         {players[0].fullName}
@@ -130,7 +130,7 @@ export const playerPageLastGamesGamesColumns: TableColumn<FinishedGameProfile>[]
 
                 <div className="flex justify-end items-center w-1/3">
                     <h1
-                        className={`${winner == players[1].fullName ? "font-bold" : ""} placeholder:text-lg mr-4`}
+                        className={`${winner == players[1].fullName ? "font-bold" : ""} text-lg mr-4`}
                         data-tag="allowRowEvents"
                     >
                         {players[1].fullName}

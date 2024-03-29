@@ -40,9 +40,9 @@ const NewGameForm: React.FC<Props> = ({ leagueId, players, className }: Props): 
     return (
         <form onSubmit={handleSubmit} className={`${className}`}>
             <div className="flex justify-between items-center pb-3 w-full">
-                <p>Play vs. : </p>
+                <p >Play vs. : </p>
                 <select
-                    className="ml-8 px-6 bg-slate-200 rounded-lg"
+                    className="ml-8 py-2 px-6 bg-slate-200 rounded-lg"
                     id="opponentId"
                     name="opponentId"
                     onChange={(e) => setFormData((prev) => ({ ...prev, opponentId: e.target.value }))}

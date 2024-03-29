@@ -41,7 +41,12 @@ const PlayerStatisticsOverviewList = ({ playerId }: Props) => {
                 <>
                     {playerGamesOverview &&
                         playerGamesOverview.map((stats) => (
-                            <PlayerStatisticsOverview name={stats.name} data={getOverviewData(stats)} colors={COLORS} />
+                            <PlayerStatisticsOverview
+                                key={stats.name}
+                                name={stats.name}
+                                data={getOverviewData(stats)}
+                                colors={COLORS}
+                            />
                         ))}
                 </>
             )}
