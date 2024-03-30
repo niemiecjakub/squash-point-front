@@ -1,7 +1,9 @@
 import { TableColumn } from "react-data-table-component";
-import { FinishedGameProfile, GameProfile, LeagueGameProfile, LeaguePlayerScoreboard, LeagueProfile, PlayerProfile } from "../squashpoint";
+import { League } from "../Models/League";
+import { Game, GameFinished } from "../Models/Game";
+import { Player, PlayerLeagueScore } from "../Models/Player";
 
-export const leagueGameTest: TableColumn<GameProfile>[] = [
+export const leagueGameTest: TableColumn<Game>[] = [
     {
         cell: ({ date, league, players, winner }) => (
             <div className="flex w-full items-center justify-between">
@@ -47,7 +49,7 @@ export const leagueGameTest: TableColumn<GameProfile>[] = [
     },
 ];
 
-export const playerPageUpcommingGamesColumns: TableColumn<GameProfile>[] = [
+export const playerPageUpcommingGamesColumns: TableColumn<Game>[] = [
     {
         cell: ({ date, league, players, winner }) => (
             <div className="flex w-full items-center justify-between">
@@ -96,7 +98,7 @@ export const playerPageUpcommingGamesColumns: TableColumn<GameProfile>[] = [
     },
 ];
 
-export const playerPageLastGamesGamesColumns: TableColumn<FinishedGameProfile>[] = [
+export const playerPageLastGamesGamesColumns: TableColumn<GameFinished>[] = [
     {
         cell: ({ league, players, winner }) => (
             <div className="flex w-full items-center justify-between">
@@ -151,7 +153,7 @@ export const playerPageLastGamesGamesColumns: TableColumn<FinishedGameProfile>[]
     },
 ];
 
-export const playerPageLastGamesColumns: TableColumn<GameProfile>[] = [
+export const playerPageLastGamesColumns: TableColumn<Game>[] = [
     {
         name: "Date",
         selector: (row) => row.date,
@@ -170,7 +172,7 @@ export const playerPageLastGamesColumns: TableColumn<GameProfile>[] = [
     },
 ];
 
-export const playerPageNextGamesColumns: TableColumn<GameProfile>[] = [
+export const playerPageNextGamesColumns: TableColumn<Game>[] = [
     {
         name: "Date",
         selector: (row) => row.date,
@@ -185,7 +187,7 @@ export const playerPageNextGamesColumns: TableColumn<GameProfile>[] = [
     },
 ];
 
-export const playerPageLeaguesColumns: TableColumn<LeagueProfile>[] = [
+export const playerPageLeaguesColumns: TableColumn<League>[] = [
     {
         name: "Name",
         selector: (row) => row.name,
@@ -193,7 +195,7 @@ export const playerPageLeaguesColumns: TableColumn<LeagueProfile>[] = [
     },
 ];
 
-export const LeaguePageGamesColumns: TableColumn<GameProfile>[] = [
+export const LeaguePageGamesColumns: TableColumn<Game>[] = [
     {
         name: "Players",
         selector: (row) => `${row.players[0].fullName} vs.${row.players[1].fullName}`,
@@ -211,7 +213,7 @@ export const LeaguePageGamesColumns: TableColumn<GameProfile>[] = [
     },
 ];
 
-export const HomePageGamesColumns: TableColumn<GameProfile>[] = [
+export const HomePageGamesColumns: TableColumn<Game>[] = [
     {
         name: "Players",
         selector: (row) => `${row.players[0].fullName} vs.${row.players[1].fullName}`,
@@ -234,7 +236,7 @@ export const HomePageGamesColumns: TableColumn<GameProfile>[] = [
     },
 ];
 
-export const leaguesColumns: TableColumn<LeagueProfile>[] = [
+export const leaguesColumns: TableColumn<League>[] = [
     {
         name: "Name",
         selector: (row) => row.name,
@@ -252,10 +254,10 @@ export const leaguesColumns: TableColumn<LeagueProfile>[] = [
     },
 ];
 
-export const leagueGamesColumns: TableColumn<LeagueGameProfile>[] = [
+export const leagueGamesColumns: TableColumn<Game>[] = [
     {
         name: "League",
-        selector: (row) => row.league.name,
+        selector: (row) => row.league,
         sortable: true,
     },
     {
@@ -275,7 +277,7 @@ export const leagueGamesColumns: TableColumn<LeagueGameProfile>[] = [
     },
 ];
 
-export const playersColumns: TableColumn<PlayerProfile>[] = [
+export const playersColumns: TableColumn<Player>[] = [
     {
         cell: ({ photo }) => (
             <img
@@ -293,7 +295,7 @@ export const playersColumns: TableColumn<PlayerProfile>[] = [
     },
 ];
 
-export const scoreboardColumns: TableColumn<LeaguePlayerScoreboard>[] = [
+export const scoreboardColumns: TableColumn<PlayerLeagueScore>[] = [
     {
         cell: ({ photo }) => (
             <img

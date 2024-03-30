@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
-import { PlayerProfile } from "../../squashpoint";
+import { useEffect,  useState } from "react";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 import PlayerBar from "../PlayerBar/PlayerBar";
 import { UserProfile } from "../../Models/User";
+import { Player } from "../../Models/Player";
 
 interface Props {
     isOpen: boolean;
@@ -12,7 +12,7 @@ interface Props {
 }
 
 const PlayerBarList: React.FC<Props> = ({ isOpen, getPlayers, data, className }: Props) => {
-    const [players, setPlayers] = useState<PlayerProfile[] | UserProfile[]>([]);
+    const [players, setPlayers] = useState<Player[] | UserProfile[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {

@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { LeagueGames, LeaguePlayerScoreboard, LeagueProfileDetails } from "../squashpoint";
 import {
     leagueGamesGetApi,
     leagueGetByIdApi,
@@ -8,6 +7,8 @@ import {
     leaguePlayersGetApi,
 } from "../Services/LeagueService";
 import { useAuth } from "../Context/useAuth";
+import { LeagueDetail, LeagueGames } from "../Models/League";
+import { PlayerLeagueScore } from "../Models/Player";
 
 type Props = {
     leagueId: string;
@@ -16,10 +17,10 @@ type Props = {
 const useLeague = ({ leagueId }: Props) => {
     const { user } = useAuth();
     const [isUserJoined, setIsUserJoined] = useState<boolean>(false);
-    const [leagueInfo, setLeagueInfo] = useState<LeagueProfileDetails>({} as LeagueProfileDetails);
+    const [leagueInfo, setLeagueInfo] = useState<LeagueDetail>({} as LeagueDetail);
     const [leagueLoading, setLeagueLoading] = useState<boolean>(true);
 
-    const [leaguePlayers, setLeaguePlayers] = useState<LeaguePlayerScoreboard[]>({} as LeaguePlayerScoreboard[]);
+    const [leaguePlayers, setLeaguePlayers] = useState<PlayerLeagueScore[]>({} as PlayerLeagueScore[]);
     const [leagueGames, setLeagueGames] = useState<LeagueGames>({} as LeagueGames);
 
     const getLeagueInfo = useCallback(() => {

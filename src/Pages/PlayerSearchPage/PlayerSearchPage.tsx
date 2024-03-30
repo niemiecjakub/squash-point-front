@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { PlayerProfile } from "../../squashpoint";
 import { useNavigate } from "react-router-dom";
 import { playersColumns } from "../../Helpers/TableColumns";
 import Table from "../../Components/Table/Table";
 import { playersGetApi } from "../../Services/PlayerService";
+import { Player } from "../../Models/Player";
 
 type Props = {};
 
 const PlayerSearchPage = (props: Props) => {
     const navigate = useNavigate();
-    const [players, setPlayers] = useState<PlayerProfile[]>([]);
+    const [players, setPlayers] = useState<Player[]>([]);
     const [playersLoading, setPlayersLoading] = useState<boolean>(true);
-    const handlePlayerClick = ({ id }: PlayerProfile) => {
+    const handlePlayerClick = ({ id }: Player) => {
         navigate(`/player/${id}`);
     };
 

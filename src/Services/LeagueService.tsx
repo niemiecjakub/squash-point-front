@@ -1,13 +1,13 @@
 import axios from "axios";
 import { handleError } from "../Helpers/ErrorHandler";
-import { LeagueGames, LeaguePlayerScoreboard, LeagueProfile, LeagueProfileDetails } from "../squashpoint";
-import { LeagueEditInputs } from "../Models/League";
+import { League, LeagueDetail, LeagueEditInputs, LeagueGames } from "../Models/League";
+import { PlayerLeagueScore } from "../Models/Player";
 
 const api = "http://localhost:5110/api/League/";
 
 export const leaguesGetApi = async () => {
     try {
-        const data = await axios.get<LeagueProfile[]>(api + "all");
+        const data = await axios.get<League[]>(api + "all");
         return data;
     } catch (error) {
         handleError(error);
@@ -16,7 +16,7 @@ export const leaguesGetApi = async () => {
 
 export const leagueGetByIdApi = async (leagueId: string) => {
     try {
-        const data = await axios.get<LeagueProfileDetails>(api + leagueId);
+        const data = await axios.get<LeagueDetail>(api + leagueId);
         return data;
     } catch (error) {
         handleError(error);
@@ -25,7 +25,7 @@ export const leagueGetByIdApi = async (leagueId: string) => {
 
 export const leaguePlayersGetApi = async (leagueId: string) => {
     try {
-        const data = await axios.get<LeaguePlayerScoreboard[]>(api + `${leagueId}/players`);
+        const data = await axios.get<PlayerLeagueScore[]>(api + `${leagueId}/players`);
         return data;
     } catch (error) {
         handleError(error);

@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { PlayerProfile } from "../../squashpoint";
 import { UserProfile } from "../../Models/User";
+import { Player } from "../../Models/Player";
 
 interface Props {
-    player: PlayerProfile | UserProfile;
+    player: Player | UserProfile;
     className?: string;
 }
 

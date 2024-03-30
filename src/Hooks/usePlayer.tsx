@@ -5,7 +5,8 @@ import {
     playerGetByIdApi,
     playerLeaguesGetByIdApi,
 } from "../Services/PlayerService";
-import { LeagueProfile, PlayerGames, PlayerProfileDetails, StatisticsOverview } from "../squashpoint";
+import { League } from "../Models/League";
+import { PlayerDetails, PlayerGames, PlayerStatistics } from "../Models/Player";
 
 type Props = {
     playerId: string;
@@ -14,10 +15,10 @@ type Props = {
 const usePlayer = ({ playerId }: Props) => {
     const [playerLoading, setPlayerLoading] = useState<boolean>(true);
 
-    const [playerInfo, setPlayerInfo] = useState<PlayerProfileDetails>({} as PlayerProfileDetails);
-    const [playerLeagues, setPlayerLeagues] = useState<LeagueProfile[]>([] as LeagueProfile[]);
+    const [playerInfo, setPlayerInfo] = useState<PlayerDetails>({} as PlayerDetails);
+    const [playerLeagues, setPlayerLeagues] = useState<League[]>([] as []);
     const [playerGames, setPlayerGames] = useState<PlayerGames>({} as PlayerGames);
-    const [playerStatisctics, setPlayerStatisctics] = useState<StatisticsOverview[]>([] as StatisticsOverview[]);
+    const [playerStatisctics, setPlayerStatisctics] = useState<PlayerStatistics[]>([]);
 
     const getplayerData = useCallback(async () => {
         setPlayerLoading(true);

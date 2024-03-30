@@ -1,13 +1,19 @@
 import "react-datepicker/dist/react-datepicker.css";
 import React, { useState } from "react";
-import { NewGameFormState, PlayerProfile } from "../../squashpoint";
 import DatePicker from "react-datepicker";
 import { createGameApi } from "../../Services/GameService";
 import { useAuth } from "../../Context/useAuth";
 import { toast } from "react-toastify";
+import { Player } from "../../Models/Player";
+
+type NewGameFormState = {
+    leagueId: string;
+    opponentId: string;
+    date: Date;
+}
 
 interface Props {
-    players: PlayerProfile[];
+    players: Player[];
     leagueId: string;
     className?: string;
 }

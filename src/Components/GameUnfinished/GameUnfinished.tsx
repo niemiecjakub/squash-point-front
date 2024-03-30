@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { GameProfileDetails, PlayerProfile } from "../../squashpoint";
 import { deleteGameApi, updateGameApi } from "../../Services/GameService";
 import { createSetApi, updateSetApi } from "../../Services/SetService";
 import { createPointApi } from "../../Services/PointService";
 import { useNavigate } from "react-router";
+import { GameDetails } from "../../Models/Game";
+import { Player } from "../../Models/Player";
 
 interface SetScore {
     player1: number;
@@ -16,12 +17,12 @@ interface GameScore {
 }
 
 interface Props {
-    gameInfo: GameProfileDetails;
+    gameInfo: GameDetails;
     gameId: string;
     getGameInfo: () => void;
 }
 
-const getGameWinner = (gameScore: GameScore, players: PlayerProfile[]): PlayerProfile | null => {
+const getGameWinner = (gameScore: GameScore, players: Player[]): Player | null => {
     const player1SetsWon = gameScore.sets.filter((set) => set.winner === players[0].id).length;
     const player2SetsWon = gameScore.sets.filter((set) => set.winner === players[1].id).length;
 

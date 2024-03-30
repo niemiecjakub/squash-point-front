@@ -1,21 +1,22 @@
 import { useParams, useNavigate } from "react-router";
 import Table from "../../Components/Table/Table";
-import { GameProfile, PlayerProfile } from "../../squashpoint";
 import { leagueGameTest, playerPageLastGamesGamesColumns, scoreboardColumns } from "../../Helpers/TableColumns";
 import LeagueInfo from "../../Components/LeagueInfo/LeagueInfo";
 import useLeague from "../../Hooks/useLeague";
 import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
+import { Player } from "../../Models/Player";
+import { Game } from "../../Models/Game";
 
 const LeaguePage = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const { leagueLoading, leaguePlayers, leagueGames } = useLeague({ leagueId: id! });
 
-    const handlePlayerClick = (row: PlayerProfile) => {
+    const handlePlayerClick = (row: Player) => {
         navigate(`/player/${row.id}`);
     };
 
-    const handleGameClick = (row: GameProfile) => {
+    const handleGameClick = (row: Game) => {
         navigate(`/game/${row.id}`);
     };
 

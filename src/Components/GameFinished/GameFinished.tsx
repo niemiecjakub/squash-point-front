@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { GameSummary, PlayerProfile, SetSummary } from "../../squashpoint";
 import {
     BarChart,
     Bar,
@@ -14,10 +13,13 @@ import {
     Cell,
 } from "recharts";
 import { gameSummaryGetByIdApi } from "../../Services/GameService";
+import { Player } from "../../Models/Player";
+import { SetSummary } from "../../Models/Set";
+import { GameSummary } from "../../Models/Game";
 
 interface Props {
     gameId: string;
-    players: PlayerProfile[];
+    players: Player[];
 }
 
 const getSetsSummary = (sets: SetSummary[]) => {

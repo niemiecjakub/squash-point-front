@@ -1,6 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
 import PlayerStatisticsOverviewList from "../../Components/PlayerStatisticsOverviewList/PlayerStatisticsOverviewList";
-import { FinishedGameProfile, GameProfile, LeagueProfile } from "../../squashpoint";
 import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
 import Table from "../../Components/Table/Table";
 import {
@@ -10,17 +9,19 @@ import {
 } from "../../Helpers/TableColumns";
 import PlayerInfo from "../../Components/PlayerInfo/PlayerInfo";
 import usePlayer from "../../Hooks/usePlayer";
+import { League } from "../../Models/League";
+import { Game, GameFinished } from "../../Models/Game";
 
 const PlayerPage = () => {
-    const { id } = useParams();
     const navigate = useNavigate();
+    const { id } = useParams();
     const { playerLeagues, playerGames, playerLoading, playerStatisctics } = usePlayer({ playerId: id! });
 
-    const handleLeagueClick = (row: LeagueProfile): void => {
+    const handleLeagueClick = (row: League): void => {
         navigate(`/league/${row.id}`);
     };
 
-    const handleGameClick = (row: GameProfile | FinishedGameProfile): void => {
+    const handleGameClick = (row: Game | GameFinished): void => {
         navigate(`/game/${row.id}`);
     };
 

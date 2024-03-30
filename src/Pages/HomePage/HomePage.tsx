@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { GameProfile, LeagueProfile, PlayerProfile } from "../../squashpoint";
 import { useNavigate } from "react-router";
 import Table from "../../Components/Table/Table";
 import { leaguesGetApi } from "../../Services/LeagueService";
 import { playersGetApi } from "../../Services/PlayerService";
 import { upcommingGamesGetApi } from "../../Services/GameService";
 import { HomePageGamesColumns, leagueGameTest, leaguesColumns, playersColumns } from "../../Helpers/TableColumns";
+import { League } from "../../Models/League";
+import { Player } from "../../Models/Player";
+import { Game } from "../../Models/Game";
 
 const HomePage: React.FC = () => {
     const navigate = useNavigate();
-    const [leagues, setLeagues] = useState<LeagueProfile[]>([]);
+    const [leagues, setLeagues] = useState<League[]>([]);
     const [leaguesLoading, setLeaguesLoading] = useState<boolean>(true);
 
-    const [players, setPlayers] = useState<PlayerProfile[]>([]);
+    const [players, setPlayers] = useState<Player[]>([]);
     const [playersLoading, setPlayersLoading] = useState<boolean>(true);
 
-    const [games, setGames] = useState<GameProfile[]>([]);
+    const [games, setGames] = useState<Game[]>([]);
     const [gamesLoading, setGamesLoading] = useState<boolean>(true);
 
     useEffect(() => {
@@ -46,13 +48,13 @@ const HomePage: React.FC = () => {
         });
     };
 
-    const handleLeagueClick = ({ id }: LeagueProfile) => {
+    const handleLeagueClick = ({ id }: League) => {
         navigate(`/league/${id}`);
     };
-    const handlePlayerClick = ({ id }: PlayerProfile) => {
+    const handlePlayerClick = ({ id }: Player) => {
         navigate(`/player/${id}`);
     };
-    const handleGameClick = ({ id }: PlayerProfile) => {
+    const handleGameClick = ({ id }: Game) => {
         navigate(`/game/${id}`);
     };
 

@@ -2,16 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Table from "../../Components/Table/Table";
 import { leaguesGetApi } from "../../Services/LeagueService";
-import { LeagueProfile } from "../../squashpoint";
 import { leaguesColumns } from "../../Helpers/TableColumns";
+import { League } from "../../Models/League";
 
 type Props = {};
 
 const LeagueSearchPage = (props: Props) => {
     const navigate = useNavigate();
-    const [leagues, setLeagues] = useState<LeagueProfile[]>([]);
+    const [leagues, setLeagues] = useState<League[]>([]);
     const [leaguesLoading, setLeaguesLoading] = useState<boolean>(true);
-    const handleLeagueClick = ({ id }: LeagueProfile) => {
+    const handleLeagueClick = ({ id }: League) => {
         navigate(`/league/${id}`);
     };
 

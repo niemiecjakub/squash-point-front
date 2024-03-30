@@ -1,21 +1,21 @@
 import { useEffect, useState } from "react";
-import { GameProfileDetails } from "../../squashpoint";
 import { useParams } from "react-router";
 import { gameGetByIdApi } from "../../Services/GameService";
 import GameInProgress from "../../Components/GameInProgress/GameInProgress";
 import GameUnfinished from "../../Components/GameUnfinished/GameUnfinished";
 import GameFinished from "../../Components/GameFinished/GameFinished";
 import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
+import { GameDetails } from "../../Models/Game";
 
 const GamePage = () => {
     const { id } = useParams();
-    const [gameInfo, setGameInfo] = useState<GameProfileDetails>({
+    const [gameInfo, setGameInfo] = useState<GameDetails>({
         id: "",
         status: "",
         date: "",
         players: [],
         sets: [],
-        league: ""
+        league: "",
     });
     const [loading, setLoading] = useState<boolean>(true);
 

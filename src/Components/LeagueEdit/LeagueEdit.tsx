@@ -4,11 +4,10 @@ import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { leagueEditApi } from "../../Services/LeagueService";
-import { LeagueProfileDetails } from "../../squashpoint";
-import { LeagueEditInputs } from "../../Models/League";
+import { LeagueDetail, LeagueEditInputs } from "../../Models/League";
 
 type Props = {
-    leagueInfo: LeagueProfileDetails;
+    leagueInfo: LeagueDetail;
     leagueId: string;
 };
 
