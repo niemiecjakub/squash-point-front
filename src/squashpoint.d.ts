@@ -6,7 +6,6 @@ export interface LeagueProfile {
     description: string;
     public: boolean;
     maxPlayers: number;
-
 }
 
 export interface GameProfile {
@@ -26,10 +25,9 @@ export interface FinishedGameProfile {
     players: {
         fullName: string;
         sets: number;
-        photo?: string
+        photo?: string;
     }[];
 }
-
 
 export interface LeagueGameProfile extends GameProfile {
     league: LeagueProfile;
@@ -44,13 +42,16 @@ export interface PlayerProfile {
 }
 
 export interface PlayerProfileDetails extends PlayerProfile {
-    leagues: LeagueProfile[];
-    lastGames: FinishedGameProfile[];
-    nextGames: GameProfile[];
     following: number;
     followers: number;
     friends: number;
 }
+
+export interface PlayerGames  {
+    lastGames: FinishedGameProfile[];
+    nextGames: GameProfile[];
+}
+
 
 export interface LeaguePlayerScoreboard extends PlayerProfile {
     score: number;
@@ -60,11 +61,13 @@ export interface LeaguePlayerScoreboard extends PlayerProfile {
 }
 
 export interface LeagueProfileDetails extends LeagueProfile {
-    players: LeaguePlayerScoreboard[];
+    photo: string;
+}
+
+export interface LeagueGames {
     finishedGames: FinishedGameProfile[];
     upcommingGames: GameProfile[];
     liveGames: GameProfile[];
-    photo: string;
 }
 
 export interface GameProfileDetails extends GameProfile {

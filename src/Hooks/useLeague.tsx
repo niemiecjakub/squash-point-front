@@ -1,16 +1,30 @@
-import { useState } from "react";
-import { LeagueProfileDetails } from "../squashpoint";
-import { leagueGetByIdApi } from "../Services/LeagueService";
+import { useCallback, useEffect, useState } from "react";
+import { LeagueGames, LeaguePlayerScoreboard, LeagueProfileDetails } from "../squashpoint";
+import {
+    leagueGamesGetApi,
+    leagueGetByIdApi,
+    leagueJoinApi,
+    leagueLeaveApi,
+    leaguePlayersGetApi,
+} from "../Services/LeagueService";
+import { useAuth } from "../Context/useAuth";
 
-type Props = {};
+type Props = {
+    leagueId: string;
+};
 
-const useLeague = (props: Props) => {
+const useLeague = ({ leagueId }: Props) => {
+    const { user } = useAuth();
+    const [isUserJoined, setIsUserJoined] = useState<boolean>(false);
     const [leagueInfo, setLeagueInfo] = useState<LeagueProfileDetails>({} as LeagueProfileDetails);
     const [leagueLoading, setLeagueLoading] = useState<boolean>(true);
 
-    const getLeagueInfo = (id: string) => {
+    const [leaguePlayers, setLeaguePlayers] = useState<LeaguePlayerScoreboard[]>({} as LeaguePlayerScoreboard[]);
+    const [leagueGames, setLeagueGames] = useState<LeagueGames>({} as LeagueGames);
+
+    const getLeagueInfo = useCallback(() => {
         setLeagueLoading(true);
-        leagueGetByIdApi(id)
+        leagueGetByIdApi(leagueId)
             .then((res) => {
                 setLeagueInfo(res?.data!);
                 setLeagueLoading(false);
@@ -18,9 +32,50 @@ const useLeague = (props: Props) => {
             .catch((e) => {
                 setLeagueLoading(false);
             });
+    }, []);
+
+    const getLeaguePlayers = useCallback(async () => {
+        await leaguePlayersGetApi(leagueId).then((res) => {
+            setLeaguePlayers(res?.data!);
+        });
+    }, []);
+
+    const getLeagueGames = useCallback(async () => {
+        await leagueGamesGetApi(leagueId).then((res) => {
+            setLeagueGames(res?.data!);
+        });
+    }, []);
+
+    const handleLeagueJoin = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        await leagueJoinApi(leagueId);
+        await getLeagueInfo();
     };
 
-    return { leagueInfo, leagueLoading, getLeagueInfo };
+    const handleLeagueLeave = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        await leagueLeaveApi(leagueId);
+        await getLeagueInfo();
+    };
+
+    useEffect(() => {
+        if (user && leaguePlayers.length > 0) {
+            setIsUserJoined(leaguePlayers.filter((p) => p.id == user?.id).length != 0);
+        }
+    }, [user, leaguePlayers]);
+
+    useEffect(() => {
+        getLeaguePlayers();
+        getLeagueGames();
+        getLeagueInfo();
+    }, [getLeaguePlayers, getLeagueGames, getLeagueInfo]);
+    return {
+        leagueLoading,
+        isUserJoined,
+        leagueInfo,
+        leagueGames,
+        leaguePlayers,
+        handleLeagueJoin,
+        handleLeagueLeave,
+    };
 };
 
 export default useLeague;

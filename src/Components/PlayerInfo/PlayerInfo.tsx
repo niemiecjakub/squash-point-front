@@ -5,10 +5,7 @@ import PlayerBarList from "../PlayerBarList/PlayerBarList";
 import { useAuth } from "../../Context/useAuth";
 import Button from "../Button/Button";
 import usePlayer from "../../Hooks/usePlayer";
-
-// type Props = {
-//     playerInfo: PlayerProfileDetails;
-// };
+import useSocial from "../../Hooks/useSocial";
 
 type Props = {
     playerId: string;
@@ -19,19 +16,21 @@ const PlayerInfo = ({ playerId }: Props) => {
     const [isFollowingModalOpen, setIsFollowingModalOpen] = useState<boolean>(false);
     const [isFollowersModalOpen, setIsFollowersModalOpen] = useState<boolean>(false);
     const [isFriendsModalOpen, setIsFriendsModalOpen] = useState<boolean>(false);
-
+    const { playerInfo, refetchData } = usePlayer({ playerId });
     const {
-        playerInfo,
         isFollowing,
         isFriend,
         isFriendRequestReceived,
         isFriendRequestSent,
-        handlePlayerFollow,
         handleAcceptFriendRequest,
         handleDeleteFriend,
+        handlePlayerFollow,
         handlePlayerUnfollow,
         handleSendFriendRequest,
-    } = usePlayer({ playerId });
+    } = useSocial({
+        playerId,
+        onSuccess: refetchData,
+    });
 
     const handleOpenFollowingModal = () => {
         setIsFollowingModalOpen(true);

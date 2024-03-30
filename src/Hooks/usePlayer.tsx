@@ -1,107 +1,64 @@
-import { useEffect, useState } from "react";
-import { getUserSocialDataApi, playerGetByIdApi } from "../Services/PlayerService";
-import { toast } from "react-toastify";
+import { useCallback, useEffect, useState } from "react";
 import {
-    acceptFriendRequestApi,
-    deleteFriendApi,
-    followPlayerApi,
-    sendFriendRequestApi,
-    unfollowPlayerApi,
-} from "../Services/AccountService";
-import { useAuth } from "../Context/useAuth";
-import { PlayerProfileDetails } from "../squashpoint";
+    playerGamesGetByIdApi,
+    playerGamesOverviewGetByIdApi,
+    playerGetByIdApi,
+    playerLeaguesGetByIdApi,
+} from "../Services/PlayerService";
+import { LeagueProfile, PlayerGames, PlayerProfileDetails, StatisticsOverview } from "../squashpoint";
 
 type Props = {
     playerId: string;
 };
 
 const usePlayer = ({ playerId }: Props) => {
-    const [isFollowing, setIsFollowing] = useState<boolean>(false);
-    const [isFriend, setIsFriend] = useState<boolean>(false);
-    const [isFriendRequestSent, setIsFriendRequestSent] = useState<boolean>(false);
-    const [isFriendRequestReceived, setIsFriendRequestReceived] = useState<boolean>(false);
-    const [playerInfo, setPlayerInfo] = useState<PlayerProfileDetails>();
-    const [playerInfoLoading, setPlayerInfoLoading] = useState<boolean>(true);
-    const { user } = useAuth();
+    const [playerLoading, setPlayerLoading] = useState<boolean>(true);
 
-    useEffect(() => {
-        getPlayerInfo();
-    }, []);
+    const [playerInfo, setPlayerInfo] = useState<PlayerProfileDetails>({} as PlayerProfileDetails);
+    const [playerLeagues, setPlayerLeagues] = useState<LeagueProfile[]>([] as LeagueProfile[]);
+    const [playerGames, setPlayerGames] = useState<PlayerGames>({} as PlayerGames);
+    const [playerStatisctics, setPlayerStatisctics] = useState<StatisticsOverview[]>([] as StatisticsOverview[]);
 
-    const getPlayerInfo = async () => {
-        setPlayerInfoLoading(true);
-        if (user) {
-            getUserSocialData();
-        }
-        getplayerData();
-        setPlayerInfoLoading(false);
-    };
-
-    const getplayerData = async () => {
+    const getplayerData = useCallback(async () => {
+        setPlayerLoading(true);
         await playerGetByIdApi(playerId).then((res) => {
             setPlayerInfo(res?.data!);
         });
-    };
+        setPlayerLoading(false);
+    }, []);
 
-    const getUserSocialData = async () => {
-        await getUserSocialDataApi(user!.id)
-            .then((res) => {
-                if (res) {
-                    const { following, sentFriendRequests, receivedFriendRequests, friends } = res.data;
-                    setIsFollowing(following.some((f) => f.id === playerId));
-                    setIsFriend(friends.some((f) => f.id === playerId));
-                    setIsFriendRequestSent(sentFriendRequests.some((f) => f.id === playerId));
-                    setIsFriendRequestReceived(receivedFriendRequests.some((f) => f.id === playerId));
-                }
-            })
-            .catch((e) => toast.warning("Server error occured"));
-    };
+    const getPlayerLeagues = useCallback(async () => {
+        await playerLeaguesGetByIdApi(playerId).then((res) => {
+            setPlayerLeagues(res?.data!);
+        });
+    }, []);
 
-    const handlePlayerFollow = async () => {
-        await followPlayerApi(playerId);
-        await getPlayerInfo();
-        toast.success(`You are now following ${playerInfo!.fullName}`);
-    };
+    const getPlayerGames = useCallback(async () => {
+        await playerGamesGetByIdApi(playerId).then((res) => {
+            setPlayerGames(res?.data!);
+        });
+    }, []);
 
-    const handlePlayerUnfollow = async () => {
-        await unfollowPlayerApi(playerId);
-        await getPlayerInfo();
-        toast.warning(`You are no longer following ${playerInfo!.fullName}`);
-    };
+    const getPlayerStatisctics = useCallback(async () => {
+        await playerGamesOverviewGetByIdApi(playerId!).then((res) => {
+            setPlayerStatisctics(res?.data!);
+        });
+    }, []);
 
-    const handleSendFriendRequest = async () => {
-        await sendFriendRequestApi(playerId);
-        await getPlayerInfo();
-        toast.success(`Friend request sent to ${playerInfo!.fullName}`);
-    };
-
-    const handleAcceptFriendRequest = async () => {
-        await acceptFriendRequestApi(playerId);
-        await getPlayerInfo();
-        toast.success(`You are now friends with ${playerInfo!.fullName}`);
-    };
-
-    const handleDeleteFriend = async () => {
-        await deleteFriendApi(playerId);
-        await getPlayerInfo();
-        toast.info(`${playerInfo!.fullName} removed from friend list`);
-    };
+    useEffect(() => {
+        getPlayerStatisctics();
+        getPlayerGames();
+        getPlayerLeagues();
+        getplayerData();
+    }, [getplayerData, getPlayerGames, getPlayerLeagues, getPlayerStatisctics]);
 
     return {
         playerInfo,
-        playerInfoLoading,
-        getplayerData,
-        getPlayerInfo,
-        isFollowing,
-        isFriend,
-        isFriendRequestReceived,
-        isFriendRequestSent,
-        getUserSocialData,
-        handlePlayerFollow,
-        handlePlayerUnfollow,
-        handleSendFriendRequest,
-        handleAcceptFriendRequest,
-        handleDeleteFriend,
+        playerLeagues,
+        playerGames,
+        playerStatisctics,
+        playerLoading,
+        refetchData: getplayerData,
     };
 };
 

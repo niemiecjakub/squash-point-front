@@ -14,7 +14,7 @@ import usePlayer from "../../Hooks/usePlayer";
 const PlayerPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { playerInfo, playerInfoLoading } = usePlayer({ playerId: id! });
+    const { playerLeagues, playerGames, playerLoading, playerStatisctics } = usePlayer({ playerId: id! });
 
     const handleLeagueClick = (row: LeagueProfile): void => {
         navigate(`/league/${row.id}`);
@@ -24,54 +24,50 @@ const PlayerPage = () => {
         navigate(`/game/${row.id}`);
     };
 
-    return playerInfoLoading ? (
+    return playerLoading ? (
         <LoadingSpinner />
     ) : (
         <>
-            {playerInfo && (
-                <>
-                    <PlayerInfo playerId={id!} />
-                    <div className="flex-col">
-                        <div className="flex w-full ">
+            <PlayerInfo playerId={id!} />
+            <div className="flex-col">
+                <div className="flex w-full ">
+                    <Table
+                        className="pb-4 mx-2 w-1/4"
+                        title="Leagues"
+                        data={playerLeagues}
+                        loading={playerLoading}
+                        onRowClicked={handleLeagueClick}
+                        columns={playerPageLeaguesColumns}
+                    />
+                    <div className="w-full px-2 flex-col">
+                        <div className="bg-white py-2 mb-4">
+                            {playerGames.lastGames && playerGames.lastGames.length > 0 ? (
+                                <PlayerStatisticsOverviewList statistics={playerStatisctics} />
+                            ) : (
+                                <p className="bg-white p-2 mb-4">No game data found</p>
+                            )}
+                        </div>
+                        <div className="flex w-full">
                             <Table
-                                className="pb-4 mx-2 w-1/4"
-                                title="Leagues"
-                                data={playerInfo!.leagues}
-                                loading={playerInfoLoading}
-                                onRowClicked={handleLeagueClick}
-                                columns={playerPageLeaguesColumns}
+                                title="Last Games"
+                                className="pb-4 w-1/2 pr-2"
+                                data={playerGames.lastGames}
+                                loading={playerLoading}
+                                onRowClicked={handleGameClick}
+                                columns={playerPageLastGamesGamesColumns}
                             />
-                            <div className="w-full px-2 flex-col">
-                                {playerInfo!.lastGames.length ? (
-                                    <div className="bg-white py-2 mb-4">
-                                        <PlayerStatisticsOverviewList playerId={id!} />
-                                    </div>
-                                ) : (
-                                    <p className="bg-white p-2 mb-4">No game data found</p>
-                                )}
-                                <div className="flex w-full">
-                                    <Table
-                                        title="Last Games"
-                                        className="pb-4 w-1/2 pr-2"
-                                        data={playerInfo!.lastGames}
-                                        loading={playerInfoLoading}
-                                        onRowClicked={handleGameClick}
-                                        columns={playerPageLastGamesGamesColumns}
-                                    />
-                                    <Table
-                                        title="Next Games"
-                                        className="pb-4 w-1/2 pl-2"
-                                        data={playerInfo!.nextGames}
-                                        loading={playerInfoLoading}
-                                        onRowClicked={handleGameClick}
-                                        columns={playerPageUpcommingGamesColumns}
-                                    />
-                                </div>
-                            </div>
+                            <Table
+                                title="Next Games"
+                                className="pb-4 w-1/2 pl-2"
+                                data={playerGames.nextGames}
+                                loading={playerLoading}
+                                onRowClicked={handleGameClick}
+                                columns={playerPageUpcommingGamesColumns}
+                            />
                         </div>
                     </div>
-                </>
-            )}
+                </div>
+            </div>
         </>
     );
 };

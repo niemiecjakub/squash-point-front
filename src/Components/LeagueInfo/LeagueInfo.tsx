@@ -1,34 +1,24 @@
 import React, { useState } from "react";
-import { LeagueProfileDetails } from "../../squashpoint";
 import NewGameForm from "../NewGameForm/NewGameForm";
-import { leagueJoinApi, leagueLeaveApi } from "../../Services/LeagueService";
 import Modal from "../Modal/Modal";
 import LeagueEdit from "../LeagueEdit/LeagueEdit";
 import { useNavigate } from "react-router-dom";
 import Badge from "../Badge/Badge";
 import Button from "../Button/Button";
 import useLeague from "../../Hooks/useLeague";
+import { useAuth } from "../../Context/useAuth";
 
 type Props = {
-    leagueInfo: LeagueProfileDetails;
     leagueId: string;
-    isLoggedIn: boolean;
-    isUserJoined: boolean;
 };
 
-const LeagueInfo = ({ isUserJoined, isLoggedIn, leagueInfo, leagueId }: Props) => {
+const LeagueInfo = ({ leagueId }: Props) => {
+    const { isLoggedIn } = useAuth();
     const [isNewGameOpen, setIsNewGameOpen] = useState<boolean>(false);
     const [isLegueEditOpen, setIsLegueEditOpen] = useState<boolean>(false);
-    const { getLeagueInfo } = useLeague({});
+    const { leagueInfo, leagueLoading, handleLeagueJoin, handleLeagueLeave, isUserJoined, leagueGames, leaguePlayers } =
+        useLeague({ leagueId });
     const navigate = useNavigate();
-
-    const handleLeagueJoin = async (e: React.MouseEvent<HTMLButtonElement>) => {
-        leagueJoinApi(leagueId).then(() => getLeagueInfo(leagueId));
-    };
-
-    const handleLeagueLeave = async (e: React.MouseEvent<HTMLButtonElement>) => {
-        leagueLeaveApi(leagueId).then(() => getLeagueInfo(leagueId));
-    };
 
     const handleNewGameOpen = () => {
         setIsNewGameOpen(true);
@@ -50,7 +40,9 @@ const LeagueInfo = ({ isUserJoined, isLoggedIn, leagueInfo, leagueId }: Props) =
         navigate("/login");
     };
 
-    return (
+    return leagueLoading ? (
+        <h1>loading</h1>
+    ) : (
         <>
             <div className="flex justify-between items-start text-xl my-4 mx-2 p-2 bg-white rounded-t-xl">
                 <div className="flex items-start">
@@ -80,13 +72,17 @@ const LeagueInfo = ({ isUserJoined, isLoggedIn, leagueInfo, leagueId }: Props) =
                         ) : (
                             <Badge text="Private" color="red" />
                         )}
-                        <Badge text={`${leagueInfo.finishedGames.length} games`} color="yellow" />
-                        <Badge text={`${leagueInfo.upcommingGames.length} upcomming`} color="yellow" />
-                        <Badge text={`${leagueInfo.liveGames.length} live`} color="red" />
+                        {leagueInfo && (
+                            <>
+                                <Badge text={`${leagueGames.finishedGames.length} games`} color="yellow" />
+                                <Badge text={`${leagueGames.upcommingGames.length} upcomming`} color="yellow" />
+                                <Badge text={`${leagueGames.liveGames.length} live`} color="red" />
+                            </>
+                        )}
                     </div>
                     <div className="flex justify-end">
                         {isUserJoined && <Button text="New game" color="yellow" onClick={handleNewGameOpen} />}
-                        {isLoggedIn ? (
+                        {isLoggedIn() ? (
                             <>
                                 {leagueInfo.playerCount < leagueInfo.maxPlayers && (
                                     <>
@@ -105,7 +101,7 @@ const LeagueInfo = ({ isUserJoined, isLoggedIn, leagueInfo, leagueId }: Props) =
                 </div>
             </div>
             <Modal isOpen={isNewGameOpen} title="New Game" onClose={handleNewGameClose} hasCloseBtn={true}>
-                <NewGameForm players={leagueInfo.players} leagueId={leagueId} />
+                <NewGameForm leagueId={leagueId} players={leaguePlayers} />
             </Modal>
             <Modal isOpen={isLegueEditOpen} title="Edit league" onClose={handleLeagueEditClose} hasCloseBtn={true}>
                 <LeagueEdit leagueId={leagueId} leagueInfo={leagueInfo} />

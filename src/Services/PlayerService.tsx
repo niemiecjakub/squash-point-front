@@ -1,6 +1,6 @@
 import axios from "axios";
 import { handleError } from "../Helpers/ErrorHandler";
-import { LeagueProfile, PlayerProfile, PlayerProfileDetails, StatisticsOverview } from "../squashpoint";
+import { LeagueProfile, PlayerGames, PlayerProfile, PlayerProfileDetails, StatisticsOverview } from "../squashpoint";
 import { UserSocialProfile } from "../Models/User";
 
 const api = "http://localhost:5110/api/Player/";
@@ -26,6 +26,15 @@ export const playerGetByIdApi = async (playerId: string) => {
 export const playerLeaguesGetByIdApi = async (playerId: string) => {
     try {
         const response = await axios.get<LeagueProfile[]>(api + `${playerId}/leagues`);
+        return response;
+    } catch (error) {
+        handleError(error);
+    }
+};
+
+export const playerGamesGetByIdApi = async (playerId: string) => {
+    try {
+        const response = await axios.get<PlayerGames>(api + `${playerId}/games`);
         return response;
     } catch (error) {
         handleError(error);

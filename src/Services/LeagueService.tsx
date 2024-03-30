@@ -1,7 +1,7 @@
 import axios from "axios";
 import { handleError } from "../Helpers/ErrorHandler";
-import { GameProfile, LeaguePlayerScoreboard, LeagueProfile, LeagueProfileDetails } from "../squashpoint";
-import { LeagueEditInputs, LeagueUpdate } from "../Models/League";
+import { LeagueGames, LeaguePlayerScoreboard, LeagueProfile, LeagueProfileDetails } from "../squashpoint";
+import { LeagueEditInputs } from "../Models/League";
 
 const api = "http://localhost:5110/api/League/";
 
@@ -34,7 +34,7 @@ export const leaguePlayersGetApi = async (leagueId: string) => {
 
 export const leagueGamesGetApi = async (leagueId: string) => {
     try {
-        const data = await axios.get<GameProfile[]>(api + `${leagueId}/games`);
+        const data = await axios.get<LeagueGames>(api + `${leagueId}/games`);
         return data;
     } catch (error) {
         handleError(error);
