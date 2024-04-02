@@ -6,7 +6,7 @@ type Props = {
     colors: string[];
 };
 
-const PlayerStatisticsOverview = ({ data, name, colors }: Props) => {
+const PlayerStatistics = ({ data, name, colors }: Props) => {
     return (
         <div className="w-full flex-col h-64 mb-6">
             <p className="text-center w-full text-xl font-semibold">{name}</p>
@@ -24,4 +24,4 @@ const PlayerStatisticsOverview = ({ data, name, colors }: Props) => {
     );
 };
 
-export default PlayerStatisticsOverview;
+export default PlayerStatistics;

@@ -67,11 +67,14 @@ export const leagueLeaveApi = async (leagueId: string) => {
     }
 };
 
-export const leagueCreateApi = async (name: string) => {
+export const leagueCreateApi = async (name: string, description: string, maxPlayers: number, isPublic: boolean) => {
     try {
         const data = await axios.post(api, null, {
             params: {
                 name,
+                description,
+                maxPlayers,
+                public: isPublic,
             },
         });
         return data;

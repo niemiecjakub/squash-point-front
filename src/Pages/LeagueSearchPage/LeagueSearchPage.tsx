@@ -1,46 +1,42 @@
-import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Table from "../../Components/Table/Table";
 import { leaguesGetApi } from "../../Services/LeagueService";
 import { leaguesColumns } from "../../Helpers/TableColumns";
 import { League } from "../../Models/League";
+import { useQuery } from "react-query";
+import DataTable from "react-data-table-component";
+import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
 
 type Props = {};
 
 const LeagueSearchPage = (props: Props) => {
     const navigate = useNavigate();
-    const [leagues, setLeagues] = useState<League[]>([]);
-    const [leaguesLoading, setLeaguesLoading] = useState<boolean>(true);
+
     const handleLeagueClick = ({ id }: League) => {
         navigate(`/league/${id}`);
     };
 
-    useEffect(() => {
-        getLeagues();
-    }, []);
-
-    const getLeagues = () => {
-        setLeaguesLoading(true);
-        leaguesGetApi().then((res) => {
-            setLeagues(res?.data!);
-            setLeaguesLoading(false);
-        });
-    };
+    const { data: leagues, isLoading: isLeaguesLoading } = useQuery({
+        queryFn: () => leaguesGetApi(),
+        queryKey: ["leagues"],
+    });
 
     return (
-        <>
-            <div className="flex w-full">
-                <div className="flex-col w-full px-2">
-                    <Table
-                        title="Leagues"
-                        columns={leaguesColumns}
-                        loading={leaguesLoading}
-                        data={leagues}
-                        onRowClicked={handleLeagueClick}
-                    />
-                </div>
+        <div className="flex w-full">
+            <div className="flex-col w-full px-2">
+                <DataTable
+                    title="Leagues"
+                    columns={leaguesColumns}
+                    data={leagues?.data!}
+                    progressPending={isLeaguesLoading}
+                    progressComponent={<LoadingSpinner />}
+                    onRowClicked={handleLeagueClick}
+                    pagination
+                    striped
+                    highlightOnHover
+                    pointerOnHover
+                />
             </div>
-        </>
+        </div>
     );
 };
 

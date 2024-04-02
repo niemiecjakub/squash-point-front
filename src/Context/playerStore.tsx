@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { League } from "../Models/League";
-import { PlayerDetails, PlayerGames, PlayerStatistics } from "../Models/Player";
+import { PlayerDetails, PlayerGames, PlayerGameStatistics } from "../Models/Player";
 
 type PlayerStore = {
     playerInfo: PlayerDetails;
@@ -9,8 +9,8 @@ type PlayerStore = {
     setLeagues: (leagues: League[]) => void;
     playerGames: PlayerGames;
     setGames: (games: PlayerGames) => void;
-    playerStatisctics: PlayerStatistics[];
-    setPlayerStatisctics: (playerStatisctics: PlayerStatistics[]) => void;
+    playerStatisctics: PlayerGameStatistics[];
+    setPlayerStatisctics: (playerStatisctics: PlayerGameStatistics[]) => void;
 };
 
 export const usePlayerStore = create<PlayerStore>((set) => ({

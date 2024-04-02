@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import PlayerStatisticsOverviewList from "../../Components/PlayerStatisticsOverviewList/PlayerStatisticsOverviewList";
+import PlayerStatisticsOverviewList from "../../Components/PlayerStatisticsList/PlayerStatisticsList";
 import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
 import {
     FinishedGameColumns,
@@ -95,6 +95,7 @@ const PlayerPage = () => {
             setIsFriendRequestReceived(sentFriendRequests.some((f) => f.id === id!));
         }
     }, [
+        socialInfo,
         playerInfo,
         setInfo,
         refetchSocial,

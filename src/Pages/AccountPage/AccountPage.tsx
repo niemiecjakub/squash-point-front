@@ -4,19 +4,29 @@ import Modal from "../../Components/Modal/Modal";
 import NewLeagueForm from "../../Components/NewLeagueForm/NewLeagueForm";
 import PlayerEdit from "../../Components/PlayerEdit/PlayerEdit";
 import PlayerBarList from "../../Components/PlayerBarList/PlayerBarList";
+import { getUserSocialDataApi } from "../../Services/PlayerService";
+import { useQuery } from "react-query";
+import { useUserStore } from "../../Context/userStore";
+import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
 
 type Props = {};
 
 const AccountPage = (props: Props) => {
     const { user } = useAuth();
-    // const { getUserSocialData } = useSocial({});
-
     const [isNewLeagueFormOpen, setIsNewLeagueFormOpen] = useState<boolean>(false);
     const [isPlayerEditOpen, setIsPlayerEditOpen] = useState<boolean>(false);
 
-    // useEffect(() => {
-    //     getUserSocialData(user!.id);
-    // }, []);
+    const { socialData, setSocialData } = useUserStore((state) => state);
+    const { data, isLoading } = useQuery({
+        queryFn: () => getUserSocialDataApi(user?.id!),
+        queryKey: ["social"],
+    });
+
+    useEffect(() => {
+        if (data?.data) {
+            setSocialData(data.data);
+        }
+    }, [data, setSocialData]);
 
     useEffect(() => {});
     const handleOpenNewLeagueForm = () => {
@@ -45,30 +55,34 @@ const AccountPage = (props: Props) => {
                 <button className="bg-blue-300 px-4 py-2" onClick={handlePlayerEditOpen}>
                     Edit info
                 </button>
-                {/* <div className="flex w-full">
-                    <div className="w-full">
-                        <h1>Followers</h1>
-                        <PlayerBarList isOpen={true} data={socialData?.followers!} />
-                    </div>
+                {isLoading ? (
+                    <LoadingSpinner />
+                ) : (
+                    <div className="flex w-full">
+                        <div className="w-full">
+                            <h1>Followers</h1>
+                            <PlayerBarList data={socialData.followers!} />
+                        </div>
 
-                    <div className="w-full">
-                        <h1>Following:</h1>
-                        <PlayerBarList isOpen={true} data={socialData?.following!} />
-                    </div>
-                    <div className="w-full">
-                        <h1>Friends:</h1>
-                        <PlayerBarList isOpen={true} data={socialData?.friends!} />
-                    </div>
-                    <div className="w-full">
-                        <h1>Sent Friend Requests:</h1>
-                        <PlayerBarList isOpen={true} data={socialData?.sentFriendRequests!} />
-                    </div>
+                        <div className="w-full">
+                            <h1>Following:</h1>
+                            <PlayerBarList data={socialData.following!} />
+                        </div>
+                        <div className="w-full">
+                            <h1>Friends:</h1>
+                            <PlayerBarList data={socialData.friends!} />
+                        </div>
+                        <div className="w-full">
+                            <h1>Sent Friend Requests:</h1>
+                            <PlayerBarList data={socialData.sentFriendRequests!} />
+                        </div>
 
-                    <div className="w-full">
-                        <h1>Received Friend Requests:</h1>
-                        <PlayerBarList isOpen={true} data={socialData?.receivedFriendRequests} />
+                        <div className="w-full">
+                            <h1>Received Friend Requests:</h1>
+                            <PlayerBarList data={socialData.receivedFriendRequests} />
+                        </div>
                     </div>
-                </div> */}
+                )}
             </div>
             <Modal isOpen={isNewLeagueFormOpen} hasCloseBtn={true} onClose={handleCloseNewLeagueForm}>
                 <NewLeagueForm close={handleCloseNewLeagueForm} />

@@ -2,7 +2,7 @@ import axios from "axios";
 import { handleError } from "../Helpers/ErrorHandler";
 import { UserSocialProfile } from "../Models/User";
 import { League } from "../Models/League";
-import { Player, PlayerDetails, PlayerGames, PlayerStatistics } from "../Models/Player";
+import { Player, PlayerDetails, PlayerGames, PlayerGameStatistics } from "../Models/Player";
 
 const api = "http://localhost:5110/api/Player/";
 
@@ -44,7 +44,7 @@ export const playerGamesGetByIdApi = async (playerId: string) => {
 
 export const playerGamesOverviewGetByIdApi = async (playerId: string) => {
     try {
-        const response = await axios.get<PlayerStatistics[]>(api + `${playerId}/games/overview`);
+        const response = await axios.get<PlayerGameStatistics[]>(api + `${playerId}/games/overview`);
         return response;
     } catch (error) {
         handleError(error);

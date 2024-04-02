@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
-import { PlayerStatistics } from "../../Models/Player";
-import PlayerStatisticsOverview from "../PlayerStatisticsOverview/PlayerStatisticsOverview";
+import { PlayerGameStatistics } from "../../Models/Player";
+import PlayerStatistics from "../PlayerStatistics/PlayerStatistics";
 import { useEffect } from "react";
 import { playerGamesOverviewGetByIdApi } from "../../Services/PlayerService";
 import { usePlayerStore } from "../../Context/playerStore";
@@ -8,7 +8,7 @@ import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 
 const COLORS = ["#394dcd", "#e35f5f", "#FFBB28"];
 
-const getOverviewData = (data: PlayerStatistics) => {
+const getOverviewData = (data: PlayerGameStatistics) => {
     return [
         { name: "win", value: data.won },
         { name: "lose", value: data.played },
@@ -17,7 +17,7 @@ const getOverviewData = (data: PlayerStatistics) => {
 
 type Props = { leagueId: string };
 
-const PlayerStatisticsOverviewList = ({ leagueId }: Props) => {
+const PlayerStatisticsList = ({ leagueId }: Props) => {
     const { playerStatisctics, setPlayerStatisctics } = usePlayerStore((state) => state);
 
     const {
@@ -40,15 +40,10 @@ const PlayerStatisticsOverviewList = ({ leagueId }: Props) => {
     ) : (
         <div className="flex w-full">
             {playerStatisctics.map((stats) => (
-                <PlayerStatisticsOverview
-                    key={stats.name}
-                    name={stats.name}
-                    data={getOverviewData(stats)}
-                    colors={COLORS}
-                />
+                <PlayerStatistics key={stats.name} name={stats.name} data={getOverviewData(stats)} colors={COLORS} />
             ))}
         </div>
     );
 };
 
-export default PlayerStatisticsOverviewList;
+export default PlayerStatisticsList;

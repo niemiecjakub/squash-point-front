@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { UserSocialProfile } from "../Models/User";
 
 type SocialStore = {
     isFollowing: boolean;

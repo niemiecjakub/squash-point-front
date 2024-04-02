@@ -26,7 +26,7 @@ export interface PlayerGames {
     nextGames: Game[];
 }
 
-export interface PlayerStatistics {
+export interface PlayerGameStatistics {
     name: string;
     played: number;
     won: number;
