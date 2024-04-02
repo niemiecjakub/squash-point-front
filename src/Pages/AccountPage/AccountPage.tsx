@@ -4,7 +4,6 @@ import Modal from "../../Components/Modal/Modal";
 import NewLeagueForm from "../../Components/NewLeagueForm/NewLeagueForm";
 import PlayerEdit from "../../Components/PlayerEdit/PlayerEdit";
 import PlayerBarList from "../../Components/PlayerBarList/PlayerBarList";
-import useSocial from "../../Hooks/usePlayer";
 
 type Props = {};
 

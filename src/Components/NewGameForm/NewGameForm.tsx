@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 import { createGameApi } from "../../Services/GameService";
 import { useAuth } from "../../Context/useAuth";
 import { toast } from "react-toastify";
-import { Player } from "../../Models/Player";
+import { useLeagueStore } from "../../Context/leagueStore";
 
 type NewGameFormState = {
     leagueId: string;
@@ -13,18 +13,16 @@ type NewGameFormState = {
 };
 
 interface Props {
-    players: Player[];
     leagueId: string;
     className?: string;
 }
 
-const NewGameForm: React.FC<Props> = ({ leagueId, players, className }: Props): JSX.Element => {
+const NewGameForm: React.FC<Props> = ({ leagueId, className }: Props): JSX.Element => {
     const { user } = useAuth();
+    const { leaguePlayers } = useLeagueStore((state) => state);
     const [formData, setFormData] = useState<NewGameFormState>({
-        leagueId: leagueId,
-        opponentId: "",
         date: new Date(),
-    });
+    } as NewGameFormState);
 
     const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
         const { leagueId, opponentId, date } = formData;
@@ -54,9 +52,9 @@ const NewGameForm: React.FC<Props> = ({ leagueId, players, className }: Props): 
                     value={formData.opponentId}
                 >
                     <option>Select player</option>
-                    {players &&
-                        players.length > 0 &&
-                        players
+                    {leaguePlayers &&
+                        leaguePlayers.length > 0 &&
+                        leaguePlayers
                             .filter((p) => p.id != user?.id)
                             .map(({ id, fullName }) => (
                                 <option key={id} value={id}>

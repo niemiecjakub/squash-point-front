@@ -4,32 +4,77 @@ import Modal from "../Modal/Modal";
 import PlayerBarList from "../PlayerBarList/PlayerBarList";
 import { useAuth } from "../../Context/useAuth";
 import Button from "../Button/Button";
-import usePlayer from "../../Hooks/usePlayer";
-import useSocial from "../../Hooks/useSocial";
+import { useSoicialStore } from "../../Context/socialStore";
+import { useMutation, useQuery } from "react-query";
+import { usePlayerStore } from "../../Context/playerStore";
+import { toast } from "react-toastify";
+import {
+    acceptFriendRequestApi,
+    deleteFriendApi,
+    followPlayerApi,
+    sendFriendRequestApi,
+    unfollowPlayerApi,
+} from "../../Services/AccountService";
 
 type Props = {
     playerId: string;
+    isSocialInfoLoading: boolean;
+    refetchInfo: () => void;
+    refetchSocial: () => void;
 };
 
-const PlayerInfo = ({ playerId }: Props) => {
+const PlayerInfo = ({ playerId, refetchInfo, refetchSocial, isSocialInfoLoading }: Props) => {
     const { user } = useAuth();
     const [isFollowingModalOpen, setIsFollowingModalOpen] = useState<boolean>(false);
     const [isFollowersModalOpen, setIsFollowersModalOpen] = useState<boolean>(false);
     const [isFriendsModalOpen, setIsFriendsModalOpen] = useState<boolean>(false);
-    const { playerInfo, refetchData } = usePlayer({ playerId });
-    const {
-        isFollowing,
-        isFriend,
-        isFriendRequestReceived,
-        isFriendRequestSent,
-        handleAcceptFriendRequest,
-        handleDeleteFriend,
-        handlePlayerFollow,
-        handlePlayerUnfollow,
-        handleSendFriendRequest,
-    } = useSocial({
-        playerId,
-        onSuccess: refetchData,
+
+    const { playerInfo } = usePlayerStore((state) => state);
+    const { isFollowing, isFriend, isFriendRequestReceived, isFriendRequestSent } = useSoicialStore((state) => state);
+
+    const { mutateAsync: handlePlayerFollow } = useMutation({
+        mutationFn: followPlayerApi,
+        onSuccess: () => {
+            refetchInfo();
+            refetchSocial();
+            toast.success(`Followed player ${playerInfo.fullName}`);
+        },
+    });
+
+    const { mutateAsync: handlePlayerUnfollow } = useMutation({
+        mutationFn: unfollowPlayerApi,
+        onSuccess: () => {
+            refetchInfo();
+            refetchSocial();
+            toast.info(`Unollowed player ${playerInfo.fullName}`);
+        },
+    });
+
+    const { mutateAsync: handleSendFriendRequest } = useMutation({
+        mutationFn: sendFriendRequestApi,
+        onSuccess: () => {
+            refetchInfo();
+            refetchSocial();
+            toast.info(`Sent friend request to ${playerInfo.fullName}`);
+        },
+    });
+
+    const { mutateAsync: handleAcceptFriendRequest } = useMutation({
+        mutationFn: acceptFriendRequestApi,
+        onSuccess: () => {
+            refetchInfo();
+            refetchSocial();
+            toast.info(`Accepted friend invite from ${playerInfo.fullName}`);
+        },
+    });
+
+    const { mutateAsync: handleDeleteFriend } = useMutation({
+        mutationFn: deleteFriendApi,
+        onSuccess: () => {
+            refetchInfo();
+            refetchSocial();
+            toast.info(`Deleted friend ${playerInfo.fullName}`);
+        },
     });
 
     const handleOpenFollowingModal = () => {
@@ -77,36 +122,48 @@ const PlayerInfo = ({ playerId }: Props) => {
                             {user.id != playerId && (
                                 <>
                                     {isFriend ? (
-                                        <Button text="- Remove friend" color="red" onClick={handleDeleteFriend} />
+                                        <Button
+                                            text="- Remove friend"
+                                            color="red"
+                                            onClick={async () => await handleDeleteFriend(playerId)}
+                                        />
                                     ) : (
                                         <>
                                             {isFriendRequestReceived && (
                                                 <Button
                                                     text="Accept friend request"
                                                     color="green"
-                                                    onClick={handleAcceptFriendRequest}
+                                                    onClick={async () => await handleAcceptFriendRequest(playerId)}
                                                 />
                                             )}
                                             {isFriendRequestSent && (
                                                 <Button
                                                     text="Friend request sent"
                                                     color="green"
-                                                    onClick={handleDeleteFriend}
+                                                    onClick={async () => await handleDeleteFriend(playerId)}
                                                 />
                                             )}
                                             {!isFriendRequestReceived && !isFriendRequestSent && (
                                                 <Button
                                                     text="+ Add friend"
                                                     color="green"
-                                                    onClick={handleSendFriendRequest}
+                                                    onClick={async () => await handleSendFriendRequest(playerId)}
                                                 />
                                             )}
                                         </>
                                     )}
                                     {isFollowing ? (
-                                        <Button text="- Unfollow" color="red" onClick={handlePlayerUnfollow} />
+                                        <Button
+                                            text="- Unfollow"
+                                            color="red"
+                                            onClick={async () => await handlePlayerUnfollow(playerId)}
+                                        />
                                     ) : (
-                                        <Button text="+ Follow" color="green" onClick={handlePlayerFollow} />
+                                        <Button
+                                            text="+ Follow"
+                                            color="green"
+                                            onClick={async () => await handlePlayerFollow(playerId)}
+                                        />
                                     )}
                                 </>
                             )}

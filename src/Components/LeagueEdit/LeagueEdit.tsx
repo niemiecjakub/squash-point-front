@@ -4,10 +4,10 @@ import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { leagueEditApi } from "../../Services/LeagueService";
-import { LeagueDetail, LeagueEditInputs } from "../../Models/League";
+import { LeagueEditInputs } from "../../Models/League";
+import { useLeagueStore } from "../../Context/leagueStore";
 
 type Props = {
-    leagueInfo: LeagueDetail;
     leagueId: string;
 };
 
@@ -18,13 +18,14 @@ const validation = Yup.object().shape({
     public: Yup.boolean().required("public name is required"),
 });
 
-const LeagueEdit = ({ leagueId, leagueInfo }: Props) => {
+const LeagueEdit = ({ leagueId }: Props) => {
+    const { leagueInfo } = useLeagueStore((state) => state);
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm<LeagueEditInputs>({});
-    
+
     const handleLeagueEdit = async (formState: LeagueEditInputs) => {
         await leagueEditApi(leagueId, formState)
             .then((res) => {

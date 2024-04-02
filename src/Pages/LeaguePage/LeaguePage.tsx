@@ -5,7 +5,7 @@ import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
 import { Player } from "../../Models/Player";
 import { Game, GameFinished } from "../../Models/Game";
 import DataTable from "react-data-table-component";
-import { useLeagueStore } from "../../Context/store";
+import { useLeagueStore } from "../../Context/leagueStore";
 import { useQuery } from "react-query";
 import { leagueGamesGetApi, leagueGetByIdApi, leaguePlayersGetApi } from "../../Services/LeagueService";
 import { useEffect } from "react";
@@ -15,6 +15,10 @@ const LeaguePage = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const { user } = useAuth();
+
+    const { leagueGames, leaguePlayers, setGames, setPlayers, setInfo, setIsUserJoined } = useLeagueStore(
+        (state) => state
+    );
 
     const {
         data: info,
@@ -43,10 +47,6 @@ const LeaguePage = () => {
         queryKey: ["games"],
     });
 
-    const { leagueGames, leaguePlayers, setGames, setPlayers, setInfo, setIsUserJoined } = useLeagueStore(
-        (state) => state
-    );
-
     useEffect(() => {
         if (info?.data) {
             setInfo(info.data);
@@ -56,7 +56,6 @@ const LeaguePage = () => {
     useEffect(() => {
         if (players?.data) {
             setPlayers(players.data);
-
             setIsUserJoined(players.data.filter((p) => p.id == user?.id).length != 0);
         }
     }, [players, setPlayers, refetchPlayers]);
@@ -79,11 +78,7 @@ const LeaguePage = () => {
         <LoadingSpinner />
     ) : (
         <>
-            <LeagueInfo
-                leagueId={id!}
-                refetchInfo={refetchInfo}
-                refetchPlayers={refetchPlayers}
-            />
+            <LeagueInfo leagueId={id!} refetchInfo={refetchInfo} refetchPlayers={refetchPlayers} />
             <div className="flex px-2">
                 <div className="w-1/2 pr-2">
                     <DataTable
