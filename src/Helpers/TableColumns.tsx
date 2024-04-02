@@ -98,7 +98,7 @@ export const playerPageUpcommingGamesColumns: TableColumn<Game>[] = [
     },
 ];
 
-export const playerPageLastGamesGamesColumns: TableColumn<GameFinished>[] = [
+export const FinishedGameColumns: TableColumn<GameFinished>[] = [
     {
         cell: ({ league, players, winner }) => (
             <div className="flex w-full items-center justify-between">

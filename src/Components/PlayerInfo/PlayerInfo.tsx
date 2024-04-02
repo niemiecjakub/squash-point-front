@@ -58,123 +58,105 @@ const PlayerInfo = ({ playerId }: Props) => {
 
     return (
         <>
-            {playerInfo && (
-                <>
-                    <div className="flex justify-between items-start text-xl my-4 mx-2 p-2 bg-white rounded-t-xl">
-                        <div className="flex items-start">
-                            <img
-                                className="h-32 w-32 rounded-full"
-                                src={
-                                    playerInfo.photo
-                                        ? `data:image/png;base64,${playerInfo!.photo} `
-                                        : `${process.env.PUBLIC_URL}` + "/player.png"
-                                }
-                                alt="player photo"
-                            />
-                            <h1 className="font-semibold text-2xl">{playerInfo.fullName}</h1>
-                        </div>
-                        <div className="flex">
-                            {user ? (
+            <div className="flex justify-between items-start text-xl my-4 mx-2 p-2 bg-white rounded-t-xl">
+                <div className="flex items-start">
+                    <img
+                        className="h-32 w-32 rounded-full"
+                        src={
+                            playerInfo.photo
+                                ? `data:image/png;base64,${playerInfo!.photo} `
+                                : `${process.env.PUBLIC_URL}` + "/player.png"
+                        }
+                        alt="player photo"
+                    />
+                    <h1 className="font-semibold text-2xl">{playerInfo.fullName}</h1>
+                </div>
+                <div className="flex">
+                    {user ? (
+                        <>
+                            {user.id != playerId && (
                                 <>
-                                    {user.id != playerId && (
+                                    {isFriend ? (
+                                        <Button text="- Remove friend" color="red" onClick={handleDeleteFriend} />
+                                    ) : (
                                         <>
-                                            {isFriend ? (
+                                            {isFriendRequestReceived && (
                                                 <Button
-                                                    text="- Remove friend"
-                                                    color="red"
+                                                    text="Accept friend request"
+                                                    color="green"
+                                                    onClick={handleAcceptFriendRequest}
+                                                />
+                                            )}
+                                            {isFriendRequestSent && (
+                                                <Button
+                                                    text="Friend request sent"
+                                                    color="green"
                                                     onClick={handleDeleteFriend}
                                                 />
-                                            ) : (
-                                                <>
-                                                    {isFriendRequestReceived && (
-                                                        <Button
-                                                            text="Accept friend request"
-                                                            color="green"
-                                                            onClick={handleAcceptFriendRequest}
-                                                        />
-                                                    )}
-                                                    {isFriendRequestSent && (
-                                                        <Button
-                                                            text="Friend request sent"
-                                                            color="green"
-                                                            onClick={handleDeleteFriend}
-                                                        />
-                                                    )}
-                                                    {!isFriendRequestReceived && !isFriendRequestSent && (
-                                                        <Button
-                                                            text="+ Add friend"
-                                                            color="green"
-                                                            onClick={handleSendFriendRequest}
-                                                        />
-                                                    )}
-                                                </>
                                             )}
-                                            {isFollowing ? (
-                                                <Button text="- Unfollow" color="red" onClick={handlePlayerUnfollow} />
-                                            ) : (
-                                                <Button text="+ Follow" color="green" onClick={handlePlayerFollow} />
+                                            {!isFriendRequestReceived && !isFriendRequestSent && (
+                                                <Button
+                                                    text="+ Add friend"
+                                                    color="green"
+                                                    onClick={handleSendFriendRequest}
+                                                />
                                             )}
                                         </>
                                     )}
+                                    {isFollowing ? (
+                                        <Button text="- Unfollow" color="red" onClick={handlePlayerUnfollow} />
+                                    ) : (
+                                        <Button text="+ Follow" color="green" onClick={handlePlayerFollow} />
+                                    )}
                                 </>
-                            ) : (
-                                <Button text="Log in to follow" color="red" onClick={() => {}} />
                             )}
-                            <Button
-                                text={`Friends: ${playerInfo.friends}`}
-                                color="yellow"
-                                onClick={handleOpenFriendsModal}
-                            />
-                            <Button
-                                text={`Followers: ${playerInfo.followers}`}
-                                color="yellow"
-                                onClick={handleOpenFollowersModal}
-                            />
-                            <Button
-                                text={`Following: ${playerInfo.following}`}
-                                color="yellow"
-                                onClick={handleOpenFollowingModal}
-                            />
-                        </div>
-                    </div>
+                        </>
+                    ) : (
+                        <Button text="Log in to follow" color="red" onClick={() => {}} />
+                    )}
+                    <Button text={`Friends: ${playerInfo.friends}`} color="yellow" onClick={handleOpenFriendsModal} />
+                    <Button
+                        text={`Followers: ${playerInfo.followers}`}
+                        color="yellow"
+                        onClick={handleOpenFollowersModal}
+                    />
+                    <Button
+                        text={`Following: ${playerInfo.following}`}
+                        color="yellow"
+                        onClick={handleOpenFollowingModal}
+                    />
+                </div>
+            </div>
 
-                    <Modal
-                        title="Followers"
-                        isOpen={isFollowersModalOpen}
-                        onClose={handleCloseFollowersModal}
-                        className="w-1/4 max-h-1/3"
-                        hasCloseBtn={true}
-                    >
-                        <PlayerBarList
-                            getPlayers={() => playerFollowersGetApi(playerId)}
-                            isOpen={isFollowersModalOpen}
-                        />
-                    </Modal>
+            <Modal
+                title="Followers"
+                isOpen={isFollowersModalOpen}
+                onClose={handleCloseFollowersModal}
+                className="w-1/4 max-h-1/3"
+                hasCloseBtn={true}
+            >
+                <PlayerBarList getPlayers={() => playerFollowersGetApi(playerId)} isOpen={isFollowersModalOpen} />
+            </Modal>
 
-                    <Modal
-                        title="Following"
-                        isOpen={isFollowingModalOpen}
-                        onClose={handleCloseFollowingModal}
-                        className="w-1/4 max-h-1/3"
-                        hasCloseBtn={true}
-                    >
-                        <PlayerBarList
-                            getPlayers={() => playerFollowingGetApi(playerId)}
-                            isOpen={isFollowingModalOpen}
-                        />
-                    </Modal>
+            <Modal
+                title="Following"
+                isOpen={isFollowingModalOpen}
+                onClose={handleCloseFollowingModal}
+                className="w-1/4 max-h-1/3"
+                hasCloseBtn={true}
+            >
+                <PlayerBarList getPlayers={() => playerFollowingGetApi(playerId)} isOpen={isFollowingModalOpen} />
+            </Modal>
 
-                    <Modal
-                        title="Friends"
-                        isOpen={isFriendsModalOpen}
-                        onClose={handleCloseFriendsModal}
-                        className="w-1/4 max-h-1/3"
-                        hasCloseBtn={true}
-                    >
-                        <PlayerBarList getPlayers={() => playerFriendsGetApi(playerId)} isOpen={isFriendsModalOpen} />
-                    </Modal>
-                </>
-            )}
+            <Modal
+                title="Friends"
+                isOpen={isFriendsModalOpen}
+                onClose={handleCloseFriendsModal}
+                className="w-1/4 max-h-1/3"
+                hasCloseBtn={true}
+            >
+                <PlayerBarList getPlayers={() => playerFriendsGetApi(playerId)} isOpen={isFriendsModalOpen} />
+            </Modal>
         </>
     );
 };

@@ -1,25 +1,28 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import NewGameForm from "../NewGameForm/NewGameForm";
 import Modal from "../Modal/Modal";
 import LeagueEdit from "../LeagueEdit/LeagueEdit";
 import { useNavigate } from "react-router-dom";
 import Badge from "../Badge/Badge";
 import Button from "../Button/Button";
-import useLeague from "../../Hooks/useLeague";
 import { useAuth } from "../../Context/useAuth";
+import { useLeagueStore } from "../../Context/store";
+import { leagueJoinApi, leagueLeaveApi } from "../../Services/LeagueService";
+import { toast } from "react-toastify";
 
 type Props = {
     leagueId: string;
+    refetchInfo: () => void;
+    refetchPlayers: () => void;
 };
 
-const LeagueInfo = ({ leagueId }: Props) => {
+const LeagueInfo = ({ leagueId,  refetchInfo, refetchPlayers }: Props) => {
+    const navigate = useNavigate();
     const { isLoggedIn } = useAuth();
     const [isNewGameOpen, setIsNewGameOpen] = useState<boolean>(false);
     const [isLegueEditOpen, setIsLegueEditOpen] = useState<boolean>(false);
-    const { leagueInfo, leagueLoading, handleLeagueJoin, handleLeagueLeave, isUserJoined, leagueGames, leaguePlayers } =
-        useLeague({ leagueId });
-    const navigate = useNavigate();
 
+    const { isUserJoined, leagueInfo, leagueGames, leaguePlayers } = useLeagueStore((state) => state);
     const handleNewGameOpen = () => {
         setIsNewGameOpen(true);
     };
@@ -40,9 +43,21 @@ const LeagueInfo = ({ leagueId }: Props) => {
         navigate("/login");
     };
 
-    return leagueLoading ? (
-        <h1>loading</h1>
-    ) : (
+    const handleLeagueJoin = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        await leagueJoinApi(leagueId);
+        refetchInfo();
+        refetchPlayers();
+        toast.success(`Joined legue ${leagueInfo.name}`);
+    };
+
+    const handleLeagueLeave = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        await leagueLeaveApi(leagueId);
+        refetchInfo();
+        refetchPlayers();
+        toast.warning(`Left league ${leagueInfo.name}`);
+    };
+
+    return (
         <>
             <div className="flex justify-between items-start text-xl my-4 mx-2 p-2 bg-white rounded-t-xl">
                 <div className="flex items-start">
@@ -64,7 +79,6 @@ const LeagueInfo = ({ leagueId }: Props) => {
                         </h1>
                     </div>
                 </div>
-
                 <div className="flex flex-col justify-between min-h-32">
                     <div className="flex">
                         {leagueInfo.public ? (
@@ -72,13 +86,13 @@ const LeagueInfo = ({ leagueId }: Props) => {
                         ) : (
                             <Badge text="Private" color="red" />
                         )}
-                        {leagueInfo && (
-                            <>
-                                <Badge text={`${leagueGames.finishedGames.length} games`} color="yellow" />
-                                <Badge text={`${leagueGames.upcommingGames.length} upcomming`} color="yellow" />
-                                <Badge text={`${leagueGames.liveGames.length} live`} color="red" />
-                            </>
+                        {leagueGames.finishedGames && (
+                            <Badge text={`${leagueGames.finishedGames.length} games`} color="yellow" />
                         )}
+                        {leagueGames.upcommingGames && (
+                            <Badge text={`${leagueGames.upcommingGames.length} upcomming`} color="yellow" />
+                        )}
+                        {leagueGames.liveGames && <Badge text={`${leagueGames.liveGames.length} live`} color="red" />}
                     </div>
                     <div className="flex justify-end">
                         {isUserJoined && <Button text="New game" color="yellow" onClick={handleNewGameOpen} />}

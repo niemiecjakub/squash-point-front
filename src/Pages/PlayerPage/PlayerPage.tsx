@@ -3,7 +3,7 @@ import PlayerStatisticsOverviewList from "../../Components/PlayerStatisticsOverv
 import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
 import Table from "../../Components/Table/Table";
 import {
-    playerPageLastGamesGamesColumns,
+    FinishedGameColumns,
     playerPageLeaguesColumns,
     playerPageUpcommingGamesColumns,
 } from "../../Helpers/TableColumns";
@@ -55,7 +55,7 @@ const PlayerPage = () => {
                                 data={playerGames.lastGames}
                                 loading={playerLoading}
                                 onRowClicked={handleGameClick}
-                                columns={playerPageLastGamesGamesColumns}
+                                columns={FinishedGameColumns}
                             />
                             <Table
                                 title="Next Games"

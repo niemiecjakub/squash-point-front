@@ -24,7 +24,7 @@ const LeagueEdit = ({ leagueId, leagueInfo }: Props) => {
         handleSubmit,
         formState: { errors },
     } = useForm<LeagueEditInputs>({});
-
+    
     const handleLeagueEdit = async (formState: LeagueEditInputs) => {
         await leagueEditApi(leagueId, formState)
             .then((res) => {
@@ -69,12 +69,30 @@ const LeagueEdit = ({ leagueId, leagueInfo }: Props) => {
 
             <div className="flex justify-between w-full">
                 <label htmlFor="leaguePublic">League public status: </label>
-                <input
-                    className="px-4 py-1 bg-slate-300 my-2"
-                    placeholder={`${leagueInfo.public}`}
-                    defaultValue={leagueInfo.public.toString()}
-                    {...register("public")}
-                />
+
+                <div>
+                    <input
+                        className="px-4 py-1 bg-slate-300 my-2"
+                        type="radio"
+                        id="huey"
+                        value="true"
+                        defaultChecked={leagueInfo.public ? true : false}
+                        {...register("public")}
+                    />
+                    <label htmlFor="huey">Public</label>
+                </div>
+
+                <div>
+                    <input
+                        className="px-4 py-1 bg-slate-300 my-2"
+                        type="radio"
+                        id="dewey"
+                        value="false"
+                        defaultChecked={leagueInfo.public ? false : true}
+                        {...register("public")}
+                    />
+                    <label htmlFor="dewey">Private</label>
+                </div>
             </div>
 
             <div className="flex justify-between w-full">

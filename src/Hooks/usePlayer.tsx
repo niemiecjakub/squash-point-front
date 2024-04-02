@@ -14,7 +14,6 @@ type Props = {
 
 const usePlayer = ({ playerId }: Props) => {
     const [playerLoading, setPlayerLoading] = useState<boolean>(true);
-
     const [playerInfo, setPlayerInfo] = useState<PlayerDetails>({} as PlayerDetails);
     const [playerLeagues, setPlayerLeagues] = useState<League[]>([] as []);
     const [playerGames, setPlayerGames] = useState<PlayerGames>({} as PlayerGames);
@@ -48,10 +47,19 @@ const usePlayer = ({ playerId }: Props) => {
 
     useEffect(() => {
         getPlayerStatisctics();
+    }, [getPlayerStatisctics]);
+
+    useEffect(() => {
         getPlayerGames();
+    }, [getPlayerGames]);
+
+    useEffect(() => {
         getPlayerLeagues();
+    }, [getPlayerLeagues]);
+
+    useEffect(() => {
         getplayerData();
-    }, [getplayerData, getPlayerGames, getPlayerLeagues, getPlayerStatisctics]);
+    }, [getplayerData]);
 
     return {
         playerInfo,

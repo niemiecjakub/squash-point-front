@@ -56,12 +56,12 @@ export const leagueJoinApi = async (leagueId: string) => {
 
 export const leagueLeaveApi = async (leagueId: string) => {
     try {
-        const data = await axios.post(api + "leave", null, {
+        const response = await axios.delete(api + "leave", {
             params: {
                 leagueId,
             },
         });
-        return data;
+        return response.data;
     } catch (error) {
         handleError(error);
     }

@@ -10,7 +10,7 @@ type NewGameFormState = {
     leagueId: string;
     opponentId: string;
     date: Date;
-}
+};
 
 interface Props {
     players: Player[];
@@ -28,7 +28,6 @@ const NewGameForm: React.FC<Props> = ({ leagueId, players, className }: Props): 
 
     const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
         const { leagueId, opponentId, date } = formData;
-        console.log(opponentId)
         const currentDate = new Date();
         if (opponentId == "") {
             e.preventDefault();
@@ -46,7 +45,7 @@ const NewGameForm: React.FC<Props> = ({ leagueId, players, className }: Props): 
     return (
         <form onSubmit={handleSubmit} className={`${className}`}>
             <div className="flex justify-between items-center pb-3 w-full">
-                <p >Play vs. : </p>
+                <p>Play vs. : </p>
                 <select
                     className="ml-8 py-2 px-6 bg-slate-200 rounded-lg"
                     id="opponentId"
@@ -55,13 +54,15 @@ const NewGameForm: React.FC<Props> = ({ leagueId, players, className }: Props): 
                     value={formData.opponentId}
                 >
                     <option>Select player</option>
-                    {players
-                        .filter((p) => p.id != user?.id)
-                        .map(({ id, fullName }) => (
-                            <option key={id} value={id}>
-                                {fullName}
-                            </option>
-                        ))}
+                    {players &&
+                        players.length > 0 &&
+                        players
+                            .filter((p) => p.id != user?.id)
+                            .map(({ id, fullName }) => (
+                                <option key={id} value={id}>
+                                    {fullName}
+                                </option>
+                            ))}
                 </select>
             </div>
 
