@@ -19,7 +19,6 @@ interface GameScore {
 interface Props {
     gameInfo: GameDetails;
     gameId: string;
-    getGameInfo: () => void;
 }
 
 const getGameWinner = (gameScore: GameScore, players: Player[]): Player | null => {
@@ -50,7 +49,7 @@ const isValidSquashSetScore = ({ player1, player2 }: SetScore): boolean => {
     return false;
 };
 
-const GameUnfinished: React.FC<Props> = ({ gameInfo, gameId, getGameInfo }) => {
+const GameUnfinished: React.FC<Props> = ({ gameInfo, gameId }) => {
     const navigate = useNavigate();
     const [isGameEditOpen, setIsGameEditOpen] = useState<boolean>(false);
     const [gameScore, setGameScore] = useState<GameScore>({
@@ -99,9 +98,8 @@ const GameUnfinished: React.FC<Props> = ({ gameInfo, gameId, getGameInfo }) => {
     };
 
     const handleGameStart = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        updateGameApi(gameId!, "Started", null)
-            .then(() => createSetApi(gameId!))
-            .then(() => getGameInfo());
+        updateGameApi(gameId!, "Started", null).then(() => createSetApi(gameId!));
+        // .then(() => getGameInfo());
     };
 
     const handleGameEnd = async () => {
@@ -121,8 +119,8 @@ const GameUnfinished: React.FC<Props> = ({ gameInfo, gameId, getGameInfo }) => {
                                 createPointApi(setId, gameInfo.players[1].id, "N")
                             );
                         })
-                        .then(() => updateGameApi(gameId, "Finished", gameWinner.id))
-                        .then(() => getGameInfo());
+                        .then(() => updateGameApi(gameId, "Finished", gameWinner.id));
+                    // .then(() => getGameInfo());
                 });
         }
     };

@@ -29,8 +29,8 @@ export const upcommingGamesGetApi = async () => {
 
 export const gameGetByIdApi = async (id: string) => {
     try {
-        const data = await axios.get<GameDetails>(api + id);
-        return data;
+        const response = await axios.get<GameDetails>(api + id);
+        return response.data;
     } catch (error) {
         handleError(error);
     }
@@ -38,8 +38,8 @@ export const gameGetByIdApi = async (id: string) => {
 
 export const gameSummaryGetByIdApi = async (id: string) => {
     try {
-        const data = await axios.get<GameSummary>(api + `${id}/summary`);
-        return data;
+        const response = await axios.get<GameSummary>(api + `${id}/summary`);
+        return response.data;
     } catch (error) {
         handleError(error);
     }

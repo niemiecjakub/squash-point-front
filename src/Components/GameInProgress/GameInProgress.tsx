@@ -8,14 +8,13 @@ import { SetDetails } from "../../Models/Set";
 interface Props {
     gameInfo: GameDetails;
     gameId: string;
-    getGameInfo: () => void;
 }
 
 const countPoints = (set: SetDetails, playerId: string) => {
     return set.points.filter((e) => e.winner.id === playerId).length;
 };
 
-const GameInProgress: React.FC<Props> = ({ gameInfo, gameId, getGameInfo }) => {
+const GameInProgress: React.FC<Props> = ({ gameInfo, gameId }) => {
     const [currentSetData, setCurrentSetData] = useState<GameState>({} as GameState);
 
     useEffect(() => {
@@ -47,17 +46,17 @@ const GameInProgress: React.FC<Props> = ({ gameInfo, gameId, getGameInfo }) => {
         winnerId: string,
         pointType: string
     ) => {
-        await createPointApi(currentSetData?.setId!, winnerId, pointType).then(() => getGameInfo());
+        // await createPointApi(currentSetData?.setId!, winnerId, pointType).then(() => getGameInfo());
     };
 
     const newSet = async (winnerId: string, setId: string) => {
         updateSetApi(setId, winnerId)
             .then(() => createSetApi(gameId))
-            .then(() => getGameInfo());
+            // .then(() => getGameInfo());
     };
 
     const gameFinished = async (playerId: string) => {
-        await updateGameApi(gameId, "Finished", playerId).then(() => getGameInfo());
+        // await updateGameApi(gameId, "Finished", playerId).then(() => getGameInfo());
     };
 
     return (

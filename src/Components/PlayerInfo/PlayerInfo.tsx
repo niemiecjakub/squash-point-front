@@ -4,7 +4,7 @@ import Modal from "../Modal/Modal";
 import PlayerBarList from "../PlayerBarList/PlayerBarList";
 import Button from "../Button/Button";
 import { useSoicialStore } from "../../Context/socialStore";
-import { useMutation, useQuery } from "react-query";
+import { useMutation } from "react-query";
 import { usePlayerStore } from "../../Context/playerStore";
 import { toast } from "react-toastify";
 import {
