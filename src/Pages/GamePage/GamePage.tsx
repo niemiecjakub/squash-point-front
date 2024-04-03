@@ -10,7 +10,11 @@ import GamePlayerBar from "../../Components/GamePlayerBar/GamePlayerBar";
 const GamePage = () => {
     const { id } = useParams();
 
-    const { data: gameInfo, isLoading: isGameInfoLoading } = useQuery({
+    const {
+        data: gameInfo,
+        isLoading: isGameInfoLoading,
+        refetch: refetchGameInfo,
+    } = useQuery({
         queryFn: () => gameGetByIdApi(id!),
         queryKey: ["gameInfo"],
     });
@@ -23,7 +27,9 @@ const GamePage = () => {
                 <>
                     <GamePlayerBar gameInfo={gameInfo!} />
                     {gameInfo!.status == "Unfinished" && <GameUnfinished gameInfo={gameInfo!} gameId={id!} />}
-                    {gameInfo!.status == "Started" && <GameInProgress gameInfo={gameInfo!} gameId={id!} />}
+                    {gameInfo!.status == "Started" && (
+                        <GameInProgress gameInfo={gameInfo!} gameId={id!} refetchGameInfo={refetchGameInfo} />
+                    )}
                     {gameInfo!.status == "Finished" && <GameFinished gameId={id!} players={gameInfo!.players} />}
                 </>
             )}

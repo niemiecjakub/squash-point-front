@@ -52,15 +52,7 @@ const isValidSquashSetScore = ({ player1, player2 }: SetScore): boolean => {
 const GameUnfinished: React.FC<Props> = ({ gameInfo, gameId }) => {
     const navigate = useNavigate();
     const [isGameEditOpen, setIsGameEditOpen] = useState<boolean>(false);
-    const [gameScore, setGameScore] = useState<GameScore>({
-        sets: [
-            { player1: 0, player2: 0, winner: "" },
-            { player1: 0, player2: 0, winner: "" },
-            { player1: 0, player2: 0, winner: "" },
-            { player1: 0, player2: 0, winner: "" },
-            { player1: 0, player2: 0, winner: "" },
-        ],
-    });
+    const [gameScore, setGameScore] = useState<GameScore>({} as GameScore);
 
     const handleScoreChange = (setIndex: number, player: "player1" | "player2", value: number) => {
         setGameScore((prevState) => {

@@ -3,7 +3,7 @@ import { PointDetails } from "./Point";
 
 export interface SetDetails {
     id: string;
-    winner: Player | null;
+    winner: string | null;
     points: PointDetails[];
 }
 

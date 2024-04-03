@@ -1,6 +1,6 @@
 import { Player } from "./Player";
 
 export interface PointDetails {
-    winner: Player;
+    winner: string;
     pointType: string;
 }

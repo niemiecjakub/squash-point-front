@@ -16,8 +16,8 @@ const GamePlayerBar = ({
     },
 }: Props) => {
     return (
-        <div className="flex w-1/2 justify-between items-center text-center my-4 ">
-            <div className="flex w-full items-center bg-slate-200 p-4 rounded-l-xl">
+        <div className="flex w-1/2 justify-between items-center text-center my-4 min-h-24">
+            <div className="flex w-full items-center bg-slate-200 p-4 rounded-l-xl h-full">
                 <img
                     className="h-16 rounded-full mx-5"
                     src={
@@ -29,11 +29,17 @@ const GamePlayerBar = ({
                 />
                 <h1 className="text-2xl">{player1.fullName}</h1>
             </div>
-            <div className="w-full items-center justify-center bg-slate-300 p-4 ">
+            <div className="w-full items-center justify-center bg-slate-300 p-4 min-h-24">
                 <p className="text-lg">{league}</p>
-                <h1 className="text-3xl font-bold">{winner ? `${player1Sets} : ${player2Sets}` : `${date}`}</h1>
+                {winner ? (
+                    <h1 className="text-3xl font-bold">
+                        {player1Sets} : {player2Sets}
+                    </h1>
+                ) : (
+                    <h1 className="text-xl font-bold">{date}</h1>
+                )}
             </div>
-            <div className="w-full items-center flex flex-row-reverse bg-slate-200 p-4 rounded-r-xl">
+            <div className="w-full items-center flex flex-row-reverse bg-slate-200 p-4 rounded-r-xl min-h-24">
                 <img
                     className="h-16 rounded-full mx-5"
                     src={
