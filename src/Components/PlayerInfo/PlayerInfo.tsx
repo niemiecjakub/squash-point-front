@@ -32,7 +32,7 @@ const PlayerInfo = ({ playerId, refetchInfo, refetchSocial, isSocialInfoLoading 
     const { playerInfo } = usePlayerStore((state) => state);
     const { isFollowing, isFriend, isFriendRequestReceived, isFriendRequestSent } = useSoicialStore((state) => state);
 
-    const { mutateAsync: handlePlayerFollow } = useMutation({
+    const { mutateAsync: handlePlayerFollow, isLoading: isLoadinPlayerFollow } = useMutation({
         mutationFn: followPlayerApi,
         onSuccess: () => {
             refetchInfo();
@@ -41,7 +41,7 @@ const PlayerInfo = ({ playerId, refetchInfo, refetchSocial, isSocialInfoLoading 
         },
     });
 
-    const { mutateAsync: handlePlayerUnfollow } = useMutation({
+    const { mutateAsync: handlePlayerUnfollow, isLoading: isLoadinPlayerUnfollow } = useMutation({
         mutationFn: unfollowPlayerApi,
         onSuccess: () => {
             refetchInfo();
@@ -50,7 +50,7 @@ const PlayerInfo = ({ playerId, refetchInfo, refetchSocial, isSocialInfoLoading 
         },
     });
 
-    const { mutateAsync: handleSendFriendRequest } = useMutation({
+    const { mutateAsync: handleSendFriendRequest, isLoading: isLoadingSendFriendRequest } = useMutation({
         mutationFn: sendFriendRequestApi,
         onSuccess: () => {
             refetchInfo();
@@ -59,7 +59,7 @@ const PlayerInfo = ({ playerId, refetchInfo, refetchSocial, isSocialInfoLoading 
         },
     });
 
-    const { mutateAsync: handleAcceptFriendRequest } = useMutation({
+    const { mutateAsync: handleAcceptFriendRequest, isLoading: isLoadingAcceptFriendRequest } = useMutation({
         mutationFn: acceptFriendRequestApi,
         onSuccess: () => {
             refetchInfo();
@@ -68,7 +68,7 @@ const PlayerInfo = ({ playerId, refetchInfo, refetchSocial, isSocialInfoLoading 
         },
     });
 
-    const { mutateAsync: handleDeleteFriend } = useMutation({
+    const { mutateAsync: handleDeleteFriend, isLoading: isLoadingDeleteFriend } = useMutation({
         mutationFn: deleteFriendApi,
         onSuccess: () => {
             refetchInfo();
@@ -126,6 +126,7 @@ const PlayerInfo = ({ playerId, refetchInfo, refetchSocial, isSocialInfoLoading 
                                             text="- Remove friend"
                                             color="red"
                                             onClick={async () => await handleDeleteFriend(playerId)}
+                                            disabled={isLoadingDeleteFriend}
                                         />
                                     ) : (
                                         <>
@@ -134,6 +135,7 @@ const PlayerInfo = ({ playerId, refetchInfo, refetchSocial, isSocialInfoLoading 
                                                     text="Accept friend request"
                                                     color="green"
                                                     onClick={async () => await handleAcceptFriendRequest(playerId)}
+                                                    disabled={isLoadingAcceptFriendRequest}
                                                 />
                                             )}
                                             {isFriendRequestSent && (
@@ -141,6 +143,7 @@ const PlayerInfo = ({ playerId, refetchInfo, refetchSocial, isSocialInfoLoading 
                                                     text="Friend request sent"
                                                     color="green"
                                                     onClick={async () => await handleDeleteFriend(playerId)}
+                                                    disabled={isLoadingDeleteFriend}
                                                 />
                                             )}
                                             {!isFriendRequestReceived && !isFriendRequestSent && (
@@ -148,6 +151,7 @@ const PlayerInfo = ({ playerId, refetchInfo, refetchSocial, isSocialInfoLoading 
                                                     text="+ Add friend"
                                                     color="green"
                                                     onClick={async () => await handleSendFriendRequest(playerId)}
+                                                    disabled={isLoadingSendFriendRequest}
                                                 />
                                             )}
                                         </>
@@ -157,12 +161,14 @@ const PlayerInfo = ({ playerId, refetchInfo, refetchSocial, isSocialInfoLoading 
                                             text="- Unfollow"
                                             color="red"
                                             onClick={async () => await handlePlayerUnfollow(playerId)}
+                                            disabled={isLoadinPlayerUnfollow}
                                         />
                                     ) : (
                                         <Button
                                             text="+ Follow"
                                             color="green"
                                             onClick={async () => await handlePlayerFollow(playerId)}
+                                            disabled={isLoadinPlayerFollow}
                                         />
                                     )}
                                 </>

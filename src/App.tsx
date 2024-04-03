@@ -13,10 +13,8 @@ function App() {
     const { setUser } = useUserStore();
     useEffect(() => {
         const user = localStorage.getItem("user");
-        const token = localStorage.getItem("token");
-        if (user && token) {
+        if (user) {
             setUser(JSON.parse(user), true);
-            axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         }
     }, []);
 

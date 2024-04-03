@@ -29,12 +29,12 @@ const LoginPage = (): JSX.Element => {
     const { mutateAsync: handleLogin, isLoading } = useMutation({
         mutationFn: ({ email, password }: LoginFormInputs) => loginApi(email, password),
         onSuccess: (response) => {
-            localStorage.setItem("token", response?.data.token!);
             const userObj = {
                 email: response?.data.email,
                 id: response?.data.id,
                 fullName: response?.data.fullName,
                 photo: response?.data.photo,
+                token: response?.data.token,
             };
             localStorage.setItem("user", JSON.stringify(userObj));
             setUser(response?.data!, true);

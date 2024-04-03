@@ -48,7 +48,7 @@ const LeagueInfo = ({ leagueId, refetchInfo, refetchPlayers }: Props) => {
         navigate("/login");
     };
 
-    const { mutateAsync: handleLeagueJoin } = useMutation({
+    const { mutateAsync: handleLeagueJoin, isLoading: isLoadingJoin } = useMutation({
         mutationFn: leagueJoinApi,
         onSuccess: () => {
             refetchInfo();
@@ -57,7 +57,7 @@ const LeagueInfo = ({ leagueId, refetchInfo, refetchPlayers }: Props) => {
         },
     });
 
-    const { mutateAsync: handleLeagueLeave } = useMutation({
+    const { mutateAsync: handleLeagueLeave, isLoading: isLoadingLeave } = useMutation({
         mutationFn: leagueLeaveApi,
         onSuccess: () => {
             refetchInfo();
@@ -106,12 +106,14 @@ const LeagueInfo = ({ leagueId, refetchInfo, refetchPlayers }: Props) => {
                                                 text="Leave"
                                                 color="red"
                                                 onClick={async () => await handleLeagueLeave(leagueId)}
+                                                disabled={isLoadingLeave}
                                             />
                                         ) : (
                                             <Button
                                                 text="Join"
                                                 color="green"
                                                 onClick={async () => await handleLeagueJoin(leagueId)}
+                                                disabled={isLoadingJoin}
                                             />
                                         )}
                                     </>

@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { UserProfileToken, UserSocialProfile } from "../Models/User";
+import axios from "axios";
 
 type UserStore = {
     user: UserProfileToken;
@@ -16,6 +17,7 @@ export const useUserStore = create<UserStore>((set) => ({
     isLoggedIn: false,
     setSocialData: (socialData) => set(() => ({ socialData })),
     setUser: (user, isLoggedIn) => {
+        axios.defaults.headers.common["Authorization"] = "Bearer " + user.token;
         set(() => ({ user, isLoggedIn }));
     },
 }));
