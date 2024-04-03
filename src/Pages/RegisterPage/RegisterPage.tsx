@@ -1,7 +1,10 @@
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useAuth } from "../../Context/useAuth";
 import { useForm } from "react-hook-form";
+import { registerApi } from "../../Services/AccountService";
+import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
+import { useMutation } from "react-query";
 
 type RegisterFormInputs = {
     firstName: string;
@@ -22,20 +25,28 @@ const validation = Yup.object().shape({
 });
 
 const RegisterPage = () => {
-    const { registerUser } = useAuth();
+    const navigate = useNavigate();
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm<RegisterFormInputs>({ resolver: yupResolver(validation) });
 
-    const handleRegister = ({ email, password, firstName, lastName, sex }: RegisterFormInputs) => {
-        registerUser(email, password, firstName, lastName, sex);
-    };
+    const { mutateAsync: handleRegister, isLoading } = useMutation({
+        mutationFn: ({ email, password, firstName, lastName, sex }: RegisterFormInputs) =>
+            registerApi(email, password, firstName, lastName, sex),
+        onSuccess: () => {
+            navigate("/login");
+            toast.success(`Account created, you can now log in`);
+        },
+        onError: () => {
+            toast.warning("Server error occured");
+        },
+    });
 
     return (
         <div className="flex flex-col items-center">
-            <form onSubmit={handleSubmit(handleRegister)} className="bg-red-400">
+            <form onSubmit={handleSubmit((values) => handleRegister(values))} className="bg-red-400">
                 <div>
                     <label htmlFor="firstName">First Name</label>
                     <br />
@@ -90,7 +101,9 @@ const RegisterPage = () => {
                     {errors.sex && <p>{errors.sex.message}</p>}
                 </div>
 
-                <button className="bg-green-200 p-2">Register</button>
+                <button className="bg-green-200 p-2" disabled={isLoading}>
+                    Register
+                </button>
             </form>
         </div>
     );

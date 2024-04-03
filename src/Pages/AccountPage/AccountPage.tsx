@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../../Context/useAuth";
 import Modal from "../../Components/Modal/Modal";
 import NewLeagueForm from "../../Components/NewLeagueForm/NewLeagueForm";
 import PlayerEdit from "../../Components/PlayerEdit/PlayerEdit";
@@ -12,7 +11,7 @@ import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
 type Props = {};
 
 const AccountPage = (props: Props) => {
-    const { user } = useAuth();
+    const { user } = useUserStore();
     const [isNewLeagueFormOpen, setIsNewLeagueFormOpen] = useState<boolean>(false);
     const [isPlayerEditOpen, setIsPlayerEditOpen] = useState<boolean>(false);
 

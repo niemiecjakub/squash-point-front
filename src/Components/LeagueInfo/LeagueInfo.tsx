@@ -5,11 +5,11 @@ import LeagueEdit from "../LeagueEdit/LeagueEdit";
 import { useNavigate } from "react-router-dom";
 import Badge from "../Badge/Badge";
 import Button from "../Button/Button";
-import { useAuth } from "../../Context/useAuth";
 import { useLeagueStore } from "../../Context/leagueStore";
 import { leagueJoinApi, leagueLeaveApi } from "../../Services/LeagueService";
 import { toast } from "react-toastify";
 import { useMutation } from "react-query";
+import { useUserStore } from "../../Context/userStore";
 
 type Props = {
     leagueId: string;
@@ -19,7 +19,7 @@ type Props = {
 
 const LeagueInfo = ({ leagueId, refetchInfo, refetchPlayers }: Props) => {
     const navigate = useNavigate();
-    const { isLoggedIn } = useAuth();
+    const { isLoggedIn } = useUserStore();
     const [isNewGameOpen, setIsNewGameOpen] = useState<boolean>(false);
     const [isLegueEditOpen, setIsLegueEditOpen] = useState<boolean>(false);
     const {
@@ -97,7 +97,7 @@ const LeagueInfo = ({ leagueId, refetchInfo, refetchPlayers }: Props) => {
                     </div>
                     <div className="flex justify-end">
                         {isUserJoined && <Button text="New game" color="yellow" onClick={handleNewGameOpen} />}
-                        {isLoggedIn() ? (
+                        {isLoggedIn ? (
                             <>
                                 {playerCount < maxPlayers && (
                                     <>

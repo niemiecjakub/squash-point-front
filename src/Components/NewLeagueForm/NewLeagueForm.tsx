@@ -28,7 +28,7 @@ const NewLeagueForm = ({ close }: Props) => {
         formState: { errors },
     } = useForm<NewLeagueFormInputs>({ resolver: yupResolver(validation) });
 
-    const handleLeagueCreate = ({ name, description, maxPlayers, isPublic }: NewLeagueFormInputs) => {
+    const handleLeagueCreate = async ({ name, description, maxPlayers, isPublic }: NewLeagueFormInputs) => {
         leagueCreateApi(name, description, maxPlayers, isPublic)
             .then(() => {
                 toast.success(`League "${name}" successfully created`);
@@ -54,12 +54,10 @@ const NewLeagueForm = ({ close }: Props) => {
                 <br />
                 <div className="flex justify-between w-full">
                     <label htmlFor="leaguePublic">League public status: </label>
-
                     <div>
                         <input type="radio" id="huey" value="true" defaultChecked={true} {...register("isPublic")} />
                         <label htmlFor="huey">Public</label>
                     </div>
-
                     <div>
                         <input type="radio" id="dewey" value="false" defaultChecked={false} {...register("isPublic")} />
                         <label htmlFor="dewey">Private</label>

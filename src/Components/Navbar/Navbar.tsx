@@ -1,10 +1,22 @@
-import { Link } from "react-router-dom";
-import { useAuth } from "../../Context/useAuth";
+import { Link, useNavigate } from "react-router-dom";
+import { useUserStore } from "../../Context/userStore";
+import { UserProfileToken } from "../../Models/User";
+import { toast } from "react-toastify";
 
 type Props = {};
 
 const Navbar = (props: Props) => {
-    const { isLoggedIn, user, logout } = useAuth();
+    const navigate = useNavigate();
+    const { setUser, isLoggedIn } = useUserStore();
+
+    const logout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        setUser({} as UserProfileToken, false);
+        toast.info("Logged out");
+        navigate("/");
+    };
+
     return (
         <div className="py-5 flex justify-between items-center">
             <Link to="/">
@@ -17,7 +29,7 @@ const Navbar = (props: Props) => {
                 <Link to="/leagues" className="font-bold bg-slate-50 mx-2 px-4 py-2 rounded-xl">
                     LEAGUES
                 </Link>
-                {isLoggedIn() ? (
+                {isLoggedIn ? (
                     <>
                         <Link to="/account" className="font-bold bg-slate-50 mx-2 px-4 py-2 rounded-xl">
                             ACCOUNT

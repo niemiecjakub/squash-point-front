@@ -1,7 +1,11 @@
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useAuth } from "../../Context/useAuth";
 import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
+import { toast } from "react-toastify";
+import { loginApi } from "../../Services/AccountService";
+import { useNavigate } from "react-router";
+import { useUserStore } from "../../Context/userStore";
 
 type LoginFormInputs = {
     email: string;
@@ -14,20 +18,37 @@ const validation = Yup.object().shape({
 });
 
 const LoginPage = (): JSX.Element => {
-    const { loginUser } = useAuth();
+    const navigate = useNavigate();
+    const { setUser } = useUserStore();
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm<LoginFormInputs>({ resolver: yupResolver(validation) });
 
-    const handleLogin = ({ email, password }: LoginFormInputs) => {
-        loginUser(email, password);
-    };
+    const { mutateAsync: handleLogin, isLoading } = useMutation({
+        mutationFn: ({ email, password }: LoginFormInputs) => loginApi(email, password),
+        onSuccess: (response) => {
+            localStorage.setItem("token", response?.data.token!);
+            const userObj = {
+                email: response?.data.email,
+                id: response?.data.id,
+                fullName: response?.data.fullName,
+                photo: response?.data.photo,
+            };
+            localStorage.setItem("user", JSON.stringify(userObj));
+            setUser(response?.data!, true);
+            navigate("/");
+            toast.success(`Log in successful`);
+        },
+        onError: () => {
+            toast.warning("Server error occured");
+        },
+    });
 
     return (
         <div className="flex flex-col items-center">
-            <form onSubmit={handleSubmit(handleLogin)} className="bg-red-400">
+            <form onSubmit={handleSubmit((values) => handleLogin(values))} className="bg-red-400">
                 <div>
                     <label htmlFor="email">Email</label>
                     <br />
@@ -44,7 +65,9 @@ const LoginPage = (): JSX.Element => {
                     <br />
                 </div>
 
-                <button className="bg-green-200 p-2">Login</button>
+                <button className="bg-green-200 p-2" disabled={isLoading}>
+                    Login
+                </button>
             </form>
         </div>
     );

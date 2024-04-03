@@ -2,7 +2,6 @@ import { useState } from "react";
 import { playerFollowingGetApi, playerFollowersGetApi, playerFriendsGetApi } from "../../Services/PlayerService";
 import Modal from "../Modal/Modal";
 import PlayerBarList from "../PlayerBarList/PlayerBarList";
-import { useAuth } from "../../Context/useAuth";
 import Button from "../Button/Button";
 import { useSoicialStore } from "../../Context/socialStore";
 import { useMutation, useQuery } from "react-query";
@@ -15,6 +14,7 @@ import {
     sendFriendRequestApi,
     unfollowPlayerApi,
 } from "../../Services/AccountService";
+import { useUserStore } from "../../Context/userStore";
 
 type Props = {
     playerId: string;
@@ -24,7 +24,7 @@ type Props = {
 };
 
 const PlayerInfo = ({ playerId, refetchInfo, refetchSocial, isSocialInfoLoading }: Props) => {
-    const { user } = useAuth();
+    const { user } = useUserStore();
     const [isFollowingModalOpen, setIsFollowingModalOpen] = useState<boolean>(false);
     const [isFollowersModalOpen, setIsFollowersModalOpen] = useState<boolean>(false);
     const [isFriendsModalOpen, setIsFriendsModalOpen] = useState<boolean>(false);

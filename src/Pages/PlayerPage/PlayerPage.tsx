@@ -19,13 +19,13 @@ import {
 } from "../../Services/PlayerService";
 import { usePlayerStore } from "../../Context/playerStore";
 import { useEffect } from "react";
-import { useAuth } from "../../Context/useAuth";
 import { useSoicialStore } from "../../Context/socialStore";
+import { useUserStore } from "../../Context/userStore";
 
 const PlayerPage = () => {
     const navigate = useNavigate();
     const { id } = useParams();
-    const { user } = useAuth();
+    const { user } = useUserStore();
     const { playerInfo, playerGames, playerLeagues, setGames, setLeagues, setInfo } = usePlayerStore((state) => state);
 
     const { setIsFollowing, setIsFriend, setIsFriendRequestReceived, setIsFriendRequestSent } = useSoicialStore(

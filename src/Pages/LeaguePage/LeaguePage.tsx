@@ -9,12 +9,12 @@ import { useLeagueStore } from "../../Context/leagueStore";
 import { useQuery } from "react-query";
 import { leagueGamesGetApi, leagueGetByIdApi, leaguePlayersGetApi } from "../../Services/LeagueService";
 import { useEffect } from "react";
-import { useAuth } from "../../Context/useAuth";
+import { useUserStore } from "../../Context/userStore";
 
 const LeaguePage = () => {
     const navigate = useNavigate();
     const { id } = useParams();
-    const { user } = useAuth();
+    const { user } = useUserStore();
 
     const { leagueGames, leaguePlayers, setGames, setPlayers, setInfo, setIsUserJoined } = useLeagueStore(
         (state) => state

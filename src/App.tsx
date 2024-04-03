@@ -1,27 +1,38 @@
 import { Outlet } from "react-router";
 import Navbar from "./Components/Navbar/Navbar";
 import { ToastContainer } from "react-toastify";
-import { UserProvider } from "./Context/useAuth";
 import "react-toastify/dist/ReactToastify.css";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { useEffect } from "react";
+import { useUserStore } from "./Context/userStore";
+import axios from "axios";
 
 const queryClient = new QueryClient();
+
 function App() {
+    const { setUser } = useUserStore();
+    useEffect(() => {
+        const user = localStorage.getItem("user");
+        const token = localStorage.getItem("token");
+        if (user && token) {
+            setUser(JSON.parse(user), true);
+            axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+        }
+    }, []);
+
     return (
         <QueryClientProvider client={queryClient}>
-            <UserProvider>
-                <div className="bg-slate-400 min-h-screen">
-                    <div className="w-screen bg-red-400">
-                        <div className="w-4/6 m-auto">
-                            <Navbar />
-                        </div>
+            <div className="bg-slate-400 min-h-screen">
+                <div className="w-screen bg-red-400">
+                    <div className="w-4/6 m-auto">
+                        <Navbar />
                     </div>
-                    <div className="w-4/6 mx-auto mt-5 h-full">
-                        <Outlet />
-                    </div>
-                    <ToastContainer />
                 </div>
-            </UserProvider>
+                <div className="w-4/6 mx-auto mt-5 h-full">
+                    <Outlet />
+                </div>
+                <ToastContainer />
+            </div>
         </QueryClientProvider>
     );
 }

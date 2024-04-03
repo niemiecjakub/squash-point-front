@@ -2,9 +2,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import { createGameApi } from "../../Services/GameService";
-import { useAuth } from "../../Context/useAuth";
 import { toast } from "react-toastify";
 import { useLeagueStore } from "../../Context/leagueStore";
+import { useUserStore } from "../../Context/userStore";
 
 type NewGameFormState = {
     leagueId: string;
@@ -18,7 +18,7 @@ interface Props {
 }
 
 const NewGameForm: React.FC<Props> = ({ leagueId, className }: Props): JSX.Element => {
-    const { user } = useAuth();
+    const { user } = useUserStore();
     const { leaguePlayers } = useLeagueStore((state) => state);
     const [formData, setFormData] = useState<NewGameFormState>({
         date: new Date(),
