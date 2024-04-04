@@ -5,11 +5,15 @@ import { createPointApi } from "../../Services/PointService";
 import { useNavigate } from "react-router";
 import { GameDetails } from "../../Models/Game";
 import { Player } from "../../Models/Player";
+import { toast } from "react-toastify";
+import { useMutation } from "react-query";
+import Button from "../Button/Button";
 
 interface SetScore {
     player1: number;
     player2: number;
-    winner: string;
+    winner: string | null;
+    isValid: boolean;
 }
 
 interface GameScore {
@@ -21,20 +25,21 @@ interface Props {
     gameId: string;
 }
 
-const getGameWinner = (gameScore: GameScore, players: Player[]): Player | null => {
-    const player1SetsWon = gameScore.sets.filter((set) => set.winner === players[0].id).length;
-    const player2SetsWon = gameScore.sets.filter((set) => set.winner === players[1].id).length;
+const getGameWinner = ({ sets }: GameScore, players: Player[]): Player | null => {
+    const [{ id: player1Id }, { id: player2Id }] = players;
+    const player1SetsWon = sets.filter(({ winner }) => winner === player1Id).length;
+    const player2SetsWon = sets.filter(({ winner }) => winner === player2Id).length;
 
-    if (player1SetsWon >= 3) {
+    if (player1SetsWon >= 3 && player2SetsWon < 3) {
         return players[0];
-    } else if (player2SetsWon >= 3) {
+    } else if (player2SetsWon >= 3 && player1SetsWon < 3) {
         return players[1];
     } else {
         return null;
     }
 };
 
-const isValidSquashSetScore = ({ player1, player2 }: SetScore): boolean => {
+const isValidSquashSetScore = (player1: number, player2: number): boolean => {
     const minScore = 11;
     const pointDifference = Math.abs(player1 - player2);
 
@@ -49,131 +54,104 @@ const isValidSquashSetScore = ({ player1, player2 }: SetScore): boolean => {
     return false;
 };
 
+const getSetWinner = ({ player1, player2 }: any, players: Player[]) => {
+    const isValid = isValidSquashSetScore(player1, player2);
+    let winner = null;
+    if (!isValid) {
+        const [{ fullName: player1Name }, { fullName: player2Name }] = players;
+        winner = player1 > player2 ? player1Name : player2Name;
+    }
+
+    return { winner, isValid };
+};
+
 const GameUnfinished: React.FC<Props> = ({ gameInfo, gameId }) => {
     const navigate = useNavigate();
-    const [isGameEditOpen, setIsGameEditOpen] = useState<boolean>(false);
-    const [gameScore, setGameScore] = useState<GameScore>({} as GameScore);
+    const [gameScore, setGameScore] = useState<GameScore>({
+        sets: [{} as SetScore, {} as SetScore, {} as SetScore, {} as SetScore, {} as SetScore],
+    } as GameScore);
 
-    const handleScoreChange = (setIndex: number, player: "player1" | "player2", value: number) => {
+    const handleScoreChange = (
+        e: React.FormEvent<HTMLInputElement>,
+        player: "player1" | "player2",
+        setIndex: number
+    ) => {
+        const newPlayerScore = e.currentTarget.value;
+        const opponent = player == "player1" ? "player2" : "player1";
         setGameScore((prevState) => {
             const newSets = [...prevState.sets];
+            const opponentScore = newSets[setIndex][opponent];
+            const { winner, isValid } = getSetWinner(
+                { [player]: newPlayerScore, [opponent]: opponentScore },
+                gameInfo.players
+            );
+
             newSets[setIndex] = {
                 ...newSets[setIndex],
-                [player]: value,
+                [player]: newPlayerScore,
+                winner,
+                isValid,
             };
             return { sets: newSets };
         });
-    };
-
-    const submitScore = () => {
-        gameScore.sets.forEach((set, setIndex) => {
-            const { player1, player2 } = set;
-            if (!isValidSquashSetScore(set)) {
-                setSetWinner("", setIndex);
-                return;
-            }
-            player1 > player2
-                ? setSetWinner(gameInfo.players[0].id, setIndex)
-                : setSetWinner(gameInfo.players[1].id, setIndex);
-        });
-    };
-
-    const setSetWinner = (winner: string, setIndex: number) => {
-        setGameScore((prevState) => {
-            const newSets = [...prevState.sets];
-            newSets[setIndex] = {
-                ...newSets[setIndex],
-                winner: winner,
-            };
-            return { sets: newSets };
-        });
-    };
-
-    const handleGameStart = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        updateGameApi(gameId!, "Started", null).then(() => createSetApi(gameId!));
-        // .then(() => getGameInfo());
     };
 
     const handleGameEnd = async () => {
-        const gameWinner = getGameWinner(gameScore, gameInfo.players);
-        if (gameWinner) {
-            await gameScore.sets
-                .filter((set) => set.winner != "")
-                .forEach(({ player1, player2, winner }) => {
-                    createSetApi(gameId)
-                        .then((res) => {
-                            const setId = res?.data.id;
-                            updateSetApi(setId, winner);
-                            [...Array(player1)].forEach(async (p) =>
-                                createPointApi(setId, gameInfo.players[0].id, "N")
-                            );
-                            [...Array(player2)].forEach(async (p) =>
-                                createPointApi(setId, gameInfo.players[1].id, "N")
-                            );
-                        })
-                        .then(() => updateGameApi(gameId, "Finished", gameWinner.id));
-                    // .then(() => getGameInfo());
-                });
-        }
+        console.log(gameScore);
     };
 
-    const handleDeleteGame = () => {
-        deleteGameApi(gameId!).then(() => navigate(-1));
-    };
+    const { mutateAsync: handleDeleteGame, isLoading: isDeleteGameLoading } = useMutation({
+        mutationFn: () => deleteGameApi(gameId!),
+        onSuccess: () => {
+            navigate(-1);
+            toast.info("Game deleted");
+        },
+    });
 
     return (
         <>
-            <div className="bg-green-200 p-4 w-full">
-                <button className="w-full" onClick={handleGameStart}>
-                    Start game
-                </button>
-            </div>
-            <div className="bg-yellow-200 p-4 w-full">
-                <button className="w-full" onClick={() => setIsGameEditOpen((o) => !o)}>
-                    Enter score
-                </button>
-            </div>
-            <div className="bg-red-200 p-4 w-full">
-                <button className="w-full" onClick={handleDeleteGame}>
-                    Delete game
-                </button>
-            </div>
-            {isGameEditOpen && (
-                <div>
-                    {gameScore.sets.map((set, index) => (
-                        <div key={index}>
+            <div>
+                {gameScore.sets.map((set, index) => (
+                    <div key={index} className="flex">
+                        <div>
                             <p>Set: {index + 1}</p>
                             {gameInfo.players[0].fullName} (
-                            <input
-                                type="number"
-                                min={0}
-                                value={set.player1}
-                                onChange={(e) => handleScoreChange(index, "player1", parseInt(e.target.value))}
-                            />
+                            <input type="number" min={0} onChange={(e) => handleScoreChange(e, "player1", index)} />
                             :
-                            <input
-                                type="number"
-                                min={0}
-                                value={set.player2}
-                                onChange={(e) => handleScoreChange(index, "player2", parseInt(e.target.value))}
-                            />
-                            ){gameInfo.players[1].fullName}
+                            <input type="number" min={0} onChange={(e) => handleScoreChange(e, "player2", index)} />)
+                            {gameInfo.players[1].fullName}
                             <br />
-                            winner : {gameInfo.players.filter((p) => set.winner == p.id)[0]?.fullName}
+                            winner : {gameInfo.players.filter((p) => set.winner == p.fullName)[0]?.fullName}
                         </div>
-                    ))}
-                    <button className="w-full bg-green-300 my-2 py-2" onClick={submitScore}>
-                        submit
-                    </button>
-                    {gameInfo.players[0].fullName}
-                    {gameScore.sets.filter((s) => s.winner == gameInfo.players[0].id).length}:{" "}
-                    {gameScore.sets.filter((s) => s.winner == gameInfo.players[1].id).length}
-                    {gameInfo.players[1].fullName}
-                    <button className="w-full bg-blue-300 py-4 my-2" onClick={handleGameEnd}>
-                        end game
-                    </button>
+                        {set.isValid ? (
+                            <p className="bg-green-300 p-4">OK</p>
+                        ) : (
+                            <p className="bg-red-300 p-4">this is not valid</p>
+                        )}
+                    </div>
+                ))}
+                <div className="bg-blue-200 py-4 text-center">
+                    <span className="mx-4">{gameInfo.players[0].fullName}</span>
+                    <span>{gameScore.sets.filter((s) => s.winner == gameInfo.players[0].fullName).length}</span>
+                    <span className="px-2">-</span>
+                    <span>{gameScore.sets.filter((s) => s.winner == gameInfo.players[1].fullName).length}</span>
+                    <span className="mx-4">{gameInfo.players[1].fullName}</span>
                 </div>
-            )}
+                <Button
+                    text="Delete game"
+                    color="red"
+                    className="w-full"
+                    disabled={isDeleteGameLoading}
+                    onClick={async () => await handleDeleteGame()}
+                />
+                <Button
+                    text="Submit score"
+                    color="green"
+                    className="w-full"
+                    disabled={isDeleteGameLoading}
+                    onClick={handleGameEnd}
+                />
+            </div>
         </>
     );
 };

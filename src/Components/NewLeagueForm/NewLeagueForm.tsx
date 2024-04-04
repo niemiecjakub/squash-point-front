@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
 
 interface Props {
     close: () => void;
@@ -28,17 +29,17 @@ const NewLeagueForm = ({ close }: Props) => {
         formState: { errors },
     } = useForm<NewLeagueFormInputs>({ resolver: yupResolver(validation) });
 
-    const handleLeagueCreate = async ({ name, description, maxPlayers, isPublic }: NewLeagueFormInputs) => {
-        leagueCreateApi(name, description, maxPlayers, isPublic)
-            .then(() => {
-                toast.success(`League "${name}" successfully created`);
-                close();
-            })
-            .catch(() => toast.error("Error occurred"));
-    };
+    const { mutateAsync: handleLeagueCreate, isLoading: isLeagueCreateLoading } = useMutation({
+        mutationFn: ({ name, description, maxPlayers, isPublic }: NewLeagueFormInputs) =>
+            leagueCreateApi(name, description, maxPlayers, isPublic),
+        onSuccess: () => {
+            toast.success(`League successfully created`);
+            close();
+        },
+    });
 
     return (
-        <form onSubmit={handleSubmit(handleLeagueCreate)}>
+        <form onSubmit={handleSubmit((values) => handleLeagueCreate(values))}>
             <div>
                 <label htmlFor="name">League name</label>
                 <input {...register("name")} placeholder="..." />
@@ -66,7 +67,9 @@ const NewLeagueForm = ({ close }: Props) => {
                 </div>
                 <br />
             </div>
-            <button className="bg-green-200 p-2">Create league</button>
+            <button className="bg-green-200 p-2" disabled={isLeagueCreateLoading}>
+                Create league
+            </button>
         </form>
     );
 };

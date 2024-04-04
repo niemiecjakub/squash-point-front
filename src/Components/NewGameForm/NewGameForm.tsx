@@ -7,7 +7,6 @@ import { useLeagueStore } from "../../Context/leagueStore";
 import { useUserStore } from "../../Context/userStore";
 
 type NewGameFormState = {
-    leagueId: string;
     opponentId: string;
     date: Date;
 };
@@ -25,8 +24,9 @@ const NewGameForm: React.FC<Props> = ({ leagueId, className }: Props): JSX.Eleme
     } as NewGameFormState);
 
     const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
-        const { leagueId, opponentId, date } = formData;
+        const { opponentId, date } = formData;
         const currentDate = new Date();
+
         if (opponentId == "") {
             e.preventDefault();
             toast.error("Please select opponent");
@@ -37,7 +37,8 @@ const NewGameForm: React.FC<Props> = ({ leagueId, className }: Props): JSX.Eleme
             toast.error("Past date cannot be selected");
             return;
         }
-        createGameApi(leagueId, opponentId, date);
+
+        await createGameApi(leagueId, opponentId, date);
     };
 
     return (

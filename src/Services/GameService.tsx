@@ -68,6 +68,7 @@ export const createGameApi = async (leagueId: string, opponentId: string, date: 
         });
         return data;
     } catch (error) {
+        console.log(error)
         handleError(error);
     }
 };

@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { leagueEditApi } from "../../Services/LeagueService";
 import { LeagueEditInputs } from "../../Models/League";
 import { useLeagueStore } from "../../Context/leagueStore";
+import { useMutation } from "react-query";
 
 type Props = {
     leagueId: string;
@@ -26,17 +27,16 @@ const LeagueEdit = ({ leagueId }: Props) => {
         formState: { errors },
     } = useForm<LeagueEditInputs>({});
 
-    const handleLeagueEdit = async (formState: LeagueEditInputs) => {
-        await leagueEditApi(leagueId, formState)
-            .then((res) => {
-                window.location.reload();
-                toast.success("League updated");
-            })
-            .catch((e) => toast.error(e));
-    };
+    const { mutateAsync: handleLeagueEdit, isLoading: isLeagueEditLoading } = useMutation({
+        mutationFn: (leagueEditInput: LeagueEditInputs) => leagueEditApi(leagueId, leagueEditInput),
+        onSuccess: () => {
+            window.location.reload();
+            toast.success("League updated");
+        },
+    });
 
     return (
-        <form className="flex-col" onSubmit={handleSubmit(handleLeagueEdit)}>
+        <form onSubmit={handleSubmit((values) => handleLeagueEdit(values))} className="flex-col">
             <div className="flex justify-between w-full">
                 <label htmlFor="leagueName">League name</label>
                 <input

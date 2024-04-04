@@ -19,7 +19,7 @@ export interface UserSocialProfile {
 
 export type PlayerEditInputs = {
     firstName: string;
-    lastName: number;
+    lastName: string;
     email: string;
     image: FileList;
 };

@@ -32,7 +32,6 @@ const Modal: React.FC<ModalProps> = ({ className, title, isOpen, hasCloseBtn = t
 
     useEffect(() => {
         const modalElement = modalRef.current;
-
         if (modalElement) {
             if (isModalOpen) {
                 modalElement.showModal();
