@@ -8,10 +8,10 @@ import { Player } from "../../Models/Player";
 import { toast } from "react-toastify";
 import { useMutation } from "react-query";
 import Button from "../Button/Button";
+import SetCreate from "../SetCreate/SetCreate";
 
 interface SetScore {
-    player1: number;
-    player2: number;
+    player: {id: string, score: number}[];
     winner: string | null;
     isValid: boolean;
 }
@@ -39,62 +39,13 @@ const getGameWinner = ({ sets }: GameScore, players: Player[]): Player | null =>
     }
 };
 
-const isValidSquashSetScore = (player1: number, player2: number): boolean => {
-    const minScore = 11;
-    const pointDifference = Math.abs(player1 - player2);
 
-    if (player1 > minScore || player2 > minScore) {
-        return pointDifference == 2;
-    }
-
-    if (player1 == minScore || player2 == minScore) {
-        return pointDifference >= 2;
-    }
-
-    return false;
-};
-
-const getSetWinner = ({ player1, player2 }: any, players: Player[]) => {
-    const isValid = isValidSquashSetScore(player1, player2);
-    let winner = null;
-    if (!isValid) {
-        const [{ fullName: player1Name }, { fullName: player2Name }] = players;
-        winner = player1 > player2 ? player1Name : player2Name;
-    }
-
-    return { winner, isValid };
-};
-
+//COMPONENT
 const GameUnfinished: React.FC<Props> = ({ gameInfo, gameId }) => {
     const navigate = useNavigate();
     const [gameScore, setGameScore] = useState<GameScore>({
         sets: [{} as SetScore, {} as SetScore, {} as SetScore, {} as SetScore, {} as SetScore],
     } as GameScore);
-
-    const handleScoreChange = (
-        e: React.FormEvent<HTMLInputElement>,
-        player: "player1" | "player2",
-        setIndex: number
-    ) => {
-        const newPlayerScore = e.currentTarget.value;
-        const opponent = player == "player1" ? "player2" : "player1";
-        setGameScore((prevState) => {
-            const newSets = [...prevState.sets];
-            const opponentScore = newSets[setIndex][opponent];
-            const { winner, isValid } = getSetWinner(
-                { [player]: newPlayerScore, [opponent]: opponentScore },
-                gameInfo.players
-            );
-
-            newSets[setIndex] = {
-                ...newSets[setIndex],
-                [player]: newPlayerScore,
-                winner,
-                isValid,
-            };
-            return { sets: newSets };
-        });
-    };
 
     const handleGameEnd = async () => {
         console.log(gameScore);
@@ -113,7 +64,8 @@ const GameUnfinished: React.FC<Props> = ({ gameInfo, gameId }) => {
             <div>
                 {gameScore.sets.map((set, index) => (
                     <div key={index} className="flex">
-                        <div>
+                        <SetCreate setIndex={index} players={gameInfo.players}/>
+                        {/* <div>
                             <p>Set: {index + 1}</p>
                             {gameInfo.players[0].fullName} (
                             <input type="number" min={0} onChange={(e) => handleScoreChange(e, "player1", index)} />
@@ -127,7 +79,7 @@ const GameUnfinished: React.FC<Props> = ({ gameInfo, gameId }) => {
                             <p className="bg-green-300 p-4">OK</p>
                         ) : (
                             <p className="bg-red-300 p-4">this is not valid</p>
-                        )}
+                        )} */}
                     </div>
                 ))}
                 <div className="bg-blue-200 py-4 text-center">
