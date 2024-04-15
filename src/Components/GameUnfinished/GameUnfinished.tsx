@@ -1,26 +1,17 @@
-import React, { useState } from "react";
-import { deleteGameApi, updateGameApi } from "../../Services/GameService";
-import { createSetApi, updateSetApi } from "../../Services/SetService";
-import { createPointApi } from "../../Services/PointService";
+import React, { useEffect, useState } from "react";
+import { deleteGameApi } from "../../Services/GameService";
 import { useNavigate } from "react-router";
 import { GameDetails } from "../../Models/Game";
-import { Player } from "../../Models/Player";
 import { toast } from "react-toastify";
 import { useMutation } from "react-query";
 import Button from "../Button/Button";
-import SetCreate from "../SetCreate/SetCreate";
-
-interface SetScore {
-    player: {id: string, score: number}[];
-    winner: string | null;
-    isValid: boolean;
-}
-
-interface GameScore {
-    sets: SetScore[];
-}
+import { GameScore, SetScore } from "../../Models/Set";
+import { Player } from "../../Models/Player";
+import SetInput from "../SetInput/SetInput";
 
 interface Props {
+    player1: Player;
+    player2: Player;
     gameInfo: GameDetails;
     gameId: string;
 }
@@ -39,18 +30,25 @@ const getGameWinner = ({ sets }: GameScore, players: Player[]): Player | null =>
     }
 };
 
+const isValidSquashSetScore = (player1Score: number, player2Score: number): boolean => {
+    const minScore = 11;
+    const pointDifference = Math.abs(player1Score - player2Score);
+    if (player1Score > minScore || player2Score > minScore) {
+        return pointDifference == 2;
+    }
+    if (player1Score == minScore || player2Score == minScore) {
+        return pointDifference >= 2;
+    }
+    return false;
+};
+
+const getSetWinner = ({ player1, player2 }: SetScore) => {
+    return player1.score > player2.score ? "player1" : "player2";
+};
 
 //COMPONENT
-const GameUnfinished: React.FC<Props> = ({ gameInfo, gameId }) => {
+const GameUnfinished: React.FC<Props> = ({ gameId, player1, player2 }) => {
     const navigate = useNavigate();
-    const [gameScore, setGameScore] = useState<GameScore>({
-        sets: [{} as SetScore, {} as SetScore, {} as SetScore, {} as SetScore, {} as SetScore],
-    } as GameScore);
-
-    const handleGameEnd = async () => {
-        console.log(gameScore);
-    };
-
     const { mutateAsync: handleDeleteGame, isLoading: isDeleteGameLoading } = useMutation({
         mutationFn: () => deleteGameApi(gameId!),
         onSuccess: () => {
@@ -59,52 +57,28 @@ const GameUnfinished: React.FC<Props> = ({ gameInfo, gameId }) => {
         },
     });
 
+    const [gameScore, setGameScore] = useState(Array.from({ length: 1 }));
+
+    const handleSetAdd = () => {
+        setGameScore((prevState) => [...prevState, {}]);
+    };
+
     return (
-        <>
-            <div>
-                {gameScore.sets.map((set, index) => (
-                    <div key={index} className="flex">
-                        <SetCreate setIndex={index} players={gameInfo.players}/>
-                        {/* <div>
-                            <p>Set: {index + 1}</p>
-                            {gameInfo.players[0].fullName} (
-                            <input type="number" min={0} onChange={(e) => handleScoreChange(e, "player1", index)} />
-                            :
-                            <input type="number" min={0} onChange={(e) => handleScoreChange(e, "player2", index)} />)
-                            {gameInfo.players[1].fullName}
-                            <br />
-                            winner : {gameInfo.players.filter((p) => set.winner == p.fullName)[0]?.fullName}
-                        </div>
-                        {set.isValid ? (
-                            <p className="bg-green-300 p-4">OK</p>
-                        ) : (
-                            <p className="bg-red-300 p-4">this is not valid</p>
-                        )} */}
-                    </div>
-                ))}
-                <div className="bg-blue-200 py-4 text-center">
-                    <span className="mx-4">{gameInfo.players[0].fullName}</span>
-                    <span>{gameScore.sets.filter((s) => s.winner == gameInfo.players[0].fullName).length}</span>
-                    <span className="px-2">-</span>
-                    <span>{gameScore.sets.filter((s) => s.winner == gameInfo.players[1].fullName).length}</span>
-                    <span className="mx-4">{gameInfo.players[1].fullName}</span>
-                </div>
-                <Button
-                    text="Delete game"
-                    color="red"
-                    className="w-full"
-                    disabled={isDeleteGameLoading}
-                    onClick={async () => await handleDeleteGame()}
-                />
-                <Button
-                    text="Submit score"
-                    color="green"
-                    className="w-full"
-                    disabled={isDeleteGameLoading}
-                    onClick={handleGameEnd}
-                />
-            </div>
-        </>
+        <div>
+            {gameScore.map((set, index) => (
+                <SetInput key={index} player1={player1} player2={player2} setIndex={index} />
+            ))}
+
+            <button onClick={handleSetAdd}>Add Set</button>
+            <Button
+                text="Delete game"
+                color="red"
+                className="w-full"
+                disabled={isDeleteGameLoading}
+                onClick={async () => await handleDeleteGame()}
+            />
+            <Button text="Submit score" color="green" className="w-full" disabled={isDeleteGameLoading} />
+        </div>
     );
 };
 

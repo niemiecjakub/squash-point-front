@@ -19,3 +19,14 @@ export interface PlayerSetPoint {
     fullName: string;
     points: number;
 }
+
+export interface SetScore {
+    player1: { id: string; score: number; fullName: string };
+    player2: { id: string; score: number; fullName: string };
+    winner: string | null;
+    isValid: boolean;
+}
+
+export interface GameScore {
+    sets: SetScore[];
+}

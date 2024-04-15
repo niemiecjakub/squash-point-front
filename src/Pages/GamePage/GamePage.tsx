@@ -26,7 +26,14 @@ const GamePage = () => {
             ) : (
                 <>
                     <GamePlayerBar gameInfo={gameInfo!} />
-                    {gameInfo!.status == "Unfinished" && <GameUnfinished gameInfo={gameInfo!} gameId={id!} />}
+                    {gameInfo!.status == "Unfinished" && (
+                        <GameUnfinished
+                            player1={gameInfo!.players[0]}
+                            player2={gameInfo!.players[1]}
+                            gameInfo={gameInfo!}
+                            gameId={id!}
+                        />
+                    )}
                     {gameInfo!.status == "Started" && (
                         <GameInProgress gameInfo={gameInfo!} gameId={id!} refetchGameInfo={refetchGameInfo} />
                     )}
